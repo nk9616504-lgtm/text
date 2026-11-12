@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yugamugesh - Tamil Audio to Text Converter</title>
-    <!-- Tailwind CSS for modern styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -19,11 +18,11 @@
             <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md shadow-blue-500/20">Y</div>
             <span class="text-xl font-bold tracking-tight text-slate-900">Yugamugesh</span>
         </div>
-        <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-2">
             <button onclick="openApiKeyModal()" class="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-full font-medium text-slate-600 hover:bg-slate-50 transition shadow-sm flex items-center space-x-1">
-                <span>⚙️ API Key</span>
+                <span>⚙️ Key</span>
             </button>
-            <a href="#uploadSection" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-sm transition">Start Free</a>
+            <a href="#uploadSection" class="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-full shadow-sm transition">Start Free</a>
         </div>
     </header>
 
@@ -168,7 +167,6 @@
 
     <!-- Script Logic -->
     <script>
-        // Embedded API Key
         let apiKey = localStorage.getItem("yugamugesh_gemini_key") || "AIzaSyCsKDikrMnVtCkjo388brj9lYm1reVmkyw";
         document.getElementById("apiKeyInput").value = apiKey;
 
@@ -222,9 +220,8 @@
             setTimeout(async () => {
                 try {
                     updateProgress(75, "Gemini AI processing Tamil audio...", "stepTranscribe");
-                    // Using Gemini to transcribe sample
                     const promptText = "Generate a natural 3-line spoken paragraph in Tamil script about technology and daily life, as if transcribed from an audio recording.";
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
@@ -241,7 +238,7 @@
         }
 
         async function callGeminiAPI(base64Data, mimeType) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{
                     parts: [
@@ -325,7 +322,6 @@
             URL.revokeObjectURL(url);
         }
 
-        // Voice Recording Setup
         let mediaRecorder;
         let audioChunks = [];
         let isRecording = false;
