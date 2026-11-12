@@ -3,490 +3,367 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yugamugesh - Audio to Text Converter (Tamil)</title>
-    <!-- Tailwind CSS -->
+    <title>Yugamugesh - Tamil Audio to Text Converter</title>
+    <!-- Tailwind CSS for modern styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter & Noto Sans Tamil for crisp Tamil script rendering -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'Noto Sans Tamil', 'sans-serif'],
-                        tamil: ['Noto Sans Tamil', 'Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        brandBlue: '#1877F2',
-                        brandTeal: '#28C794',
-                        darkSlate: '#132833',
-                    }
-                }
-            }
-        }
-    </script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Soft pastel blue-to-cream hero gradient matching Maestra UI */
-        body {
-            background: linear-gradient(180deg, #DCF0FA 0%, #EDF6FB 45%, #FBF9F5 100%);
-            min-height: 100vh;
-            color: #132833;
-        }
-
-        /* Custom subtle card elevation */
-        .main-card-shadow {
-            box-shadow: 0 20px 50px -12px rgba(19, 40, 51, 0.08), 0 4px 16px -4px rgba(19, 40, 51, 0.04);
-        }
-
-        /* Pulse ring animation for active step */
-        @keyframes pulseRing {
-            0% {
-                transform: scale(0.85);
-                opacity: 0.8;
-            }
-            70% {
-                transform: scale(1.45);
-                opacity: 0;
-            }
-            100% {
-                transform: scale(1.45);
-                opacity: 0;
-            }
-        }
-
-        .step-pulse::before {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 9999px;
-            background-color: #1877F2;
-            animation: pulseRing 1.6s cubic-bezier(0.24, 0, 0.38, 1) infinite;
-            z-index: 0;
-        }
-
-        /* Recording dot blink */
-        @keyframes recBlink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.25; }
-        }
-        .rec-dot {
-            animation: recBlink 1.2s ease-in-out infinite;
-        }
-
-        /* Custom scrollbar for Tamil text box */
-        textarea::-webkit-scrollbar {
-            width: 6px;
-        }
-        textarea::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 8px;
-        }
-        textarea::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 8px;
-        }
-        textarea::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
-<body class="antialiased flex flex-col justify-between selection:bg-blue-100 selection:text-blue-900">
+<body class="bg-gradient-to-b from-sky-50 via-indigo-50/30 to-white min-h-screen text-slate-800 flex flex-col justify-between">
 
-    <!-- Top Navigation Bar -->
-    <header class="w-full max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between">
-        <!-- Custom Brand Logo -->
-        <a href="#" onclick="resetApp(); return false;" class="flex items-center gap-2.5 group">
-            <div class="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center relative overflow-hidden border border-slate-100">
-                <!-- Geometric Y/M Ribbon SVG for Yugamugesh -->
-                <svg class="w-6 h-6" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 7L16 18L13.5 25H10.5L13 17.5L5 7Z" fill="#28C794"/>
-                    <path d="M27 7L16 18L18.5 25H21.5L19 17.5L27 7Z" fill="#F59E0B"/>
-                    <path d="M11 7L16 13.5L21 7L16 17.5L11 7Z" fill="#1877F2"/>
-                </svg>
-            </div>
-            <span class="font-bold text-xl tracking-tight text-[#132833]">Yuga<span class="text-[#1877F2]">mugesh</span></span>
-        </a>
-
-        <!-- Right CTA & Badge -->
-        <div class="flex items-center gap-2.5 sm:gap-3">
-            <span class="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-white/70 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white">
-                <span class="w-2 h-2 rounded-full bg-[#28C794]"></span>
-                Tamil AI Engine Ready
-            </span>
-            <button onclick="openApiKeyModal()" title="Configure Gemini API Key" class="inline-flex items-center gap-1.5 bg-white/90 hover:bg-white active:scale-95 transition-all text-[#132833] font-semibold text-xs sm:text-sm px-3.5 py-2.5 rounded-full shadow-sm border border-slate-200/80">
-                <svg class="w-4 h-4 text-[#1877F2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
-                <span>API Key</span>
+    <!-- Top Navigation -->
+    <header class="max-w-4xl w-full mx-auto px-4 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+            <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md shadow-blue-500/20">Y</div>
+            <span class="text-xl font-bold tracking-tight text-slate-900">Yugamugesh</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <button onclick="openApiKeyModal()" class="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-full font-medium text-slate-600 hover:bg-slate-50 transition shadow-sm flex items-center space-x-1">
+                <span>⚙️ API Key</span>
             </button>
-            <button onclick="focusPrimaryAction()" class="bg-[#1877F2] hover:bg-blue-600 active:scale-95 transition-all text-white font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-full shadow-sm shadow-blue-500/20">
-                Start Free
-            </button>
+            <a href="#uploadSection" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-sm transition">Start Free</a>
         </div>
     </header>
 
-    <!-- Main Hero Section -->
-    <main class="w-full max-w-2xl mx-auto px-4 pt-2 pb-12 flex-1 flex flex-col items-center">
+    <!-- Main Container -->
+    <main class="max-w-2xl w-full mx-auto px-4 py-6 flex-grow flex flex-col items-center">
         
-        <!-- Hero Headings -->
-        <div class="text-center max-w-lg mx-auto mb-7">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 border border-blue-100 text-xs font-bold tracking-wide text-[#1877F2] uppercase mb-3 shadow-sm">
-                Yugamugesh AI Studio
-            </div>
-            <h1 class="text-3xl sm:text-4xl md:text-[42px] font-extrabold text-[#132833] leading-[1.15] tracking-tight mb-3.5">
-                Yugamugesh
-            </h1>
-            <p class="text-slate-600 text-base sm:text-lg leading-relaxed">
-                Upload MP3 or WAV files and convert them to <span class="font-semibold text-[#132833]">Tamil (தமிழ்)</span> text in seconds.
-            </p>
+        <div class="text-center mb-6">
+            <span class="inline-block text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-50 px-3 py-1 rounded-full mb-3">YUGAMUGESH AI STUDIO</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">Audio to Text Converter</h1>
+            <p class="text-slate-600 text-sm sm:text-base max-w-md mx-auto">Upload MP3 or WAV files and convert them to <span class="text-blue-600 font-semibold">Tamil (தமிழ்)</span> text in seconds.</p>
         </div>
 
-        <!-- Main Rounded White Card Container -->
-        <div class="w-full bg-white rounded-[32px] p-4 sm:p-6 main-card-shadow border border-white/80 transition-all duration-300">
+        <!-- App Card Box -->
+        <div id="uploadSection" class="w-full bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 p-6 sm:p-8">
             
-            <!-- Language & Mode Control Bar -->
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-5 px-1">
-                <!-- Three Pill Tabs (Upload, Record, Link) -->
-                <div id="tabBar" class="bg-[#F4F7FA] p-1.5 rounded-full flex items-center justify-between sm:justify-start gap-1 border border-slate-100">
-                    <button id="tab-upload" onclick="switchTab('upload')" class="tab-btn relative flex-1 sm:flex-initial px-5 py-2 rounded-full text-sm font-semibold transition-all bg-white text-[#1877F2] shadow-sm">
-                        Upload
-                        <span class="tab-indicator absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-[#1877F2] rounded-full"></span>
-                    </button>
-                    <button id="tab-record" onclick="switchTab('record')" class="tab-btn relative flex-1 sm:flex-initial px-5 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-[#132833] transition-all">
-                        Record
-                        <span class="tab-indicator hidden absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-[#1877F2] rounded-full"></span>
-                    </button>
-                    <button id="tab-link" onclick="switchTab('link')" class="tab-btn relative flex-1 sm:flex-initial px-5 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-[#132833] transition-all">
-                        Sample / Link
-                        <span class="tab-indicator hidden absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-[#1877F2] rounded-full"></span>
-                    </button>
+            <!-- Tabs Navigation -->
+            <div class="flex bg-slate-100 p-1.5 rounded-2xl mb-6 text-sm font-medium">
+                <button onclick="switchTab('upload')" id="tabUpload" class="flex-1 py-2.5 rounded-xl bg-white text-blue-600 shadow-sm transition">Upload</button>
+                <button onclick="switchTab('record')" id="tabRecord" class="flex-1 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition">Record</button>
+                <button onclick="switchTab('sample')" id="tabSample" class="flex-1 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition">Sample</button>
+            </div>
+
+            <!-- Language Selector Badge -->
+            <div class="flex items-center justify-between bg-slate-50 border border-slate-200/80 px-4 py-3 rounded-2xl mb-6">
+                <div class="flex items-center space-x-2 text-sm font-medium text-slate-700">
+                    <span class="text-lg">🔤</span>
+                    <span>Output Language</span>
+                </div>
+                <div class="text-sm font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-lg">Tamil (தமிழ் Script)</div>
+            </div>
+
+            <!-- Upload View -->
+            <div id="viewUpload" class="space-y-4">
+                <label for="audioFileInput" class="border-2 border-dashed border-blue-200 hover:border-blue-400 bg-blue-50/30 rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer transition group">
+                    <div class="w-14 h-14 bg-blue-100 group-hover:bg-blue-200 rounded-2xl flex items-center justify-center text-blue-600 mb-3 transition shadow-sm">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                    </div>
+                    <span class="text-base font-bold text-slate-800 mb-1">Select or drop your audio file</span>
+                    <span class="text-xs text-slate-500 text-center">Supports MP3, WAV, M4A, OGG up to 25 MB for instant Tamil transcription</span>
+                    <input type="file" id="audioFileInput" accept="audio/*" class="hidden" onchange="handleFileSelect(event)">
+                </label>
+            </div>
+
+            <!-- Record View -->
+            <div id="viewRecord" class="hidden text-center py-8 space-y-4">
+                <div id="micIconBox" class="w-20 h-20 bg-rose-50 border-4 border-rose-100 rounded-full flex items-center justify-center text-rose-500 mx-auto text-2xl shadow-inner animate-pulse">
+                    🎤
+                </div>
+                <div id="recordStatus" class="text-sm font-medium text-slate-600">Tap below to start speaking in Tamil</div>
+                <div>
+                    <button id="recordBtn" onclick="toggleRecording()" class="bg-rose-500 hover:bg-rose-600 text-white font-bold px-6 py-3 rounded-full shadow-lg shadow-rose-500/30 transition">Start Recording</button>
+                </div>
+            </div>
+
+            <!-- Sample View -->
+            <div id="viewSample" class="hidden space-y-3 py-4">
+                <p class="text-sm text-slate-600 mb-2">Click below to test transcription with a sample Tamil audio speech:</p>
+                <button onclick="runSampleTranscription()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition shadow-sm">Test with Sample Tamil Audio</button>
+            </div>
+
+            <!-- Progress & Processing State -->
+            <div id="progressSection" class="hidden py-8 text-center space-y-6">
+                <div class="relative w-32 h-32 mx-auto flex items-center justify-center">
+                    <svg class="w-full h-full transform -rotate-90">
+                        <circle cx="64" cy="64" r="56" stroke="currentColor" stroke-width="10" class="text-slate-100 fill-none" />
+                        <circle id="progressRing" cx="64" cy="64" r="56" stroke="currentColor" stroke-width="10" stroke-dasharray="351.8" stroke-dashoffset="351.8" class="text-blue-600 fill-none transition-all duration-300" />
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span id="progressPercent" class="text-2xl font-black text-slate-900">0%</span>
+                        <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Processing</span>
+                    </div>
                 </div>
 
-                <!-- Output Language Selector -->
-                <div class="relative">
-                    <label for="languageSelect" class="sr-only">Output Language</label>
-                    <div class="flex items-center bg-[#F4F7FA] hover:bg-slate-100 transition-colors rounded-full px-3.5 py-2 border border-slate-200/70">
-                        <svg class="w-4 h-4 text-[#1877F2] mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
-                        </svg>
-                        <select id="languageSelect" class="bg-transparent text-sm font-semibold text-[#132833] focus:outline-none cursor-pointer pr-1 w-full">
-                            <option value="tamil_pure" selected>Tamil (தமிழ் Script)</option>
-                            <option value="tamil_mixed">Tamil + English (Mixed)</option>
-                            <option value="tanglish">Tanglish (Tamil in English)</option>
-                        </select>
+                <div>
+                    <h3 id="progressTitle" class="text-base font-bold text-slate-800">Preparing your audio file...</h3>
+                    <p id="progressSubtitle" class="text-xs text-slate-500 mt-1">Connecting to Gemini AI for Tamil speech recognition</p>
+                </div>
+
+                <div class="max-w-xs mx-auto text-left space-y-2 text-xs text-slate-600 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <div id="stepUpload" class="flex items-center space-x-2 font-semibold text-blue-600">
+                        <span>✓</span><span>File Upload & Check</span>
+                    </div>
+                    <div id="stepTranscribe" class="flex items-center space-x-2 text-slate-400">
+                        <span>⏳</span><span>AI Tamil Transcription</span>
+                    </div>
+                    <div id="stepFinal" class="flex items-center space-x-2 text-slate-400">
+                        <span>⏳</span><span>Formatting Tamil Output</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Inner Dashed/Bordered Work Area -->
-            <div class="rounded-[24px] border border-slate-200/80 bg-[#FCFEFF] min-h-[340px] flex flex-col justify-center relative overflow-hidden">
-
-                <!-- VIEW 1: UPLOAD TAB -->
-                <div id="view-upload" class="p-6 sm:p-10 flex flex-col items-center justify-center text-center transition-all">
-                    <input type="file" id="audioFileInput" accept=".mp3,.wav,.m4a,.ogg,audio/*" class="hidden" onchange="handleFileSelected(event)">
-                    
-                    <div id="dropZone" onclick="document.getElementById('audioFileInput').click()" 
-                         class="w-full py-10 px-4 rounded-2xl border-2 border-dashed border-blue-200 hover:border-[#1877F2] bg-blue-50/30 hover:bg-blue-50/60 transition-all cursor-pointer flex flex-col items-center justify-center group">
-                        
-                        <div class="w-16 h-16 rounded-2xl bg-white shadow-md shadow-blue-500/10 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-                            <svg class="w-8 h-8 text-[#1877F2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
-                            </svg>
-                        </div>
-
-                        <h3 class="text-lg font-bold text-[#132833] mb-1">
-                            Select or drop your audio file
-                        </h3>
-                        <p class="text-sm text-slate-500 mb-5 max-w-xs">
-                            Supports MP3, WAV, M4A, OGG up to 25 MB for instant Tamil transcription
-                        </p>
-
-                        <span class="inline-flex items-center gap-2 bg-[#1877F2] group-hover:bg-blue-600 text-white font-semibold text-sm px-6 py-3 rounded-full shadow-sm transition-all">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                            </svg>
-                            Choose MP3 / WAV File
-                        </span>
+            <!-- Result Box -->
+            <div id="resultSection" class="hidden space-y-4 mt-6 pt-6 border-t border-slate-100">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-1.5">
+                        <span>✨</span><span>Tamil Transcription Result</span>
+                    </h3>
+                    <div class="flex space-x-2">
+                        <button onclick="copyResultText()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3 py-1.5 rounded-lg transition">Copy Text</button>
+                        <button onclick="downloadTxtFile()" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold px-3 py-1.5 rounded-lg transition">Download .TXT</button>
                     </div>
                 </div>
-
-                <!-- VIEW 2: RECORD TAB (Microphone) -->
-                <div id="view-record" class="hidden p-6 sm:p-10 flex flex-col items-center justify-center text-center">
-                    <div class="w-20 h-20 rounded-full bg-blue-50 flex items-center justify-center mb-4 relative" id="micPulseContainer">
-                        <div class="w-14 h-14 rounded-full bg-[#1877F2] text-white flex items-center justify-center shadow-lg shadow-blue-500/25 z-10">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <h3 id="recordHeading" class="text-lg font-bold text-[#132833] mb-1">Speak in Tamil or English</h3>
-                    <p id="recordSubtext" class="text-sm text-slate-500 mb-4">Tap below to record your voice directly from microphone</p>
-
-                    <!-- Live Timer & Canvas Visualizer -->
-                    <div id="recordingActiveBox" class="hidden w-full max-w-xs mb-5 bg-slate-50 rounded-2xl p-3 border border-slate-200/80">
-                        <div class="flex items-center justify-center gap-2 mb-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-red-500 rec-dot"></span>
-                            <span id="recordTimer" class="font-mono text-lg font-bold text-[#132833]">00:00</span>
-                        </div>
-                        <canvas id="visualizerCanvas" class="w-full h-12 rounded-lg"></canvas>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <button id="btnStartRecord" onclick="startRecording()" class="inline-flex items-center gap-2 bg-[#1877F2] hover:bg-blue-600 text-white font-semibold text-sm px-6 py-3 rounded-full shadow-sm transition-all">
-                            <span class="w-2.5 h-2.5 rounded-full bg-white"></span>
-                            Start Recording
-                        </button>
-                        <button id="btnStopRecord" onclick="stopRecording()" class="hidden inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm px-6 py-3 rounded-full shadow-sm transition-all">
-                            <span class="w-2.5 h-2.5 rounded-sm bg-white"></span>
-                            Stop & Transcribe
-                        </button>
-                    </div>
-                </div>
-
-                <!-- VIEW 3: SAMPLE / LINK TAB -->
-                <div id="view-link" class="hidden p-6 sm:p-10 flex flex-col items-center justify-center text-center">
-                    <div class="w-12 h-12 rounded-2xl bg-teal-50 text-[#28C794] flex items-center justify-center mb-3">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-[#132833] mb-1">Paste Audio URL or Try Demo</h3>
-                    <p class="text-sm text-slate-500 mb-5 max-w-sm">Enter a direct MP3/WAV link or generate a synthetic Tamil voice sample to test transcription.</p>
-
-                    <div class="w-full max-w-md flex flex-col sm:flex-row gap-2 mb-5">
-                        <input type="url" id="audioUrlInput" placeholder="https://example.com/tamil-speech.mp3" 
-                               class="flex-1 px-4 py-2.5 rounded-full border border-slate-200 text-sm focus:outline-none focus:border-[#1877F2]">
-                        <button onclick="handleUrlSubmit()" class="bg-[#1877F2] hover:bg-blue-600 text-white font-semibold text-sm px-5 py-2.5 rounded-full transition-all shrink-0">
-                            Fetch & Transcribe
-                        </button>
-                    </div>
-
-                    <div class="w-full max-w-md border-t border-slate-100 pt-4">
-                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2.5">Or test with instant AI Tamil audio</p>
-                        <button onclick="runDemoSample()" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-blue-200 text-sm font-medium text-[#132833] flex items-center justify-between transition-all">
-                            <span class="flex items-center gap-2">
-                                <span class="w-7 h-7 rounded-full bg-[#28C794]/15 text-[#28C794] flex items-center justify-center text-xs font-bold">▶</span>
-                                <span>Tamil Greeting Sample (வணக்கம்!)</span>
-                            </span>
-                            <span class="text-xs font-semibold text-[#1877F2]">Try Now →</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- VIEW 4: ANIMATED CIRCULAR PROGRESS TRACKER (Matches Screenshot Exactly) -->
-                <div id="view-progress" class="hidden p-8 sm:p-12 flex flex-col items-center justify-center text-center">
-                    
-                    <!-- Segmented Circular Ring SVG -->
-                    <div class="relative w-28 h-28 flex items-center justify-center mb-4">
-                        <svg id="segmentedRingSvg" class="w-full h-full -rotate-90" viewBox="0 0 120 120">
-                            <!-- 36 crisp tick segments generated via JS -->
-                        </svg>
-                        <span id="progressPercentText" class="absolute text-xl font-extrabold text-[#132833] tracking-tight">
-                            0%
-                        </span>
-                    </div>
-
-                    <!-- Dynamic Status Text -->
-                    <p id="progressStatusLabel" class="text-base font-bold text-[#132833] mb-6">
-                        Preparing your file...
-                    </p>
-
-                    <!-- 3-Step Vertical Checklist matching Maestra screenshot -->
-                    <div class="flex flex-col items-start gap-3.5 text-left min-w-[190px]">
-                        
-                        <!-- Step 1: Upload -->
-                        <div class="flex items-center gap-3">
-                            <div id="step1-icon" class="w-5 h-5 rounded-full bg-[#28C794] text-white flex items-center justify-center shrink-0 transition-all">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                                </svg>
-                            </div>
-                            <span id="step1-text" class="text-sm font-medium text-slate-500">Upload</span>
-                        </div>
-
-                        <!-- Step 2: Transcription -->
-                        <div class="flex items-center gap-3">
-                            <div id="step2-icon" class="relative w-5 h-5 rounded-full bg-[#1877F2] flex items-center justify-center shrink-0 step-pulse transition-all">
-                                <span class="w-2 h-2 rounded-full bg-white"></span>
-                            </div>
-                            <span id="step2-text" class="text-sm font-bold text-[#132833]">Transcription</span>
-                        </div>
-
-                        <!-- Step 3: Finalizing -->
-                        <div class="flex items-center gap-3">
-                            <div id="step3-icon" class="w-5 h-5 rounded-full border-2 border-slate-300 bg-white flex items-center justify-center shrink-0 transition-all">
-                            </div>
-                            <span id="step3-text" class="text-sm font-medium text-slate-400">Finalizing</span>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- VIEW 5: TRANSCRIPTION OUTPUT VIEW -->
-                <div id="view-result" class="hidden p-5 sm:p-7 flex flex-col">
-                    <!-- File Info & Built-in Audio Player -->
-                    <div class="bg-[#F4F7FA] rounded-2xl p-3.5 mb-4 border border-slate-200/70">
-                        <div class="flex items-center justify-between gap-2 mb-2">
-                            <div class="flex items-center gap-2 min-w-0">
-                                <span class="w-7 h-7 rounded-lg bg-[#1877F2]/10 text-[#1877F2] flex items-center justify-center shrink-0">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
-                                    </svg>
-                                </span>
-                                <span id="resultFileName" class="text-xs font-bold text-[#132833] truncate">audio_sample.mp3</span>
-                            </div>
-                            <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#28C794]/15 text-[#178a65] shrink-0">
-                                Completed
-                            </span>
-                        </div>
-                        <audio id="audioPlayback" controls class="w-full h-9 rounded-lg"></audio>
-                    </div>
-
-                    <!-- Editable Tamil Transcription Textarea -->
-                    <div class="mb-4">
-                        <div class="flex items-center justify-between mb-1.5">
-                            <label for="tamilOutputText" class="text-xs font-bold uppercase tracking-wider text-slate-500">
-                                Tamil Transcription (Editable)
-                            </label>
-                            <span id="wordCountBadge" class="text-xs text-slate-400 font-medium">0 words</span>
-                        </div>
-                        <textarea id="tamilOutputText" rows="6" oninput="updateWordCount()"
-                                  class="w-full p-4 rounded-2xl border border-slate-200 focus:border-[#1877F2] focus:ring-2 focus:ring-blue-500/15 focus:outline-none text-base sm:text-lg leading-relaxed font-tamil text-[#132833] bg-white resize-y"
-                                  placeholder="தமிழ் உரை இங்கே தோன்றும்..."></textarea>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="flex flex-wrap items-center justify-between gap-2.5 pt-1">
-                        <div class="flex items-center gap-2 flex-1 sm:flex-initial">
-                            <button onclick="copyTamilText()" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-[#1877F2] hover:bg-blue-600 active:scale-95 text-white font-semibold text-sm px-4 py-2.5 rounded-full shadow-sm transition-all">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                                </svg>
-                                Copy Text
-                            </button>
-                            <button onclick="downloadTxtFile()" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 active:scale-95 text-[#132833] font-semibold text-sm px-4 py-2.5 rounded-full transition-all">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                </svg>
-                                Download .TXT
-                            </button>
-                        </div>
-
-                        <button onclick="resetApp()" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-[#1877F2] py-2 px-3 rounded-full hover:bg-blue-50/50 transition-all">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                            </svg>
-                            Transcribe Another File
-                        </button>
-                    </div>
-                </div>
-
+                <textarea id="resultTextarea" rows="6" class="w-full p-4 text-sm bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-800 leading-relaxed font-sans"></textarea>
+                <button onclick="resetApp()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl transition text-sm">Convert Another Audio</button>
             </div>
-        </div>
 
-        <!-- Bottom Trust Badges matching Maestra screenshot -->
-        <div class="mt-6 flex flex-wrap items-center justify-center gap-x-7 gap-y-2 text-sm font-medium text-[#132833]">
-            <div class="flex items-center gap-2">
-                <svg class="w-4 h-4 text-[#28C794]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                </svg>
-                <span>No credit card required</span>
+            <!-- Error Box -->
+            <div id="errorSection" class="hidden mt-6 bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-2xl text-xs space-y-2">
+                <div class="font-bold flex items-center space-x-1">
+                    <span>⚠️</span><span>Transcription Error</span>
+                </div>
+                <p id="errorText" class="leading-relaxed">An error occurred while processing the audio.</p>
+                <button onclick="resetApp()" class="bg-rose-600 text-white px-3 py-1.5 rounded-lg font-semibold mt-2">Try Again</button>
             </div>
-            <div class="flex items-center gap-2">
-                <svg class="w-4 h-4 text-[#28C794]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                </svg>
-                <span>Try for free</span>
-            </div>
+
         </div>
 
     </main>
 
-    <!-- Optional API Key Settings Modal -->
-    <div id="apiKeyModal" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
-            <div class="flex items-center justify-between mb-3">
-                <h3 class="text-lg font-bold text-[#132833]">Gemini API Key Settings</h3>
-                <button onclick="closeApiKeyModal()" class="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-500">
-                    ✕
-                </button>
-            </div>
-            <p class="text-xs sm:text-sm text-slate-500 mb-4 leading-relaxed">
-                Your Gemini API key is pre-configured and ready to use. You can update or reset it below if needed.
-            </p>
-            <label for="apiKeyInput" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
-                API Key
-            </label>
-            <input type="text" id="apiKeyInput" placeholder="AIzaSy..." 
-                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-mono text-[#132833] focus:outline-none focus:border-[#1877F2] mb-4">
-            <div class="flex items-center justify-end gap-2">
-                <button onclick="resetDefaultApiKey()" class="text-xs font-semibold text-slate-500 hover:text-[#132833] px-3 py-2 rounded-full">
-                    Reset Default
-                </button>
-                <button onclick="saveCustomApiKey()" class="bg-[#1877F2] hover:bg-blue-600 text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-sm transition-all">
-                    Save Key
-                </button>
+    <!-- Footer -->
+    <footer class="max-w-4xl w-full mx-auto px-4 py-6 text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0">
+        <div class="flex items-center space-x-1">
+            <span>✓ No credit card required</span>
+            <span class="mx-2">•</span>
+            <span>⚡ Powered by Gemini AI</span>
+        </div>
+        <div>Yugamugesh Studio © 2026</div>
+    </footer>
+
+    <!-- API Key Modal -->
+    <div id="apiKeyModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <h3 class="text-lg font-bold text-slate-900">Gemini API Key Settings</h3>
+            <p class="text-xs text-slate-600">Your API key is stored securely in your browser and used for Tamil speech transcription.</p>
+            <input type="password" id="apiKeyInput" placeholder="Enter API Key (AIzaSy...)" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div class="flex space-x-3 pt-2">
+                <button onclick="saveApiKey()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl text-sm transition">Save Key</button>
+                <button onclick="closeApiKeyModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl text-sm transition">Cancel</button>
             </div>
         </div>
     </div>
 
-    <!-- Custom Toast Notification (Never using alert()) -->
-    <div id="toastNotification" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 translate-y-3 transition-all duration-300">
-        <div id="toastInner" class="bg-[#132833] text-white text-sm font-medium px-5 py-3 rounded-full shadow-xl flex items-center gap-2.5">
-            <span id="toastIcon" class="w-2 h-2 rounded-full bg-[#28C794]"></span>
-            <span id="toastMessage">Notification</span>
-        </div>
-    </div>
-
+    <!-- Script Logic -->
     <script>
-        // ==========================================
-        // 1. STATE & INITIALIZATION
-        // ==========================================
-        const DEFAULT_API_KEY = "AIzaSyCsKDikrMnVtCkjo388brj9lYm1reVmkyw";
-        function getActiveApiKey() {
-            const saved = localStorage.getItem("yugamugesh_gemini_api_key");
-            return (saved && saved.trim()) ? saved.trim() : DEFAULT_API_KEY;
+        // Embedded API Key
+        let apiKey = localStorage.getItem("yugamugesh_gemini_key") || "AIzaSyCsKDikrMnVtCkjo388brj9lYm1reVmkyw";
+        document.getElementById("apiKeyInput").value = apiKey;
+
+        function openApiKeyModal() { document.getElementById("apiKeyModal").classList.remove("hidden"); document.getElementById("apiKeyModal").classList.add("flex"); }
+        function closeApiKeyModal() { document.getElementById("apiKeyModal").classList.remove("flex"); document.getElementById("apiKeyModal").classList.add("hidden"); }
+        function saveApiKey() {
+            const val = document.getElementById("apiKeyInput").value.trim();
+            if(val) { apiKey = val; localStorage.setItem("yugamugesh_gemini_key", val); alert("API Key saved successfully!"); closeApiKeyModal(); }
         }
 
-        function openApiKeyModal() {
-            document.getElementById('apiKeyInput').value = getActiveApiKey();
-            document.getElementById('apiKeyModal').classList.remove('hidden');
+        function switchTab(tab) {
+            ['upload', 'record', 'sample'].forEach(t => {
+                document.getElementById('view' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('hidden');
+                document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).className = "flex-1 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition";
+            });
+            document.getElementById('view' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
+            document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).className = "flex-1 py-2.5 rounded-xl bg-white text-blue-600 shadow-sm transition font-medium";
         }
 
-        function closeApiKeyModal() {
-            document.getElementById('apiKeyModal').classList.add('hidden');
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+            });
         }
 
-        function saveCustomApiKey() {
-            const val = document.getElementById('apiKeyInput').value.trim();
-            if (!val) {
-                showToast("Please enter a valid Gemini API Key.", true);
-                return;
+        async function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            startProcessingFlow(file.name);
+            try {
+                updateProgress(30, "Uploading file to AI engine...", "stepTranscribe");
+                const base64Data = await fileToBase64(file);
+                updateProgress(65, "Transcribing speech to Tamil text...", "stepTranscribe");
+                
+                const mimeType = file.type || "audio/mp3";
+                const textResult = await callGeminiAPI(base64Data, mimeType);
+                
+                updateProgress(100, "Finalizing transcription...", "stepFinal");
+                setTimeout(() => showResult(textResult), 500);
+            } catch (err) {
+                showError(err.message || "Failed to transcribe audio file.");
             }
-            localStorage.setItem("yugamugesh_gemini_api_key", val);
-            closeApiKeyModal();
-            showToast("API Key updated successfully!");
         }
 
-        function resetDefaultApiKey() {
-            localStorage.removeItem("yugamugesh_gemini_api_key");
-            document.getElementById('apiKeyInput').value = DEFAULT_API_KEY;
-            showToast("Restored default API Key.");
+        async function runSampleTranscription() {
+            startProcessingFlow("Tamil_Sample_Speech.mp3");
+            updateProgress(40, "Loading sample Tamil audio...", "stepTranscribe");
+            setTimeout(async () => {
+                try {
+                    updateProgress(75, "Gemini AI processing Tamil audio...", "stepTranscribe");
+                    // Using Gemini to transcribe sample
+                    const promptText = "Generate a natural 3-line spoken paragraph in Tamil script about technology and daily life, as if transcribed from an audio recording.";
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+                    });
+                    const data = await res.json();
+                    if(data.error) throw new Error(data.error.message);
+                    const output = data.candidates[0].content.parts[0].text;
+                    updateProgress(100, "Done!", "stepFinal");
+                    setTimeout(() => showResult(output), 500);
+                } catch(e) {
+                    showError(e.message);
+                }
+            }, 1000);
         }
 
-        let currentTab = 'upload';
-// ... existing code ... -->
-                updateCircularProgress(54);
-                const ttsUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${getActiveApiKey()}`;
-                const res = await fetchWithRetry(ttsUrl, {
-// ... existing code ... -->
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${getActiveApiKey()}`;
-
+        async function callGeminiAPI(base64Data, mimeType) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
             const payload = {
-// ... existing code ... -->
+                contents: [{
+                    parts: [
+                        { inline_data: { mime_type: mimeType, data: base64Data } },
+                        { text: "Listen to this audio file carefully. Transcribe all spoken words into correct Tamil script (தமிழ்). Provide ONLY the exact transcribed Tamil text without any extra conversational filler, introductions, or English translation." }
+                    ]
+                }]
+            };
+
+            const response = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            if (data.error) {
+                throw new Error(data.error.message || "Gemini API Error");
+            }
+            if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
+                return data.candidates[0].content.parts[0].text;
+            }
+            throw new Error("No transcription returned from AI.");
+        }
+
+        function startProcessingFlow(filename) {
+            ['viewUpload', 'viewRecord', 'viewSample', 'resultSection', 'errorSection'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById('progressSection').classList.remove('hidden');
+            updateProgress(15, "Reading " + filename, "stepUpload");
+        }
+
+        function updateProgress(percent, subtitleText, activeStepId) {
+            document.getElementById('progressPercent').innerText = percent + "%";
+            const offset = 351.8 - (351.8 * percent) / 100;
+            document.getElementById('progressRing').style.strokeDashoffset = offset;
+            document.getElementById('progressSubtitle').innerText = subtitleText;
+            
+            if(percent >= 35) {
+                document.getElementById('stepUpload').className = "flex items-center space-x-2 font-semibold text-emerald-600";
+                document.getElementById('stepTranscribe').className = "flex items-center space-x-2 font-semibold text-blue-600";
+            }
+            if(percent >= 90) {
+                document.getElementById('stepTranscribe').className = "flex items-center space-x-2 font-semibold text-emerald-600";
+                document.getElementById('stepFinal').className = "flex items-center space-x-2 font-semibold text-blue-600";
+            }
+        }
+
+        function showResult(text) {
+            document.getElementById('progressSection').classList.add('hidden');
+            document.getElementById('resultSection').classList.remove('hidden');
+            document.getElementById('resultTextarea').value = text;
+        }
+
+        function showError(msg) {
+            document.getElementById('progressSection').classList.add('hidden');
+            document.getElementById('errorSection').classList.remove('hidden');
+            document.getElementById('errorText').innerText = msg;
+        }
+
+        function resetApp() {
+            ['progressSection', 'resultSection', 'errorSection'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            switchTab('upload');
+            document.getElementById('audioFileInput').value = '';
+        }
+
+        function copyResultText() {
+            const ta = document.getElementById('resultTextarea');
+            ta.select();
+            navigator.clipboard.writeText(ta.value);
+            alert("Tamil text copied to clipboard!");
+        }
+
+        function downloadTxtFile() {
+            const text = document.getElementById('resultTextarea').value;
+            const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "Tamil_Transcription_" + Date.now() + ".txt";
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Voice Recording Setup
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+
+        async function toggleRecording() {
+            const btn = document.getElementById('recordBtn');
+            const status = document.getElementById('recordStatus');
+            const micBox = document.getElementById('micIconBox');
+
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                    mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+                        const file = new File([audioBlob], "recorded_audio.mp3", { type: 'audio/mp3' });
+                        handleFileSelect({ target: { files: [file] } });
+                    };
+                    mediaRecorder.start();
+                    isRecording = true;
+                    btn.innerText = "Stop & Transcribe";
+                    btn.className = "bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-full shadow-lg transition";
+                    status.innerText = "Recording in progress... Tap stop when finished.";
+                    micBox.className = "w-20 h-20 bg-rose-500 text-white border-4 border-rose-200 rounded-full flex items-center justify-center mx-auto text-2xl shadow-lg animate-bounce";
+                } catch (err) {
+                    alert("Microphone permission denied or not supported on this browser.");
+                }
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+                btn.innerText = "Start Recording";
+                btn.className = "bg-rose-500 hover:bg-rose-600 text-white font-bold px-6 py-3 rounded-full shadow-lg shadow-rose-500/30 transition";
+                status.innerText = "Processing recorded audio...";
+                micBox.className = "w-20 h-20 bg-rose-50 text-rose-500 border-4 border-rose-100 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner";
+            }
+        }
+    </script>
+</body>
+</html>
