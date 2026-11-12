@@ -263,7 +263,7 @@
                 updateProgress(100, "Merging all parts into final Tamil text...", "stepFinal");
                 setTimeout(() => showResult(fullTranscription), 500);
             } catch (err) {
-                showError(err.message || "Failed to transcribe audio file. Please try a shorter clip.");
+                showError(err.message || "Failed to transcribe audio file. Please try again.");
             }
         }
 
@@ -283,7 +283,7 @@
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => controller.abort(), 25000);
 
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] }),
@@ -303,7 +303,7 @@
         }
 
         async function callGeminiAPI(base64Data, mimeType, partNum, totalParts) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
             const promptText = totalParts > 1 
                 ? `Listen to audio part ${partNum} of ${totalParts}. Transcribe all spoken words into correct Tamil script (தமிழ்). Provide ONLY the exact transcribed Tamil text for this part without introductions.`
                 : `Listen to this audio file carefully. Transcribe all spoken words into correct Tamil script (தமிழ்). Provide ONLY the exact transcribed Tamil text without any extra conversational filler, introductions, or English translation.`;
