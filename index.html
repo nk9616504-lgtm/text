@@ -157,7 +157,7 @@
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <h3 class="text-lg font-bold text-slate-900">Enter Your Gemini API Key</h3>
             <p class="text-xs text-slate-600">Your key is stored 100% securely inside your phone browser only (never exposed publicly).</p>
-            <input type="password" id="apiKeyInput" placeholder="Paste AIzaSy... here" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="password" id="apiKeyInput" placeholder="Paste Gemini API Key here..." class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
             <div class="flex space-x-3 pt-2">
                 <button onclick="saveApiKey()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl text-sm transition">Save & Start</button>
                 <button onclick="closeApiKeyModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl text-sm transition">Cancel</button>
@@ -167,7 +167,6 @@
 
     <!-- Script Logic -->
     <script>
-        // No key embedded in code to prevent leaks!
         let apiKey = localStorage.getItem("yugamugesh_gemini_key") || "";
         
         window.addEventListener('DOMContentLoaded', () => {
@@ -175,6 +174,10 @@
                 openApiKeyModal();
             }
         });
+
+        function isValidKey(k) {
+            return k && k.length > 20 && (k.startsWith("AIza") || k.startsWith("AQ."));
+        }
 
         function openApiKeyModal() { 
             document.getElementById("apiKeyInput").value = apiKey;
@@ -187,13 +190,13 @@
         }
         function saveApiKey() {
             const val = document.getElementById("apiKeyInput").value.trim();
-            if(val && val.startsWith("AIza")) { 
+            if(isValidKey(val)) { 
                 apiKey = val; 
                 localStorage.setItem("yugamugesh_gemini_key", val); 
                 alert("API Key saved securely in your browser!"); 
                 closeApiKeyModal(); 
             } else {
-                alert("Please enter a valid Gemini API Key starting with AIza...");
+                alert("Please paste a valid Gemini API Key from Google AI Studio.");
             }
         }
 
@@ -219,7 +222,7 @@
             const file = event.target.files[0];
             if (!file) return;
             
-            if (!apiKey || !apiKey.startsWith("AIza")) {
+            if (!isValidKey(apiKey)) {
                 openApiKeyModal();
                 return;
             }
@@ -241,7 +244,7 @@
         }
 
         async function runSampleTranscription() {
-            if (!apiKey || !apiKey.startsWith("AIza")) {
+            if (!isValidKey(apiKey)) {
                 openApiKeyModal();
                 return;
             }
@@ -358,7 +361,7 @@
         let isRecording = false;
 
         async function toggleRecording() {
-            if (!apiKey || !apiKey.startsWith("AIza")) {
+            if (!isValidKey(apiKey)) {
                 openApiKeyModal();
                 return;
             }
