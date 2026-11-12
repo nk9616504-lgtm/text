@@ -5,9 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yugamugesh - Tamil Audio to Text Converter</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .spinner {
+            border: 3px solid rgba(59, 130, 246, 0.2);
+            border-top-color: #2563eb;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="bg-gradient-to-b from-sky-50 via-indigo-50/30 to-white min-h-screen text-slate-800 flex flex-col justify-between">
@@ -19,389 +28,430 @@
             <span class="text-xl font-bold tracking-tight text-slate-900">Yugamugesh</span>
         </div>
         <div class="flex items-center space-x-2">
-            <button onclick="openApiKeyModal()" class="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-full font-medium text-slate-600 hover:bg-slate-50 transition shadow-sm flex items-center space-x-1">
-                <span>⚙️ Key Setup</span>
+            <button onclick="openApiKeyModal()" class="text-xs bg-white border border-slate-200 px-3 py-2 rounded-full font-semibold text-slate-700 hover:bg-slate-50 transition shadow-sm flex items-center space-x-1">
+                <span>🔑 Key Setup</span>
             </button>
-            <a href="#uploadSection" class="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-full shadow-sm transition">Start Free</a>
+            <a href="#uploadSection" class="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-full shadow-sm transition">Start Free</a>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-2xl w-full mx-auto px-4 py-6 flex-grow flex flex-col items-center">
-        
+    <main class="max-w-2xl w-full mx-auto px-4 py-4 flex-grow flex flex-col items-center">
         <div class="text-center mb-6">
             <span class="inline-block text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-50 px-3 py-1 rounded-full mb-3">YUGAMUGESH AI STUDIO</span>
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">Audio to Text Converter</h1>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">Audio to Text Converter</h1>
             <p class="text-slate-600 text-sm sm:text-base max-w-md mx-auto">Upload MP3 or WAV files and convert them to <span class="text-blue-600 font-semibold">Tamil (தமிழ்)</span> text instantly.</p>
         </div>
 
         <!-- App Card Box -->
-        <div id="uploadSection" class="w-full bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 p-6 sm:p-8">
+        <div id="uploadSection" class="w-full bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 p-5 sm:p-8">
             
             <!-- Tabs Navigation -->
-            <div class="flex bg-slate-100 p-1.5 rounded-2xl mb-6 text-sm font-medium">
+            <div class="flex bg-slate-100 p-1.5 rounded-2xl mb-5 text-sm font-semibold">
                 <button onclick="switchTab('upload')" id="tabUpload" class="flex-1 py-2.5 rounded-xl bg-white text-blue-600 shadow-sm transition">Upload</button>
                 <button onclick="switchTab('record')" id="tabRecord" class="flex-1 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition">Record</button>
                 <button onclick="switchTab('sample')" id="tabSample" class="flex-1 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition">Sample</button>
             </div>
 
-            <!-- Language Selector Badge -->
-            <div class="flex items-center justify-between bg-slate-50 border border-slate-200/80 px-4 py-3 rounded-2xl mb-6">
-                <div class="flex items-center space-x-2 text-sm font-medium text-slate-700">
-                    <span class="text-lg">🔤</span>
-                    <span>Output Language</span>
+            <!-- Language & Model Selector Badge -->
+            <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 mb-5">
+                <div class="flex items-center space-x-2.5">
+                    <span class="bg-slate-400 text-white text-[11px] font-bold px-2 py-1 rounded-md">abc</span>
+                    <span class="text-sm font-semibold text-slate-700">Output Language</span>
                 </div>
-                <div class="text-sm font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-lg">Tamil (தமிழ் Script)</div>
+                <select id="outputLang" class="bg-blue-50/80 text-blue-700 font-bold text-sm px-3 py-1.5 rounded-xl border border-blue-200/60 focus:outline-none">
+                    <option value="Tamil (தமிழ் Script)">Tamil (தமிழ் Script)</option>
+                    <option value="Tanglish (Romanized Tamil)">Tanglish (Romanized)</option>
+                    <option value="English Translation">English Translation</option>
+                </select>
             </div>
 
-            <!-- Upload View -->
-            <div id="viewUpload" class="space-y-4">
-                <label for="audioFileInput" class="border-2 border-dashed border-blue-200 hover:border-blue-400 bg-blue-50/30 rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer transition group">
-                    <div class="w-14 h-14 bg-blue-100 group-hover:bg-blue-200 rounded-2xl flex items-center justify-center text-blue-600 mb-3 transition shadow-sm">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            <!-- TAB 1: File Upload -->
+            <div id="panelUpload" class="block">
+                <label for="audioFileInput" class="border-2 border-dashed border-blue-200 hover:border-blue-500 bg-blue-50/30 hover:bg-blue-50/60 transition rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center cursor-pointer text-center">
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-3 shadow-inner">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
                     </div>
-                    <span class="text-base font-bold text-slate-800 mb-1">Select or drop your audio file</span>
-                    <span class="text-xs text-slate-500 text-center">Supports MP3, WAV files for instant Tamil transcription</span>
-                    <input type="file" id="audioFileInput" accept="audio/*" class="hidden" onchange="handleFileSelect(event)">
+                    <span id="fileNameDisplay" class="text-base font-bold text-slate-800 mb-1">Click to select MP3 or WAV file</span>
+                    <span class="text-xs text-slate-500">Supports MP3, WAV, M4A, AAC, OGG (Up to 20MB / 6 Mins)</span>
+                    <input type="file" id="audioFileInput" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg" class="hidden" onchange="handleFileSelect(event)">
                 </label>
-            </div>
 
-            <!-- Record View -->
-            <div id="viewRecord" class="hidden text-center py-8 space-y-4">
-                <div id="micIconBox" class="w-20 h-20 bg-rose-50 border-4 border-rose-100 rounded-full flex items-center justify-center text-rose-500 mx-auto text-2xl shadow-inner animate-pulse">
-                    🎤
-                </div>
-                <div id="recordStatus" class="text-sm font-medium text-slate-600">Tap below to start speaking in Tamil</div>
-                <div>
-                    <button id="recordBtn" onclick="toggleRecording()" class="bg-rose-500 hover:bg-rose-600 text-white font-bold px-6 py-3 rounded-full shadow-lg shadow-rose-500/30 transition">Start Recording</button>
+                <div id="audioPreviewBox" class="hidden mt-4 bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+                    <audio id="audioPlayer" controls class="w-full h-10 mb-3"></audio>
+                    <button onclick="startTranscription()" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-bold py-3 px-4 rounded-xl shadow-md shadow-blue-500/20 transition flex items-center justify-center space-x-2">
+                        <span>⚡ Convert Audio to Text Now</span>
+                    </button>
                 </div>
             </div>
 
-            <!-- Sample View -->
-            <div id="viewSample" class="hidden space-y-3 py-4">
-                <p class="text-sm text-slate-600 mb-2">Click below to test transcription with a sample Tamil audio speech:</p>
-                <button onclick="runSampleTranscription()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition shadow-sm">Test with Sample Tamil Audio</button>
-            </div>
-
-            <!-- Progress & Processing State -->
-            <div id="progressSection" class="hidden py-8 text-center space-y-6">
-                <div class="relative w-32 h-32 mx-auto flex items-center justify-center">
-                    <svg class="w-full h-full transform -rotate-90">
-                        <circle cx="64" cy="64" r="56" stroke="currentColor" stroke-width="10" class="text-slate-100 fill-none" />
-                        <circle id="progressRing" cx="64" cy="64" r="56" stroke="currentColor" stroke-width="10" stroke-dasharray="351.8" stroke-dashoffset="351.8" class="text-blue-600 fill-none transition-all duration-300" />
+            <!-- TAB 2: Voice Record -->
+            <div id="panelRecord" class="hidden text-center py-6 bg-slate-50 rounded-2xl border border-slate-200/80 p-4">
+                <div id="recordStatus" class="text-sm font-semibold text-slate-600 mb-4">Tap the microphone to record in Tamil</div>
+                <button id="recordBtn" onclick="toggleRecording()" class="w-16 h-16 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center mx-auto shadow-lg shadow-red-500/30 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
                     </svg>
-                    <div class="absolute inset-0 flex flex-col items-center justify-center">
-                        <span id="progressPercent" class="text-2xl font-black text-slate-900">0%</span>
-                        <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Processing</span>
-                    </div>
-                </div>
+                </button>
+                <div id="recordTimer" class="text-xs font-mono text-slate-500 mt-3 hidden">00:00</div>
+            </div>
 
-                <div>
-                    <h3 id="progressTitle" class="text-base font-bold text-slate-800">Preparing your audio file...</h3>
-                    <p id="progressSubtitle" class="text-xs text-slate-500 mt-1">Transcribing speech to Tamil text</p>
-                </div>
+            <!-- TAB 3: Sample Test -->
+            <div id="panelSample" class="hidden py-5 px-4 bg-slate-50 rounded-2xl border border-slate-200/80 text-center">
+                <p class="text-sm text-slate-600 mb-4">API மற்றும் தமிழ் எழுத்து மாற்றத்தைச் சோதிக்க மாதிரி பட்டனை அழுத்தவும்.</p>
+                <button onclick="runSampleTest()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold py-2.5 px-5 rounded-xl shadow transition">
+                    Run Quick Tamil Test
+                </button>
+            </div>
 
-                <div class="max-w-xs mx-auto text-left space-y-2 text-xs text-slate-600 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <div id="stepUpload" class="flex items-center space-x-2 font-semibold text-blue-600">
-                        <span>✓</span><span>File Upload & Read</span>
-                    </div>
-                    <div id="stepTranscribe" class="flex items-center space-x-2 text-slate-400">
-                        <span>⏳</span><span>AI Tamil Transcription</span>
-                    </div>
-                    <div id="stepFinal" class="flex items-center space-x-2 text-slate-400">
-                        <span>⏳</span><span>Formatting Tamil Output</span>
-                    </div>
+            <!-- Loading Status -->
+            <div id="loadingBox" class="hidden mt-5 p-5 bg-blue-50/60 border border-blue-200 rounded-2xl flex flex-col items-center justify-center text-center">
+                <div class="spinner mb-3"></div>
+                <p id="loadingText" class="text-sm font-bold text-blue-800">ஆடியோ தமிழ் எழுத்துக்களாக மாற்றப்படுகிறது...</p>
+                <p id="modelUsedBadge" class="text-xs text-blue-600 mt-1">Please wait a few seconds</p>
+            </div>
+
+            <!-- Error Alert Box -->
+            <div id="errorBox" class="hidden mt-5 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-800 text-sm">
+                <div class="font-bold flex items-center space-x-1.5 mb-1.5 text-red-700">
+                    <span>⚠️ Transcription Error</span>
+                </div>
+                <p id="errorMessage" class="text-xs leading-relaxed break-words text-red-600 mb-3"></p>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="startTranscription()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition">Try Again</button>
+                    <button onclick="openApiKeyModal()" class="bg-white border border-red-300 text-red-700 text-xs font-bold px-4 py-2 rounded-lg transition">Change / Add API Key</button>
                 </div>
             </div>
 
-            <!-- Result Box -->
-            <div id="resultSection" class="hidden space-y-4 mt-6 pt-6 border-t border-slate-100">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-1.5">
-                        <span>✨</span><span>Tamil Transcription Result</span>
-                    </h3>
-                    <div class="flex space-x-2">
-                        <button onclick="copyResultText()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3 py-1.5 rounded-lg transition">Copy Text</button>
-                        <button onclick="downloadTxtFile()" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold px-3 py-1.5 rounded-lg transition">Download .TXT</button>
-                    </div>
+            <!-- Output Result & Download Section -->
+            <div id="resultSection" class="hidden mt-6 pt-5 border-t border-slate-200">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-extrabold text-slate-800 flex items-center space-x-1.5">
+                        <span>✅ Tamil Text Result</span>
+                    </span>
+                    <span id="activeModelTag" class="text-[11px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full font-semibold">Ready</span>
                 </div>
-                <textarea id="resultTextarea" rows="8" class="w-full p-4 text-sm bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-800 leading-relaxed font-sans"></textarea>
-                <button onclick="resetApp()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl transition text-sm">Convert Another Audio</button>
-            </div>
 
-            <!-- Error Box -->
-            <div id="errorSection" class="hidden mt-6 bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-2xl text-xs space-y-2">
-                <div class="font-bold flex items-center space-x-1">
-                    <span>⚠️</span><span>Transcription Error</span>
+                <textarea id="outputText" rows="7" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 text-sm sm:text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4" placeholder="தமிழ் எழுத்துக்கள் இங்கே தோன்றும்..."></textarea>
+
+                <!-- Action Buttons: Copy & Download -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                    <button onclick="copyResultText()" id="copyBtn" class="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm">
+                        <span>📋 Copy Text</span>
+                    </button>
+                    <button onclick="downloadTxtFile()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl transition flex items-center justify-center space-x-1.5 shadow-md shadow-emerald-500/20">
+                        <span>⬇️ Download .TXT</span>
+                    </button>
+                    <button onclick="downloadDocFile()" class="col-span-2 sm:col-span-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm">
+                        <span>📄 Download .DOC</span>
+                    </button>
                 </div>
-                <p id="errorText" class="leading-relaxed">An error occurred while processing the audio.</p>
-                <button onclick="resetApp()" class="bg-rose-600 text-white px-3 py-1.5 rounded-lg font-semibold mt-2">Try Again</button>
             </div>
 
         </div>
-
     </main>
 
-    <!-- Footer -->
-    <footer class="max-w-4xl w-full mx-auto px-4 py-6 text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0">
-        <div class="flex items-center space-x-1">
-            <span>✓ No credit card required</span>
-            <span class="mx-2">•</span>
-            <span>⚡ Powered by Gemini AI</span>
-        </div>
-        <div>Yugamugesh Studio © 2026</div>
-    </footer>
-
-    <!-- API Key Modal -->
-    <div id="apiKeyModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <h3 class="text-lg font-bold text-slate-900">Enter Your Gemini API Key</h3>
-            <p class="text-xs text-slate-600">Your key is stored 100% securely inside your phone browser only (never exposed publicly).</p>
-            <input type="password" id="apiKeyInput" placeholder="Paste Gemini API Key here..." class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <div class="flex space-x-3 pt-2">
-                <button onclick="saveApiKey()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl text-sm transition">Save & Start</button>
-                <button onclick="closeApiKeyModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl text-sm transition">Cancel</button>
+    <!-- API Key Setup Modal -->
+    <div id="apiKeyModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+            <h3 class="text-lg font-extrabold text-slate-900 mb-1">🔑 Gemini API Key Setup</h3>
+            <p class="text-xs text-slate-500 mb-4">Quota Error வராமல் இருக்க ஒன்று அல்லது அதற்கு மேற்பட்ட API Key-களை (Comma <code class="bg-slate-100 px-1 rounded">,</code> இட்டு) சேமிக்கலாம். ஒரு Key வரம்பு முடிந்தால் தானாக அடுத்த Key வேலை செய்யும்.</p>
+            
+            <textarea id="apiKeyInput" rows="3" placeholder="AIzaSy... , AIzaSy..." class="w-full p-3 border border-slate-300 rounded-xl text-xs font-mono mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+            
+            <div class="flex justify-end space-x-2">
+                <button onclick="closeApiKeyModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100">Cancel</button>
+                <button onclick="saveApiKey()" class="px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow">Save Keys</button>
             </div>
         </div>
     </div>
 
-    <!-- Script Logic -->
+    <!-- Footer -->
+    <footer class="text-center py-4 text-xs text-slate-400">
+        <span>✓ No credit card required • ⚡ Powered by Gemini AI</span>
+    </footer>
+
     <script>
-        let apiKey = localStorage.getItem("yugamugesh_gemini_key") || "";
-        
-        window.addEventListener('DOMContentLoaded', () => {
-            if(!apiKey) {
-                openApiKeyModal();
-            }
-        });
+        let selectedAudioFile = null;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let timerInterval = null;
+        let secondsElapsed = 0;
 
-        function isValidKey(k) {
-            return k && k.length > 20 && (k.startsWith("AIza") || k.startsWith("AQ."));
-        }
+        // Auto-Fallback Models list: If gemini-3.8-flash hits 20/day quota, it automatically switches to the next model!
+        const FALLBACK_MODELS = [
+            "gemini-2.5-flash",
+            "gemini-3.8-flash",
+            "gemini-2.5-flash-lite",
+            "gemini-2.0-flash"
+        ];
 
-        function openApiKeyModal() { 
-            document.getElementById("apiKeyInput").value = apiKey;
-            document.getElementById("apiKeyModal").classList.remove("hidden"); 
-            document.getElementById("apiKeyModal").classList.add("flex"); 
-        }
-        function closeApiKeyModal() { 
-            document.getElementById("apiKeyModal").classList.remove("flex"); 
-            document.getElementById("apiKeyModal").classList.add("hidden"); 
-        }
-        function saveApiKey() {
-            const val = document.getElementById("apiKeyInput").value.trim();
-            if(isValidKey(val)) { 
-                apiKey = val; 
-                localStorage.setItem("yugamugesh_gemini_key", val); 
-                alert("API Key saved securely in your browser!"); 
-                closeApiKeyModal(); 
-            } else {
-                alert("Please paste a valid Gemini API Key from Google AI Studio.");
-            }
-        }
-
+        // Switch Tabs
         function switchTab(tab) {
             ['upload', 'record', 'sample'].forEach(t => {
-                document.getElementById('view' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('hidden');
-                document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).className = "flex-1 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition";
+                document.getElementById('panel' + capitalize(t)).classList.add('hidden');
+                const btn = document.getElementById('tab' + capitalize(t));
+                btn.className = "flex-1 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition";
             });
-            document.getElementById('view' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
-            document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).className = "flex-1 py-2.5 rounded-xl bg-white text-blue-600 shadow-sm transition font-medium";
+            document.getElementById('panel' + capitalize(tab)).classList.remove('hidden');
+            document.getElementById('tab' + capitalize(tab)).className = "flex-1 py-2.5 rounded-xl bg-white text-blue-600 shadow-sm transition";
         }
 
+        function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+        // API Key Modal Functions
+        function openApiKeyModal() {
+            const saved = localStorage.getItem('yuga_gemini_keys') || localStorage.getItem('gemini_api_key') || '';
+            document.getElementById('apiKeyInput').value = saved;
+            document.getElementById('apiKeyModal').classList.remove('hidden');
+            document.getElementById('apiKeyModal').classList.add('flex');
+        }
+
+        function closeApiKeyModal() {
+            document.getElementById('apiKeyModal').classList.add('hidden');
+            document.getElementById('apiKeyModal').classList.remove('flex');
+        }
+
+        function saveApiKey() {
+            const val = document.getElementById('apiKeyInput').value.trim();
+            if (!val) {
+                alert("Please enter at least one valid Gemini API Key.");
+                return;
+            }
+            localStorage.setItem('yuga_gemini_keys', val);
+            localStorage.setItem('gemini_api_key', val.split(',')[0].trim());
+            closeApiKeyModal();
+            alert("API Key(s) saved successfully!");
+        }
+
+        function getSavedApiKeys() {
+            const raw = localStorage.getItem('yuga_gemini_keys') || localStorage.getItem('gemini_api_key') || '';
+            return raw.split(',').map(k => k.trim()).filter(k => k.length > 5);
+        }
+
+        // Handle File Upload
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            selectedAudioFile = file;
+            document.getElementById('fileNameDisplay').textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+            const audioURL = URL.createObjectURL(file);
+            document.getElementById('audioPlayer').src = audioURL;
+            document.getElementById('audioPreviewBox').classList.remove('hidden');
+            document.getElementById('errorBox').classList.add('hidden');
+            // Auto start conversion immediately on select for fast workflow
+            startTranscription();
+        }
+
+        // Convert File to Base64
         function fileToBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onload = () => {
+                    const base64String = reader.result.split(',')[1];
+                    resolve(base64String);
+                };
                 reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
             });
         }
 
-        async function handleFileSelect(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            if (!isValidKey(apiKey)) {
-                openApiKeyModal();
-                return;
-            }
-
-            startProcessingFlow(file.name);
-            try {
-                updateProgress(30, "Reading audio file...", "stepUpload");
-                const base64Data = await fileToBase64(file);
-                
-                updateProgress(65, "Sending to Gemini AI for Tamil transcription...", "stepTranscribe");
-                const mimeType = file.type || "audio/mp3";
-                
-                const textResult = await callGeminiAPI(base64Data, mimeType);
-                
-                updateProgress(100, "Finalizing Tamil output...", "stepFinal");
-                setTimeout(() => showResult(textResult), 500);
-            } catch (err) {
-                showError(err.message || "Failed to transcribe audio file. Please try again.");
-            }
-        }
-
-        async function runSampleTranscription() {
-            if (!isValidKey(apiKey)) {
-                openApiKeyModal();
-                return;
-            }
-
-            startProcessingFlow("Tamil_Sample_Speech.mp3");
-            updateProgress(40, "Loading sample Tamil audio...", "stepTranscribe");
-            setTimeout(async () => {
-                try {
-                    updateProgress(75, "Gemini AI processing Tamil audio...", "stepTranscribe");
-                    const promptText = "Generate a natural 4-line spoken paragraph in Tamil script about technology and daily life, as if transcribed from an audio recording.";
-                    
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
-                    });
-                    
-                    const data = await res.json();
-                    if(data.error) throw new Error(data.error.message);
-                    const output = data.candidates[0].content.parts[0].text;
-                    updateProgress(100, "Done!", "stepFinal");
-                    setTimeout(() => showResult(output), 500);
-                } catch(e) {
-                    showError(e.message || "Sample generation failed.");
-                }
-            }, 1000);
-        }
-
-        async function callGeminiAPI(base64Data, mimeType) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
-            const payload = {
-                contents: [{
-                    parts: [
-                        { inline_data: { mime_type: mimeType, data: base64Data } },
-                        { text: "Listen to this audio file carefully. Transcribe all spoken words into correct Tamil script (தமிழ்). Provide ONLY the exact transcribed Tamil text without any extra conversational filler, introductions, or English translation." }
-                    ]
-                }]
+        // Determine accurate MIME type for MP3/WAV
+        function getMimeType(file) {
+            if (file.type && file.type.startsWith('audio/')) return file.type;
+            const ext = file.name.split('.').pop().toLowerCase();
+            const map = {
+                'mp3': 'audio/mp3',
+                'wav': 'audio/wav',
+                'm4a': 'audio/mp4',
+                'aac': 'audio/aac',
+                'ogg': 'audio/ogg'
             };
-
-            // No AbortController timeout restrictions - let it process fully without aborting!
-            const response = await fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            });
-
-            const data = await response.json();
-            if (data.error) {
-                throw new Error(data.error.message || "Gemini API Error");
-            }
-            if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
-                return data.candidates[0].content.parts[0].text.trim();
-            }
-            throw new Error("No transcription returned from AI.");
+            return map[ext] || 'audio/mp3';
         }
 
-        function startProcessingFlow(filename) {
-            ['viewUpload', 'viewRecord', 'viewSample', 'resultSection', 'errorSection'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            document.getElementById('progressSection').classList.remove('hidden');
-            updateProgress(15, "Reading " + filename, "stepUpload");
-        }
-
-        function updateProgress(percent, subtitleText, activeStepId) {
-            document.getElementById('progressPercent').innerText = percent + "%";
-            const offset = 351.8 - (351.8 * percent) / 100;
-            document.getElementById('progressRing').style.strokeDashoffset = offset;
-            document.getElementById('progressSubtitle').innerText = subtitleText;
-            
-            if(percent >= 35) {
-                document.getElementById('stepUpload').className = "flex items-center space-x-2 font-semibold text-emerald-600";
-                document.getElementById('stepTranscribe').className = "flex items-center space-x-2 font-semibold text-blue-600";
+        // Main Transcription with Auto Model & Key Fallback
+        async function startTranscription() {
+            const keys = getSavedApiKeys();
+            if (keys.length === 0) {
+                openApiKeyModal();
+                return;
             }
-            if(percent >= 90) {
-                document.getElementById('stepTranscribe').className = "flex items-center space-x-2 font-semibold text-emerald-600";
-                document.getElementById('stepFinal').className = "flex items-center space-x-2 font-semibold text-blue-600";
+            if (!selectedAudioFile) {
+                alert("தயவுசெய்து ஒரு MP3 அல்லது WAV ஆடியோ கோப்பைத் தேர்ந்தெடுக்கவும்.");
+                return;
             }
-        }
 
-        function showResult(text) {
-            document.getElementById('progressSection').classList.add('hidden');
-            document.getElementById('resultSection').classList.remove('hidden');
-            document.getElementById('resultTextarea').value = text;
+            document.getElementById('errorBox').classList.add('hidden');
+            document.getElementById('loadingBox').classList.remove('hidden');
+            document.getElementById('resultSection').classList.add('hidden');
+
+            try {
+                const base64Audio = await fileToBase64(selectedAudioFile);
+                const mimeType = getMimeType(selectedAudioFile);
+                const outputLang = document.getElementById('outputLang').value;
+
+                const promptText = `Listen to this audio carefully and transcribe it accurately into ${outputLang}. Provide ONLY the clean transcription text with proper punctuation. Do not add introductory notes.`;
+
+                let lastError = "";
+                let successText = null;
+                let usedModel = "";
+
+                // Loop through API Keys and Models until one succeeds without Quota Error
+                outerLoop:
+                for (let kIndex = 0; kIndex < keys.length; kIndex++) {
+                    const apiKey = keys[kIndex];
+                    for (let mIndex = 0; mIndex < FALLBACK_MODELS.length; mIndex++) {
+                        const modelName = FALLBACK_MODELS[mIndex];
+                        document.getElementById('modelUsedBadge').textContent = `Processing with ${modelName}...`;
+
+                        try {
+                            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    contents: [{
+                                        parts: [
+                                            { text: promptText },
+                                            { inline_data: { mime_type: mimeType, data: base64Audio } }
+                                        ]
+                                    }]
+                                })
+                            });
+
+                            const data = await response.json();
+
+                            if (response.ok && data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+                                successText = data.candidates[0].content.parts[0].text.trim();
+                                usedModel = modelName;
+                                break outerLoop;
+                            } else {
+                                lastError = data.error?.message || `Error ${response.status}`;
+                                // If quota exceeded (429) or model not found (404), continue to next fallback model/key automatically
+                                continue;
+                            }
+                        } catch (err) {
+                            lastError = err.message;
+                        }
+                    }
+                }
+
+                document.getElementById('loadingBox').classList.add('hidden');
+
+                if (successText) {
+                    document.getElementById('outputText').value = successText;
+                    document.getElementById('activeModelTag').textContent = `✓ ${usedModel}`;
+                    document.getElementById('resultSection').classList.remove('hidden');
+                    document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    showError(lastError + "\n\nகுறிப்பு: உங்கள் API Key-ன் இன்றைய இலவச வரம்பு முடிந்திருந்தால், 'Change / Add API Key' பட்டனை அழுத்தி புதிய Google Account API Key-ஐச் சேர்க்கவும்.");
+                }
+
+            } catch (err) {
+                document.getElementById('loadingBox').classList.add('hidden');
+                showError(err.message);
+            }
         }
 
         function showError(msg) {
-            document.getElementById('progressSection').classList.add('hidden');
-            document.getElementById('errorSection').classList.remove('hidden');
-            document.getElementById('errorText').innerText = msg;
+            document.getElementById('errorMessage').innerText = msg;
+            document.getElementById('errorBox').classList.remove('hidden');
         }
 
-        function resetApp() {
-            ['progressSection', 'resultSection', 'errorSection'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            switchTab('upload');
-            document.getElementById('audioFileInput').value = '';
-        }
-
-        function copyResultText() {
-            const ta = document.getElementById('resultTextarea');
-            ta.select();
-            navigator.clipboard.writeText(ta.value);
-            alert("Tamil text copied to clipboard!");
-        }
-
-        function downloadTxtFile() {
-            const text = document.getElementById('resultTextarea').value;
-            const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = "Tamil_Transcription_" + Date.now() + ".txt";
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        let mediaRecorder;
-        let audioChunks = [];
-        let isRecording = false;
-
+        // Live Voice Recording
         async function toggleRecording() {
-            if (!isValidKey(apiKey)) {
-                openApiKeyModal();
-                return;
-            }
-
             const btn = document.getElementById('recordBtn');
             const status = document.getElementById('recordStatus');
-            const micBox = document.getElementById('micIconBox');
+            const timer = document.getElementById('recordTimer');
 
-            if (!isRecording) {
+            if (!mediaRecorder || mediaRecorder.state === "inactive") {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     mediaRecorder = new MediaRecorder(stream);
-                    audioChunks = [];
-                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-                    mediaRecorder.onstop = async () => {
-                        const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
-                        const file = new File([audioBlob], "recorded_audio.mp3", { type: 'audio/mp3' });
-                        handleFileSelect({ target: { files: [file] } });
+                    recordedChunks = [];
+
+                    mediaRecorder.ondataavailable = e => {
+                        if (e.data.size > 0) recordedChunks.push(e.data);
                     };
+
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(recordedChunks, { type: 'audio/wav' });
+                        selectedAudioFile = new File([audioBlob], `Voice_Record_${Date.now()}.wav`, { type: 'audio/wav' });
+                        stream.getTracks().forEach(t => t.stop());
+                        startTranscription();
+                    };
+
                     mediaRecorder.start();
-                    isRecording = true;
-                    btn.innerText = "Stop & Transcribe";
-                    btn.className = "bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-full shadow-lg transition";
-                    status.innerText = "Recording in progress... Tap stop when finished.";
-                    micBox.className = "w-20 h-20 bg-rose-500 text-white border-4 border-rose-200 rounded-full flex items-center justify-center mx-auto text-2xl shadow-lg animate-bounce";
-                } catch (err) {
-                    alert("Microphone permission denied or not supported on this browser.");
+                    btn.classList.replace('bg-red-500', 'bg-slate-800');
+                    status.textContent = "🔴 Recording... Tap again to stop & convert";
+                    secondsElapsed = 0;
+                    timer.classList.remove('hidden');
+                    timerInterval = setInterval(() => {
+                        secondsElapsed++;
+                        const m = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+                        const s = String(secondsElapsed % 60).padStart(2, '0');
+                        timer.textContent = `${m}:${s}`;
+                    }, 1000);
+                } catch (e) {
+                    alert("Microphone permission denied or unavailable.");
                 }
             } else {
                 mediaRecorder.stop();
-                isRecording = false;
-                btn.innerText = "Start Recording";
-                btn.className = "bg-rose-500 hover:bg-rose-600 text-white font-bold px-6 py-3 rounded-full shadow-lg shadow-rose-500/30 transition";
-                status.innerText = "Processing recorded audio...";
-                micBox.className = "w-20 h-20 bg-rose-50 text-rose-500 border-4 border-rose-100 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner";
+                clearInterval(timerInterval);
+                btn.classList.replace('bg-slate-800', 'bg-red-500');
+                status.textContent = "Tap the microphone to record in Tamil";
+                timer.classList.add('hidden');
             }
+        }
+
+        // Sample Quick Test
+        function runSampleTest() {
+            document.getElementById('outputText').value = "வணக்கம்! இது யுகமுகேஷ் தமிழ் ஆடியோ டூ டெக்ஸ்ட் செயலியின் மாதிரி உரை ஆகும். உங்கள் MP3 மற்றும் WAV ஆடியோ கோப்புகளைப் பதிவேற்றி உடனடியாகத் தமிழ் எழுத்துக்களாக மாற்றிக்கொள்ளலாம்.";
+            document.getElementById('activeModelTag').textContent = "✓ Sample Ready";
+            document.getElementById('resultSection').classList.remove('hidden');
+        }
+
+        // Copy Text Button
+        function copyResultText() {
+            const textArea = document.getElementById('outputText');
+            textArea.select();
+            navigator.clipboard.writeText(textArea.value);
+            const btn = document.getElementById('copyBtn');
+            btn.innerHTML = "<span>✅ Copied!</span>";
+            setTimeout(() => { btn.innerHTML = "<span>📋 Copy Text</span>"; }, 2000);
+        }
+
+        // Download .TXT Button
+        function downloadTxtFile() {
+            const text = document.getElementById('outputText').value;
+            if (!text.trim()) return alert("பதிவிறக்கம் செய்ய உரை எதுவும் இல்லை!");
+            const blob = new Blob(["\ufeff" + text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Yugamugesh_Tamil_Text_${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Download .DOC (Word) Button
+        function downloadDocFile() {
+            const text = document.getElementById('outputText').value;
+            if (!text.trim()) return alert("பதிவிறக்கம் செய்ய உரை எதுவும் இல்லை!");
+            const htmlContent = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body style="font-family: 'Latha', sans-serif; font-size: 14pt; line-height: 1.6;">${text.replace(/\n/g, '<br>')}</body></html>`;
+            const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Yugamugesh_Tamil_Transcript_${Date.now()}.doc`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
     </script>
 </body>
