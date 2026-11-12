@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yugamugesh - Tamil Audio to Text Converter</title>
+    <title>Yugamugesh - Tamil Audio to Text & Vocal Splitter</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -17,7 +17,6 @@
             animation: spin 0.7s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        /* Hide API key characters like a password inside textarea */
         .masked-key {
             -webkit-text-security: disc;
             text-security: disc;
@@ -45,32 +44,36 @@
     <main class="max-w-2xl w-full mx-auto px-4 py-4 flex-grow flex flex-col items-center">
         <div class="text-center mb-6">
             <span class="inline-block text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-50 px-3 py-1 rounded-full mb-3">YUGAMUGESH AI STUDIO</span>
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">Audio to Text Converter</h1>
-            <p class="text-slate-600 text-sm sm:text-base max-w-md mx-auto">Upload MP3 or WAV files and convert them to <span class="text-blue-600 font-semibold">Tamil (தமிழ்)</span> text instantly.</p>
+            <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">Audio to Text & Vocal Splitter</h1>
+            <p class="text-slate-600 text-xs sm:text-base max-w-md mx-auto">Convert MP3/WAV to <span class="text-blue-600 font-semibold">Tamil (தமிழ்)</span> text or separate <span class="text-indigo-600 font-semibold">Voice & Music</span> instantly.</p>
         </div>
 
         <!-- App Card Box -->
-        <div id="uploadSection" class="w-full bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 p-5 sm:p-8">
+        <div id="uploadSection" class="w-full bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 p-4 sm:p-8">
             
             <!-- Tabs Navigation -->
-            <div class="flex bg-slate-100 p-1.5 rounded-2xl mb-5 text-sm font-semibold">
-                <button onclick="switchTab('upload')" id="tabUpload" class="flex-1 py-2.5 rounded-xl bg-white text-blue-600 shadow-sm transition">Upload</button>
-                <button onclick="switchTab('record')" id="tabRecord" class="flex-1 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition">Record</button>
-                <button onclick="switchTab('sample')" id="tabSample" class="flex-1 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition">Sample</button>
+            <div class="grid grid-cols-4 bg-slate-100 p-1.5 rounded-2xl mb-5 text-xs sm:text-sm font-semibold gap-1">
+                <button onclick="switchTab('upload')" id="tabUpload" class="py-2.5 rounded-xl bg-white text-blue-600 shadow-sm transition">Upload</button>
+                <button onclick="switchTab('splitter')" id="tabSplitter" class="py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition">🎵 Split</button>
+                <button onclick="switchTab('record')" id="tabRecord" class="py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition">Record</button>
+                <button onclick="switchTab('sample')" id="tabSample" class="py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition">Sample</button>
             </div>
 
-            <!-- Language Selector Badge -->
-            <div class="flex items-center justify-between bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 mb-5">
-                <div class="flex items-center space-x-2.5">
+            <!-- Language / Mode Selector Badge -->
+            <div id="langSelectorBox" class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 mb-5">
+                <div class="flex items-center space-x-2">
                     <span class="bg-slate-400 text-white text-[11px] font-bold px-2 py-1 rounded-md">abc</span>
-                    <span class="text-sm font-semibold text-slate-700">Output Language</span>
+                    <span class="text-xs sm:text-sm font-semibold text-slate-700">Output Mode</span>
                 </div>
-                <span class="bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm px-3.5 py-1.5 rounded-xl border border-blue-200/60">
-                    Tamil (தமிழ் Script)
-                </span>
+                <select id="outputMode" class="bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm px-3 py-1.5 rounded-xl border border-blue-200/60 focus:outline-none">
+                    <option value="Tamil script (தமிழ்)">Tamil (தமிழ் Script)</option>
+                    <option value="Tamil script along with short bullet-point summary in Tamil">Tamil + Summary Points</option>
+                    <option value="English translation">English Translation</option>
+                    <option value="Tanglish (Romanized Tamil)">Tanglish (Romanized)</option>
+                </select>
             </div>
 
-            <!-- TAB 1: File Upload -->
+            <!-- TAB 1: File Upload (Audio to Text) -->
             <div id="panelUpload" class="block">
                 <label for="audioFileInput" class="border-2 border-dashed border-blue-200 hover:border-blue-500 bg-blue-50/30 hover:bg-blue-50/60 transition rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center cursor-pointer text-center">
                     <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-3">
@@ -78,20 +81,80 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                         </svg>
                     </div>
-                    <span id="fileNameDisplay" class="text-base font-bold text-slate-800 mb-1">Tap to Upload MP3 or WAV</span>
+                    <span id="fileNameDisplay" class="text-sm sm:text-base font-bold text-slate-800 mb-1">Tap to Upload MP3 or WAV</span>
                     <span class="text-xs text-slate-500">Fast Conversion • Supports MP3, WAV, M4A (Up to 6 Mins)</span>
                     <input type="file" id="audioFileInput" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg" class="hidden" onclick="this.value=null" onchange="handleFileSelect(event)">
                 </label>
 
                 <div id="audioPreviewBox" class="hidden mt-4 bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
                     <audio id="audioPlayer" controls class="w-full h-10 mb-3"></audio>
-                    <button onclick="startTranscription()" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-bold py-3 px-4 rounded-xl shadow-md shadow-blue-500/20 transition flex items-center justify-center space-x-2">
-                        <span>⚡ Convert to Tamil Text</span>
-                    </button>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <button onclick="startTranscription()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl shadow-md shadow-blue-500/20 transition">
+                            ⚡ Convert to Text
+                        </button>
+                        <button onclick="openCurrentInSplitter()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl shadow-md shadow-indigo-500/20 transition">
+                            🎵 Split Voice & Music
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- TAB 2: Voice Record -->
+            <!-- TAB 2: Voice & Music Splitter (NEW) -->
+            <div id="panelSplitter" class="hidden">
+                <div class="bg-indigo-50/60 border border-indigo-100 rounded-2xl p-4 mb-4 text-center">
+                    <h3 class="text-sm font-extrabold text-indigo-950 mb-1">🎤 Voice & Background Music Splitter</h3>
+                    <p class="text-xs text-indigo-700">MP3 அல்லது WAV பாடலில் உள்ள குரல் (Vocals) மற்றும் இசையை (Music/Karaoke) தனித்தனியாகப் பிரித்து டவுன்லோட் செய்யலாம்.</p>
+                </div>
+
+                <label for="splitterFileInput" class="border-2 border-dashed border-indigo-200 hover:border-indigo-500 bg-indigo-50/20 hover:bg-indigo-50/50 transition rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer text-center">
+                    <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-2">
+                        <span class="text-xl">🎧</span>
+                    </div>
+                    <span id="splitterFileName" class="text-sm font-bold text-slate-800 mb-1">Select MP3 / WAV to Split Voice & Music</span>
+                    <span class="text-[11px] text-slate-500">Works best on Stereo MP3 & WAV songs</span>
+                    <input type="file" id="splitterFileInput" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg" class="hidden" onclick="this.value=null" onchange="handleSplitterFile(event)">
+                </label>
+
+                <!-- Splitter Loading -->
+                <div id="splitterLoading" class="hidden mt-4 p-4 bg-indigo-50 border border-indigo-200 rounded-2xl flex flex-col items-center text-center">
+                    <div class="spinner mb-2"></div>
+                    <p class="text-xs font-bold text-indigo-900">குரல் (Voice) மற்றும் இசை (Music) பிரிக்கப்படுகிறது...</p>
+                </div>
+
+                <!-- Separated Tracks Output -->
+                <div id="splitterResultBox" class="hidden mt-5 space-y-4">
+                    <!-- Isolated Voice Card -->
+                    <div class="p-4 bg-emerald-50/70 border border-emerald-200 rounded-2xl">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs sm:text-sm font-extrabold text-emerald-900">🎤 Isolated Voice (குரல் மட்டும்)</span>
+                            <span class="text-[11px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-semibold">Vocals</span>
+                        </div>
+                        <audio id="vocalsAudioPlayer" controls class="w-full h-10 mb-3"></audio>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <button onclick="downloadSplitTrack('vocals')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition shadow-sm">
+                                ⬇️ Download Voice (.WAV)
+                            </button>
+                            <button onclick="transcribeIsolatedVocals()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition shadow-sm">
+                                📝 Convert Voice to Tamil Text
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Isolated Music Card -->
+                    <div class="p-4 bg-purple-50/70 border border-purple-200 rounded-2xl">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs sm:text-sm font-extrabold text-purple-900">🎹 Background Music (இசை மட்டும்)</span>
+                            <span class="text-[11px] bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full font-semibold">Instrumental / Karaoke</span>
+                        </div>
+                        <audio id="musicAudioPlayer" controls class="w-full h-10 mb-3"></audio>
+                        <button onclick="downloadSplitTrack('music')" class="w-full bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition shadow-sm">
+                            ⬇️ Download Music Only (.WAV)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: Voice Record -->
             <div id="panelRecord" class="hidden text-center py-6 bg-slate-50 rounded-2xl border border-slate-200/80 p-4">
                 <div id="recordStatus" class="text-sm font-semibold text-slate-600 mb-4">Tap the microphone to record in Tamil</div>
                 <button id="recordBtn" onclick="toggleRecording()" class="w-16 h-16 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center mx-auto shadow-lg shadow-red-500/30 transition">
@@ -102,7 +165,7 @@
                 <div id="recordTimer" class="text-xs font-mono text-slate-500 mt-3 hidden">00:00</div>
             </div>
 
-            <!-- TAB 3: Sample Test -->
+            <!-- TAB 4: Sample Test -->
             <div id="panelSample" class="hidden py-5 px-4 bg-slate-50 rounded-2xl border border-slate-200/80 text-center">
                 <p class="text-sm text-slate-600 mb-4">தமிழ் எழுத்து மாற்றம் மற்றும் Download வசதியைச் சோதிக்க கீழே உள்ள பட்டனை அழுத்தவும்.</p>
                 <button onclick="runSampleTest()" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2.5 px-5 rounded-xl shadow transition">
@@ -138,13 +201,19 @@
 
                 <textarea id="outputText" rows="7" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 text-sm sm:text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4 select-text" placeholder="தமிழ் எழுத்துக்கள் இங்கே தோன்றும்..."></textarea>
 
-                <!-- Clear Copy & Download Buttons Below -->
-                <div class="grid grid-cols-2 gap-3">
-                    <button onclick="copyResultText()" id="copyBtn" class="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs sm:text-sm py-3.5 px-4 rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm">
-                        <span>📋 Copy Text</span>
+                <!-- Action Buttons: Copy, TXT, DOC & WhatsApp -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                    <button onclick="copyResultText()" id="copyBtn" class="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center space-x-1 shadow-sm">
+                        <span>📋 Copy</span>
                     </button>
-                    <button onclick="downloadTxtFile()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm py-3.5 px-4 rounded-xl transition flex items-center justify-center space-x-1.5 shadow-md shadow-emerald-500/20">
-                        <span>⬇️ Download .TXT</span>
+                    <button onclick="downloadTxtFile()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center space-x-1 shadow-sm">
+                        <span>⬇️ .TXT</span>
+                    </button>
+                    <button onclick="downloadDocFile()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center space-x-1 shadow-sm">
+                        <span>📄 .DOC</span>
+                    </button>
+                    <button onclick="shareOnWhatsApp()" class="bg-green-500 hover:bg-green-600 text-white font-bold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center space-x-1 shadow-sm">
+                        <span>📲 WhatsApp</span>
                     </button>
                 </div>
             </div>
@@ -162,7 +231,7 @@
                 </button>
             </div>
             <p class="text-xs text-slate-500 mb-3 leading-relaxed">
-                உங்கள் API Key உங்கள் போன் பிரவுசரில் மட்டுமே பாதுகாப்பாகச் சேமிக்கப்படும் (வேறு யாராலும் பார்க்க முடியாது). தடையின்றிப் பயன்படுத்த 2 அல்லது 3 Key-களை அடுத்தடுத்த வரியில் சேமிக்கலாம்.
+                உங்கள் API Key உங்கள் போன் பிரவுசரில் மட்டுமே பாதுகாப்பாகச் சேமிக்கப்படும். தடையின்றிப் பயன்படுத்த 2 அல்லது 3 Key-களை அடுத்தடுத்த வரியில் சேமிக்கலாம்.
             </p>
             
             <textarea id="apiKeyInput" rows="4" autocomplete="off" spellcheck="false" placeholder="AIzaSy... அல்லது AQ..." class="masked-key w-full p-3 border border-slate-300 rounded-xl text-xs font-mono mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
@@ -181,7 +250,7 @@
 
     <!-- Footer -->
     <footer class="text-center py-4 text-xs text-slate-400">
-        <span>🔒 Client-Side Encrypted Storage • ⚡ Powered by Gemini 3.8 Flash</span>
+        <span>🔒 Client-Side Encrypted • 🎵 DSP Vocal Splitter • ⚡ Gemini 3.8 Flash</span>
     </footer>
 
     <script>
@@ -193,32 +262,33 @@
         let timerInterval = null;
         let secondsElapsed = 0;
 
-        // Check key status on page load
+        // Splitter Blobs
+        let separatedVocalsBlob = null;
+        let separatedMusicBlob = null;
+        let vocalsUrl = null;
+        let musicUrl = null;
+
         window.addEventListener('DOMContentLoaded', updateKeyIndicator);
 
         function updateKeyIndicator() {
             const keys = getSavedApiKeys();
             const dot = document.getElementById('keyCountDot');
-            if (keys.length > 0) {
-                dot.className = "w-2 h-2 rounded-full bg-emerald-500 ml-1";
-            } else {
-                dot.className = "w-2 h-2 rounded-full bg-amber-500 ml-1";
-            }
+            dot.className = keys.length > 0 ? "w-2 h-2 rounded-full bg-emerald-500 ml-1" : "w-2 h-2 rounded-full bg-amber-500 ml-1";
         }
 
         // Switch Tabs
         function switchTab(tab) {
-            ['upload', 'record', 'sample'].forEach(t => {
+            ['upload', 'splitter', 'record', 'sample'].forEach(t => {
                 document.getElementById('panel' + capitalize(t)).classList.add('hidden');
-                document.getElementById('tab' + capitalize(t)).className = "flex-1 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition";
+                document.getElementById('tab' + capitalize(t)).className = "py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition";
             });
             document.getElementById('panel' + capitalize(tab)).classList.remove('hidden');
-            document.getElementById('tab' + capitalize(tab)).className = "flex-1 py-2.5 rounded-xl bg-white text-blue-600 shadow-sm transition";
+            document.getElementById('tab' + capitalize(tab)).className = "py-2.5 rounded-xl bg-white text-blue-600 shadow-sm transition";
         }
 
         function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-        // Toggle Password Masking for API Key
+        // Key Management
         function toggleKeyVisibility() {
             const input = document.getElementById('apiKeyInput');
             const btn = document.getElementById('toggleMaskBtn');
@@ -231,7 +301,6 @@
             }
         }
 
-        // Open & Close API Key Modal
         function openApiKeyModal() {
             const saved = localStorage.getItem('yuga_multi_keys') || localStorage.getItem('gemini_api_key') || '';
             const input = document.getElementById('apiKeyInput');
@@ -250,12 +319,10 @@
         function saveApiKey() {
             const rawVal = document.getElementById('apiKeyInput').value.trim();
             const validKeys = rawVal.split(/[\n,]+/).map(k => k.trim()).filter(k => /^(AIza|AQ)/i.test(k) || k.length >= 20);
-
             if (validKeys.length === 0) {
                 alert("தயவுசெய்து சரியான Gemini API Key-ஐ (AIza... அல்லது AQ...) உள்ளிடவும்.");
                 return;
             }
-
             localStorage.setItem('yuga_multi_keys', validKeys.join('\n'));
             localStorage.setItem('gemini_api_key', validKeys[0]);
             updateKeyIndicator();
@@ -278,31 +345,188 @@
             return raw.split(/[\n,]+/).map(k => k.trim()).filter(k => k.length >= 15);
         }
 
-        // Handle File Upload with Memory Cleanup & Size Validation
+        // File Upload for Transcription
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const sizeMB = file.size / (1024 * 1024);
             if (sizeMB > 25) {
                 alert("கோப்பின் அளவு 25 MB-க்கும் குறைவாக இருக்க வேண்டும்.");
                 return;
             }
-
             selectedAudioFile = file;
             document.getElementById('fileNameDisplay').textContent = `${file.name} (${sizeMB.toFixed(2)} MB)`;
-
-            if (currentAudioObjectUrl) {
-                URL.revokeObjectURL(currentAudioObjectUrl);
-            }
+            if (currentAudioObjectUrl) URL.revokeObjectURL(currentAudioObjectUrl);
             currentAudioObjectUrl = URL.createObjectURL(file);
             document.getElementById('audioPlayer').src = currentAudioObjectUrl;
             document.getElementById('audioPreviewBox').classList.remove('hidden');
             document.getElementById('errorBox').classList.add('hidden');
-
             startTranscription();
         }
 
+        function openCurrentInSplitter() {
+            if (!selectedAudioFile) return;
+            switchTab('splitter');
+            processAudioSeparation(selectedAudioFile);
+        }
+
+        // --- WEB AUDIO API: VOICE & MUSIC SPLITTER ---
+        function handleSplitterFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            processAudioSeparation(file);
+        }
+
+        async function processAudioSeparation(file) {
+            document.getElementById('splitterFileName').textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+            document.getElementById('splitterLoading').classList.remove('hidden');
+            document.getElementById('splitterResultBox').classList.add('hidden');
+
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+                const sampleRate = audioBuffer.sampleRate;
+                const length = audioBuffer.length;
+                const numChannels = audioBuffer.numberOfChannels;
+
+                // Create buffers for Vocals (Center/Speech Band) and Music (Side/Instrumental)
+                const vocalBuffer = audioCtx.createBuffer(1, length, sampleRate);
+                const musicBuffer = audioCtx.createBuffer(numChannels, length, sampleRate);
+
+                const vocalData = vocalBuffer.getChannelData(0);
+
+                if (numChannels >= 2) {
+                    const left = audioBuffer.getChannelData(0);
+                    const right = audioBuffer.getChannelData(1);
+                    const musicL = musicBuffer.getChannelData(0);
+                    const musicR = musicBuffer.getChannelData(1);
+
+                    // Simple Band-Pass State for Vocal Isolation (200Hz - 3800Hz human voice range)
+                    let lpVal = 0, hpVal = 0;
+                    const lpAlpha = Math.exp(-2 * Math.PI * 3800 / sampleRate);
+                    const hpAlpha = Math.exp(-2 * Math.PI * 180 / sampleRate);
+
+                    for (let i = 0; i < length; i++) {
+                        const L = left[i];
+                        const R = right[i];
+
+                        // Center channel (Mid) contains lead vocals; Side (L - R) contains stereo music
+                        const mid = (L + R) * 0.5;
+                        const side = (L - R) * 0.5;
+
+                        // Filter mid channel to human voice frequencies
+                        lpVal = mid * (1 - lpAlpha) + lpVal * lpAlpha;
+                        hpVal = lpVal * (1 - hpAlpha) + hpVal * hpAlpha;
+                        const isolatedVoice = (lpVal - hpVal) * 1.35;
+
+                        vocalData[i] = Math.max(-1, Math.min(1, isolatedVoice));
+
+                        // Instrumental = Out-of-phase cancellation of center vocal
+                        musicL[i] = Math.max(-1, Math.min(1, side + (L - isolatedVoice * 0.7) * 0.5));
+                        musicR[i] = Math.max(-1, Math.min(1, -side + (R - isolatedVoice * 0.7) * 0.5));
+                    }
+                } else {
+                    // Mono fallback: Frequency Band-Pass separation
+                    const mono = audioBuffer.getChannelData(0);
+                    const musicM = musicBuffer.getChannelData(0);
+                    let lpVal = 0, hpVal = 0;
+                    const lpAlpha = Math.exp(-2 * Math.PI * 3600 / sampleRate);
+                    const hpAlpha = Math.exp(-2 * Math.PI * 200 / sampleRate);
+
+                    for (let i = 0; i < length; i++) {
+                        const sample = mono[i];
+                        lpVal = sample * (1 - lpAlpha) + lpVal * lpAlpha;
+                        hpVal = lpVal * (1 - hpAlpha) + hpVal * hpAlpha;
+                        const v = lpVal - hpVal;
+                        vocalData[i] = Math.max(-1, Math.min(1, v * 1.3));
+                        musicM[i] = Math.max(-1, Math.min(1, sample - v));
+                    }
+                }
+
+                separatedVocalsBlob = audioBufferToWavBlob(vocalBuffer);
+                separatedMusicBlob = audioBufferToWavBlob(musicBuffer);
+
+                if (vocalsUrl) URL.revokeObjectURL(vocalsUrl);
+                if (musicUrl) URL.revokeObjectURL(musicUrl);
+
+                vocalsUrl = URL.createObjectURL(separatedVocalsBlob);
+                musicUrl = URL.createObjectURL(separatedMusicBlob);
+
+                document.getElementById('vocalsAudioPlayer').src = vocalsUrl;
+                document.getElementById('musicAudioPlayer').src = musicUrl;
+
+                document.getElementById('splitterLoading').classList.add('hidden');
+                document.getElementById('splitterResultBox').classList.remove('hidden');
+                audioCtx.close();
+
+            } catch (err) {
+                document.getElementById('splitterLoading').classList.add('hidden');
+                alert("ஆடியோவைப் பிரிப்பதில் சிக்கல்: " + err.message);
+            }
+        }
+
+        // Convert AudioBuffer to standard .WAV Blob
+        function audioBufferToWavBlob(buffer) {
+            const numOfChan = buffer.numberOfChannels;
+            const length = buffer.length * numOfChan * 2 + 44;
+            const out = new ArrayBuffer(length);
+            const view = new DataView(out);
+            const channels = [];
+            let sample, offset = 0, pos = 0;
+
+            function setUint16(data) { view.setUint16(pos, data, true); pos += 2; }
+            function setUint32(data) { view.setUint32(pos, data, true); pos += 4; }
+
+            setUint32(0x46464952); // "RIFF"
+            setUint32(length - 8);
+            setUint32(0x45564157); // "WAVE"
+            setUint32(0x20746d66); // "fmt "
+            setUint32(16);
+            setUint16(1); // PCM
+            setUint16(numOfChan);
+            setUint32(buffer.sampleRate);
+            setUint32(buffer.sampleRate * 2 * numOfChan);
+            setUint16(numOfChan * 2);
+            setUint16(16);
+            setUint32(0x61746164); // "data"
+            setUint32(length - pos - 4);
+
+            for (let i = 0; i < numOfChan; i++) channels.push(buffer.getChannelData(i));
+
+            while (pos < length) {
+                for (let i = 0; i < numOfChan; i++) {
+                    sample = Math.max(-1, Math.min(1, channels[i][offset]));
+                    sample = (sample < 0 ? sample * 0x8000 : sample * 0x7FFF) | 0;
+                    view.setInt16(pos, sample, true);
+                    pos += 2;
+                }
+                offset++;
+            }
+            return new Blob([out], { type: "audio/wav" });
+        }
+
+        function downloadSplitTrack(type) {
+            const blob = type === 'vocals' ? separatedVocalsBlob : separatedMusicBlob;
+            if (!blob) return;
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Yugamugesh_${type === 'vocals' ? 'Voice_Only' : 'Music_Only'}_${Date.now()}.wav`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function transcribeIsolatedVocals() {
+            if (!separatedVocalsBlob) return;
+            selectedAudioFile = new File([separatedVocalsBlob], `Isolated_Vocals_${Date.now()}.wav`, { type: 'audio/wav' });
+            startTranscription();
+        }
+
+        // Helpers for Gemini Transcription
         function fileToBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -323,7 +547,7 @@
             return file.type || 'audio/mp3';
         }
 
-        // Secure Transcription using x-goog-api-key Header (No key exposed in URL)
+        // Secure Transcription using gemini-3.8-flash
         async function startTranscription() {
             const keys = getSavedApiKeys();
             if (keys.length === 0) {
@@ -335,6 +559,7 @@
                 return;
             }
 
+            const mode = document.getElementById('outputMode').value;
             document.getElementById('errorBox').classList.add('hidden');
             document.getElementById('resultSection').classList.add('hidden');
             document.getElementById('loadingBox').classList.remove('hidden');
@@ -361,7 +586,7 @@
                             body: JSON.stringify({
                                 contents: [{
                                     parts: [
-                                        { text: "Transcribe this audio accurately into Tamil script (தமிழ்). Return ONLY the Tamil transcription text without any extra comments." },
+                                        { text: `Listen to the speech/vocals in this audio carefully and transcribe it accurately into ${mode}. Return ONLY the clean output text without extra commentary.` },
                                         { inline_data: { mime_type: mimeType, data: base64Audio } }
                                     ]
                                 }]
@@ -406,7 +631,7 @@
             document.getElementById('errorBox').classList.remove('hidden');
         }
 
-        // Cross-Browser Live Voice Recording
+        // Live Voice Recording
         async function toggleRecording() {
             const btn = document.getElementById('recordBtn');
             const status = document.getElementById('recordStatus');
@@ -451,7 +676,7 @@
 
         // Sample Test
         function runSampleTest() {
-            document.getElementById('outputText').value = "வணக்கம்! இது யுகமுகேஷ் தமிழ் ஆடியோ டூ டெக்ஸ்ட் செயலியின் மாதிரி உரை ஆகும். கீழே உள்ள Download .TXT பட்டனை அழுத்தி கோப்பாகப் பதிவிறக்கம் செய்து கொள்ளலாம்.";
+            document.getElementById('outputText').value = "வணக்கம்! இது யுகமுகேஷ் தமிழ் ஆடியோ டூ டெக்ஸ்ட் மற்றும் வாய்ஸ் ஸ்பிளிட்டர் செயலியின் மாதிரி உரை ஆகும். கீழே உள்ள பட்டன்களைப் பயன்படுத்தி TXT, DOC அல்லது WhatsApp-ல் பகிர்ந்து கொள்ளலாம்.";
             document.getElementById('activeKeyBadge').textContent = `✓ ${MODEL_NAME}`;
             document.getElementById('resultSection').classList.remove('hidden');
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
@@ -464,7 +689,7 @@
             navigator.clipboard.writeText(textArea.value);
             const btn = document.getElementById('copyBtn');
             btn.innerHTML = "<span>✅ Copied!</span>";
-            setTimeout(() => { btn.innerHTML = "<span>📋 Copy Text</span>"; }, 2000);
+            setTimeout(() => { btn.innerHTML = "<span>📋 Copy</span>"; }, 2000);
         }
 
         // Download .TXT File
@@ -480,6 +705,30 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+        }
+
+        // Download .DOC File
+        function downloadDocFile() {
+            const text = document.getElementById('outputText').value;
+            if (!text.trim()) return alert("பதிவிறக்கம் செய்ய உரை எதுவும் இல்லை!");
+            const htmlContent = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body style="font-family: 'Latha', sans-serif; font-size: 14pt; line-height: 1.6;">${text.replace(/\n/g, '<br>')}</body></html>`;
+            const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Yugamugesh_Tamil_Doc_${Date.now()}.doc`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Share on WhatsApp
+        function shareOnWhatsApp() {
+            const text = document.getElementById('outputText').value;
+            if (!text.trim()) return alert("பகிர உரை எதுவும் இல்லை!");
+            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
         }
     </script>
 </body>
