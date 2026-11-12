@@ -20,7 +20,7 @@
         </div>
         <div class="flex items-center space-x-2">
             <button onclick="openApiKeyModal()" class="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-full font-medium text-slate-600 hover:bg-slate-50 transition shadow-sm flex items-center space-x-1">
-                <span>⚙️ Key</span>
+                <span>⚙️ Key Setup</span>
             </button>
             <a href="#uploadSection" class="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-full shadow-sm transition">Start Free</a>
         </div>
@@ -155,11 +155,11 @@
     <!-- API Key Modal -->
     <div id="apiKeyModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <h3 class="text-lg font-bold text-slate-900">Gemini API Key Settings</h3>
-            <p class="text-xs text-slate-600">Your API key is stored securely in your browser and used for Tamil speech transcription.</p>
-            <input type="password" id="apiKeyInput" placeholder="Enter API Key (AIzaSy...)" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <h3 class="text-lg font-bold text-slate-900">Enter Your Gemini API Key</h3>
+            <p class="text-xs text-slate-600">Your key is stored 100% securely inside your phone browser only (never exposed publicly).</p>
+            <input type="password" id="apiKeyInput" placeholder="Paste AIzaSy... here" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
             <div class="flex space-x-3 pt-2">
-                <button onclick="saveApiKey()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl text-sm transition">Save Key</button>
+                <button onclick="saveApiKey()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl text-sm transition">Save & Start</button>
                 <button onclick="closeApiKeyModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl text-sm transition">Cancel</button>
             </div>
         </div>
@@ -167,14 +167,34 @@
 
     <!-- Script Logic -->
     <script>
-        let apiKey = localStorage.getItem("yugamugesh_gemini_key") || "AIzaSyCsKDikrMnVtCkjo388brj9lYm1reVmkyw";
-        document.getElementById("apiKeyInput").value = apiKey;
+        let apiKey = localStorage.getItem("yugamugesh_gemini_key") || "";
+        
+        // If no key saved yet, prompt user on load
+        window.addEventListener('DOMContentLoaded', () => {
+            if(!apiKey) {
+                openApiKeyModal();
+            }
+        });
 
-        function openApiKeyModal() { document.getElementById("apiKeyModal").classList.remove("hidden"); document.getElementById("apiKeyModal").classList.add("flex"); }
-        function closeApiKeyModal() { document.getElementById("apiKeyModal").classList.remove("flex"); document.getElementById("apiKeyModal").classList.add("hidden"); }
+        function openApiKeyModal() { 
+            document.getElementById("apiKeyInput").value = apiKey;
+            document.getElementById("apiKeyModal").classList.remove("hidden"); 
+            document.getElementById("apiKeyModal").classList.add("flex"); 
+        }
+        function closeApiKeyModal() { 
+            document.getElementById("apiKeyModal").classList.remove("flex"); 
+            document.getElementById("apiKeyModal").classList.add("hidden"); 
+        }
         function saveApiKey() {
             const val = document.getElementById("apiKeyInput").value.trim();
-            if(val) { apiKey = val; localStorage.setItem("yugamugesh_gemini_key", val); alert("API Key saved successfully!"); closeApiKeyModal(); }
+            if(val && val.startsWith("AIza")) { 
+                apiKey = val; 
+                localStorage.setItem("yugamugesh_gemini_key", val); 
+                alert("API Key saved securely in your browser!"); 
+                closeApiKeyModal(); 
+            } else {
+                alert("Please enter a valid Gemini API Key starting with AIza...");
+            }
         }
 
         function switchTab(tab) {
@@ -198,6 +218,12 @@
         async function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
+            
+            if (!apiKey || !apiKey.startsWith("AIza")) {
+                openApiKeyModal();
+                return;
+            }
+
             startProcessingFlow(file.name);
             try {
                 updateProgress(30, "Uploading file to AI engine...", "stepTranscribe");
@@ -215,6 +241,11 @@
         }
 
         async function runSampleTranscription() {
+            if (!apiKey || !apiKey.startsWith("AIza")) {
+                openApiKeyModal();
+                return;
+            }
+
             startProcessingFlow("Tamil_Sample_Speech.mp3");
             updateProgress(40, "Loading sample Tamil audio...", "stepTranscribe");
             setTimeout(async () => {
@@ -327,6 +358,11 @@
         let isRecording = false;
 
         async function toggleRecording() {
+            if (!apiKey || !apiKey.startsWith("AIza")) {
+                openApiKeyModal();
+                return;
+            }
+
             const btn = document.getElementById('recordBtn');
             const status = document.getElementById('recordStatus');
             const micBox = document.getElementById('micIconBox');
