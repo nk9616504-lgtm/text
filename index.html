@@ -209,9 +209,9 @@
             document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).className = "flex-1 py-2.5 rounded-xl bg-white text-blue-600 shadow-sm transition font-medium";
         }
 
-        // Split audio blob into smaller chunks (~1MB each for fast & safe upload)
+        // Split audio blob into smaller chunks (~800KB each for fast & safe upload)
         function splitAudioFile(file) {
-            const CHUNK_SIZE = 1024 * 1024; // 1 MB per chunk
+            const CHUNK_SIZE = 800 * 1024; 
             const chunks = [];
             let start = 0;
             while (start < file.size) {
@@ -283,7 +283,7 @@
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => controller.abort(), 25000);
 
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] }),
@@ -303,7 +303,7 @@
         }
 
         async function callGeminiAPI(base64Data, mimeType, partNum, totalParts) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
             const promptText = totalParts > 1 
                 ? `Listen to audio part ${partNum} of ${totalParts}. Transcribe all spoken words into correct Tamil script (தமிழ்). Provide ONLY the exact transcribed Tamil text for this part without introductions.`
                 : `Listen to this audio file carefully. Transcribe all spoken words into correct Tamil script (தமிழ்). Provide ONLY the exact transcribed Tamil text without any extra conversational filler, introductions, or English translation.`;
@@ -318,7 +318,7 @@
             };
 
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 40000);
+            const timeoutId = setTimeout(() => controller.abort(), 75000); // 75 seconds timeout per chunk
 
             const response = await fetch(url, {
                 method: "POST",
