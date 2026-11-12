@@ -167,9 +167,9 @@
 
     <!-- Script Logic -->
     <script>
+        // No key embedded in code to prevent leaks!
         let apiKey = localStorage.getItem("yugamugesh_gemini_key") || "";
         
-        // If no key saved yet, prompt user on load
         window.addEventListener('DOMContentLoaded', () => {
             if(!apiKey) {
                 openApiKeyModal();
