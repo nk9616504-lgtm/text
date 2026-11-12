@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yugamugesh - Tamil Audio to Text & Pro Vocal Splitter</title>
+    <title>Yugamugesh - Tamil Audio to Text & Vocal Splitter</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -99,18 +99,18 @@
                 </div>
             </div>
 
-            <!-- TAB 2: Pro Studio Voice & Music Splitter -->
+            <!-- TAB 2: Guaranteed Sound Voice & Music Splitter -->
             <div id="panelSplitter" class="hidden">
                 <div class="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-4 mb-4">
                     <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-                        <h3 class="text-sm font-extrabold text-indigo-950">🎧 Pro DSP Vocal & Karaoke Splitter</h3>
+                        <h3 class="text-sm font-extrabold text-indigo-950">🎧 Multi-Band Voice & Music Splitter</h3>
                         <select id="splitIntensity" onchange="reprocessIfFileLoaded()" class="text-xs font-bold bg-white text-indigo-700 border border-indigo-200 rounded-lg px-2.5 py-1 focus:outline-none">
-                            <option value="deep">Deep Separation (Best)</option>
-                            <option value="sharp">Sharp Voice Cut</option>
-                            <option value="natural">Soft / Natural</option>
+                            <option value="strong">Strong Separation (Default)</option>
+                            <option value="extreme">Extreme Vocal Cut</option>
+                            <option value="balanced">Balanced / Smooth</option>
                         </select>
                     </div>
-                    <p class="text-xs text-indigo-700 leading-relaxed">பாடலில் உள்ள <b>குரல் (Voice Only)</b> மற்றும் <b>கரோக்கி இசை (Karaoke Music Only)</b> இரண்டையும் தனித்தனியாகப் பிரித்து டவுன்லோட் செய்யலாம்.</p>
+                    <p class="text-xs text-indigo-700 leading-relaxed">எந்த MP3 அல்லது WAV பாடலிலும் சத்தம் குறையாமல் <b>குரல் (Voice Only)</b> மற்றும் <b>பின்னணி இசை (Karaoke Music Only)</b> இரண்டையும் தனித்தனியாகப் பிரிக்கும்.</p>
                 </div>
 
                 <label for="splitterFileInput" class="border-2 border-dashed border-indigo-300 hover:border-indigo-500 bg-indigo-50/20 hover:bg-indigo-50/50 transition rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer text-center">
@@ -118,26 +118,22 @@
                         <span class="text-xl">🎵</span>
                     </div>
                     <span id="splitterFileName" class="text-sm font-bold text-slate-800 mb-1">Tap to Select MP3 or WAV Song</span>
-                    <span class="text-[11px] text-slate-500">Stereo MP3/WAV gives 100% pure Karaoke Music separation</span>
+                    <span class="text-[11px] text-slate-500">Works on both Mono & Stereo MP3/WAV files with full audio volume</span>
                     <input type="file" id="splitterFileInput" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg" class="hidden" onclick="this.value=null" onchange="handleSplitterFile(event)">
                 </label>
 
                 <!-- Splitter Loading -->
                 <div id="splitterLoading" class="hidden mt-4 p-5 bg-indigo-50 border border-indigo-200 rounded-2xl flex flex-col items-center text-center">
                     <div class="spinner mb-2"></div>
-                    <p id="splitterStatusText" class="text-xs font-bold text-indigo-900">Studio DSP மூலம் குரலும் இசையும் தனித்தனியாகப் பிரிக்கப்படுகிறது...</p>
+                    <p id="splitterStatusText" class="text-xs font-bold text-indigo-900">குரல் (Voice) மற்றும் இசை (Music) தனித்தனியாகப் பிரிக்கப்படுகிறது...</p>
                 </div>
 
                 <!-- Separated Tracks Output -->
                 <div id="splitterResultBox" class="hidden mt-5 space-y-4">
-                    <div id="stereoWarning" class="hidden p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs">
-                        ⚠️ இது Mono ஆடியோ என்பதால் Frequency EQ முறையில் பிரிக்கப்பட்டுள்ளது. இன்னும் துல்லியமாகப் பிரிக்க Stereo MP3/WAV பயன்படுத்தவும்.
-                    </div>
-
                     <!-- 1. Isolated Voice Card -->
                     <div class="p-4 bg-emerald-50/80 border border-emerald-200 rounded-2xl shadow-sm">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs sm:text-sm font-extrabold text-emerald-950">🎤 1. Voice Only (குரல் மட்டும் - இசை நீக்கப்பட்டது)</span>
+                            <span class="text-xs sm:text-sm font-extrabold text-emerald-950">🎤 1. Voice Only (குரல் மட்டும் - Bass & Beats நீக்கப்பட்டது)</span>
                             <span class="text-[11px] bg-emerald-200/80 text-emerald-900 px-2.5 py-0.5 rounded-full font-bold">Vocals Track</span>
                         </div>
                         <audio id="vocalsAudioPlayer" controls class="w-full h-10 mb-3"></audio>
@@ -154,7 +150,7 @@
                     <!-- 2. Isolated Karaoke Music Card -->
                     <div class="p-4 bg-purple-50/80 border border-purple-200 rounded-2xl shadow-sm">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs sm:text-sm font-extrabold text-purple-950">🎹 2. Music / Karaoke Only (இசை மட்டும் - குரல் நீக்கப்பட்டது)</span>
+                            <span class="text-xs sm:text-sm font-extrabold text-purple-950">🎹 2. Music / Karaoke Only (இசை மட்டும் - குரல் குறைக்கப்பட்டது)</span>
                             <span class="text-[11px] bg-purple-200/80 text-purple-900 px-2.5 py-0.5 rounded-full font-bold">Karaoke Track</span>
                         </div>
                         <audio id="musicAudioPlayer" controls class="w-full h-10 mb-3"></audio>
@@ -261,7 +257,7 @@
 
     <!-- Footer -->
     <footer class="text-center py-4 text-xs text-slate-400">
-        <span>🔒 Client-Side Encrypted • 🎧 Studio Phase-DSP Splitter • ⚡ Gemini 3.8 Flash</span>
+        <span>🔒 Client-Side Encrypted • 🎧 Multi-Band Vocal & Music Splitter • ⚡ Gemini 3.8 Flash</span>
     </footer>
 
     <script>
@@ -383,7 +379,7 @@
             processAudioSeparation(selectedAudioFile);
         }
 
-        // --- PRO STUDIO DSP: TRUE VOCAL & KARAOKE MUSIC SPLITTER ---
+        // --- GUARANTEED SOUND MULTI-BAND VOCAL & KARAOKE SPLITTER ---
         function handleSplitterFile(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -403,7 +399,7 @@
             document.getElementById('splitterResultBox').classList.add('hidden');
 
             try {
-                const mode = document.getElementById('splitIntensity').value;
+                const intensity = document.getElementById('splitIntensity').value;
                 const arrayBuffer = await file.arrayBuffer();
                 const decodeCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const sourceBuffer = await decodeCtx.decodeAudioData(arrayBuffer);
@@ -413,140 +409,169 @@
                 const length = sourceBuffer.length;
                 const numChannels = sourceBuffer.numberOfChannels;
 
-                document.getElementById('stereoWarning').classList.toggle('hidden', numChannels >= 2);
+                // Check if stereo actually has a real difference between Left and Right
+                let stereoDiffEnergy = 0;
+                if (numChannels >= 2) {
+                    const L = sourceBuffer.getChannelData(0);
+                    const R = sourceBuffer.getChannelData(1);
+                    const step = Math.max(1, Math.floor(length / 10000));
+                    for (let i = 0; i < length; i += step) {
+                        stereoDiffEnergy += Math.abs(L[i] - R[i]);
+                    }
+                    stereoDiffEnergy /= (length / step);
+                }
+                const isTrueStereo = (numChannels >= 2 && stereoDiffEnergy > 0.015);
 
-                // STEP 1: Raw Center vs Side Mathematical Extraction
-                const rawVocalCtx = new OfflineAudioContext(1, length, sampleRate);
-                const rawMusicCtx = new OfflineAudioContext(2, length, sampleRate);
-
-                const vocalRawBuffer = rawVocalCtx.createBuffer(1, length, sampleRate);
-                const musicRawBuffer = rawMusicCtx.createBuffer(2, length, sampleRate);
-
-                const vOut = vocalRawBuffer.getChannelData(0);
-                const mOutL = musicRawBuffer.getChannelData(0);
-                const mOutR = musicRawBuffer.getChannelData(1);
+                // =========================================================
+                // TRACK 1: ISOLATED VOICE (Removes Bass/Drums & High Music)
+                // =========================================================
+                const vocalOfflineCtx = new OfflineAudioContext(1, length, sampleRate);
+                const vocalInputBuffer = vocalOfflineCtx.createBuffer(1, length, sampleRate);
+                const vData = vocalInputBuffer.getChannelData(0);
 
                 if (numChannels >= 2) {
                     const L = sourceBuffer.getChannelData(0);
                     const R = sourceBuffer.getChannelData(1);
-
                     for (let i = 0; i < length; i++) {
-                        const left = L[i];
-                        const right = R[i];
-
-                        // KARAOKE / MUSIC ONLY: Pure Out-Of-Phase Center Cancellation (L - R)
-                        // Removes 100% of center-panned vocals
-                        const sideDiff = (left - right) * 0.85;
-                        mOutL[i] = sideDiff;
-                        mOutR[i] = -sideDiff;
-
-                        // VOCALS ONLY: Adaptive Center Channel Extraction
-                        // Extract common center signal and attenuate wide stereo instruments
-                        const mid = (left + right) * 0.5;
-                        const sideMag = Math.abs(left - right) * 0.5;
-                        const suppressRatio = mode === 'sharp' ? 1.15 : (mode === 'deep' ? 0.85 : 0.55);
-
-                        let centerVal = mid;
-                        if (Math.abs(mid) > sideMag * suppressRatio) {
-                            const sign = mid >= 0 ? 1 : -1;
-                            centerVal = sign * (Math.abs(mid) - sideMag * suppressRatio);
-                        } else {
-                            centerVal = mid * 0.12;
-                        }
-                        vOut[i] = centerVal;
+                        // Extract center channel where lead vocals sit
+                        const mid = (L[i] + R[i]) * 0.5;
+                        const side = Math.abs(L[i] - R[i]) * 0.45;
+                        vData[i] = isTrueStereo ? (Math.abs(mid) > side ? mid * 1.2 : mid * 0.35) : mid;
                     }
                 } else {
-                    // Mono Fallback
                     const M = sourceBuffer.getChannelData(0);
-                    for (let i = 0; i < length; i++) {
-                        vOut[i] = M[i];
-                        mOutL[i] = M[i];
-                        mOutR[i] = M[i];
-                    }
+                    for (let i = 0; i < length; i++) vData[i] = M[i];
                 }
 
-                // STEP 2: Multi-Stage Biquad Filter Graph on Vocals (Cuts Bass Drums & High Cymbals)
-                const vSource = rawVocalCtx.createBufferSource();
-                vSource.buffer = vocalRawBuffer;
+                const vSrc = vocalOfflineCtx.createBufferSource();
+                vSrc.buffer = vocalInputBuffer;
 
-                // High-pass filter 1 & 2 (Removes Kick Drums & Bass Guitar below 220Hz)
-                const hpFreq = mode === 'sharp' ? 260 : 200;
-                const hp1 = rawVocalCtx.createBiquadFilter();
-                hp1.type = 'highpass';
-                hp1.frequency.value = hpFreq;
-                hp1.Q.value = 0.707;
+                // Steep High-Pass (Cuts all Bass, Kick Drums, Tabla/Mridangam thump below 260Hz)
+                const vHP1 = vocalOfflineCtx.createBiquadFilter();
+                vHP1.type = 'highpass';
+                vHP1.frequency.value = intensity === 'extreme' ? 300 : 250;
+                vHP1.Q.value = 0.8;
 
-                const hp2 = rawVocalCtx.createBiquadFilter();
-                hp2.type = 'highpass';
-                hp2.frequency.value = hpFreq;
-                hp2.Q.value = 0.707;
+                const vHP2 = vocalOfflineCtx.createBiquadFilter();
+                vHP2.type = 'highpass';
+                vHP2.frequency.value = intensity === 'extreme' ? 300 : 250;
+                vHP2.Q.value = 0.8;
 
-                // Low-pass filter 1 & 2 (Removes Hi-Hats, Flute & Synth fizz above 3900Hz)
-                const lpFreq = mode === 'sharp' ? 3500 : 4100;
-                const lp1 = rawVocalCtx.createBiquadFilter();
-                lp1.type = 'lowpass';
-                lp1.frequency.value = lpFreq;
-                lp1.Q.value = 0.707;
+                // Steep Low-Pass (Cuts Cymbals, Hi-Hats, String/Synth shimmer above 3500Hz)
+                const vLP1 = vocalOfflineCtx.createBiquadFilter();
+                vLP1.type = 'lowpass';
+                vLP1.frequency.value = intensity === 'extreme' ? 3200 : 3600;
+                vLP1.Q.value = 0.8;
 
-                const lp2 = rawVocalCtx.createBiquadFilter();
-                lp2.type = 'lowpass';
-                lp2.frequency.value = lpFreq;
-                lp2.Q.value = 0.707;
+                const vLP2 = vocalOfflineCtx.createBiquadFilter();
+                vLP2.type = 'lowpass';
+                vLP2.frequency.value = intensity === 'extreme' ? 3200 : 3600;
+                vLP2.Q.value = 0.8;
 
-                // Vocal Presence Peaking Boost (1.8 kHz human voice clarity)
-                const vocalBoost = rawVocalCtx.createBiquadFilter();
-                vocalBoost.type = 'peaking';
-                vocalBoost.frequency.value = 1800;
-                vocalBoost.Q.value = 1.1;
-                vocalBoost.gain.value = 5.5;
+                // Vocal Presence Boost (1.5 kHz human speech clarity)
+                const vBoost = vocalOfflineCtx.createBiquadFilter();
+                vBoost.type = 'peaking';
+                vBoost.frequency.value = 1600;
+                vBoost.Q.value = 1.0;
+                vBoost.gain.value = 6.0;
 
-                // Chain vocal filters
-                vSource.connect(hp1);
-                hp1.connect(hp2);
-                hp2.connect(lp1);
-                lp1.connect(lp2);
-                lp2.connect(vocalBoost);
-                vocalBoost.connect(rawVocalCtx.destination);
-                vSource.start(0);
+                vSrc.connect(vHP1);
+                vHP1.connect(vHP2);
+                vHP2.connect(vLP1);
+                vLP1.connect(vLP2);
+                vLP2.connect(vBoost);
+                vBoost.connect(vocalOfflineCtx.destination);
+                vSrc.start(0);
 
-                const renderedVocalBuffer = await rawVocalCtx.startRendering();
+                const renderedVocalBuffer = await vocalOfflineCtx.startRendering();
 
-                // STEP 3: Multi-Stage Filter Graph on Karaoke Music (Restores Bass & Cuts Residual Vocal Midrange)
-                const mSource = rawMusicCtx.createBufferSource();
-                mSource.buffer = musicRawBuffer;
+                // =========================================================
+                // TRACK 2: KARAOKE / MUSIC ONLY (100% Audible + Vocal Cut)
+                // =========================================================
+                const outChannels = numChannels >= 2 ? 2 : 1;
+                const musicOfflineCtx = new OfflineAudioContext(outChannels, length, sampleRate);
+                const musicInputBuffer = musicOfflineCtx.createBuffer(outChannels, length, sampleRate);
 
-                // Cut residual human vocal frequencies around 1000Hz - 2400Hz in Music track
-                const vocalNotch1 = rawMusicCtx.createBiquadFilter();
-                vocalNotch1.type = 'peaking';
-                vocalNotch1.frequency.value = 1200;
-                vocalNotch1.Q.value = 1.0;
-                vocalNotch1.gain.value = numChannels >= 2 ? -4.5 : -18.0;
+                if (numChannels >= 2) {
+                    const L = sourceBuffer.getChannelData(0);
+                    const R = sourceBuffer.getChannelData(1);
+                    const mL = musicInputBuffer.getChannelData(0);
+                    const mR = musicInputBuffer.getChannelData(1);
 
-                const vocalNotch2 = rawMusicCtx.createBiquadFilter();
-                vocalNotch2.type = 'peaking';
-                vocalNotch2.frequency.value = 2400;
-                vocalNotch2.Q.value = 1.0;
-                vocalNotch2.gain.value = numChannels >= 2 ? -4.5 : -18.0;
+                    for (let i = 0; i < length; i++) {
+                        if (isTrueStereo) {
+                            // Blend Stereo Side (Instruments) + 45% Original so Bass/Rhythm NEVER goes silent!
+                            const side = (L[i] - R[i]) * 0.7;
+                            mL[i] = L[i] * 0.45 + side;
+                            mR[i] = R[i] * 0.45 + side; // Same polarity on both ears so phone speaker never cancels out!
+                        } else {
+                            mL[i] = L[i];
+                            mR[i] = R[i];
+                        }
+                    }
+                } else {
+                    const M = sourceBuffer.getChannelData(0);
+                    const mM = musicInputBuffer.getChannelData(0);
+                    for (let i = 0; i < length; i++) mM[i] = M[i];
+                }
 
-                // Boost Low Bass for Karaoke fullness
-                const bassShelf = rawMusicCtx.createBiquadFilter();
-                bassShelf.type = 'lowshelf';
-                bassShelf.frequency.value = 150;
-                bassShelf.gain.value = 5.0;
+                const mSrc = musicOfflineCtx.createBufferSource();
+                mSrc.buffer = musicInputBuffer;
 
-                mSource.connect(vocalNotch1);
-                vocalNotch1.connect(vocalNotch2);
-                vocalNotch2.connect(bassShelf);
-                bassShelf.connect(rawMusicCtx.destination);
-                mSource.start(0);
+                // 4-Stage Deep Vocal Formant Cancellation (Suppresses human voice frequencies 450Hz - 3000Hz)
+                const cutGain = intensity === 'extreme' ? -24.0 : (intensity === 'strong' ? -18.0 : -12.0);
 
-                const renderedMusicBuffer = await rawMusicCtx.startRendering();
+                const notch1 = musicOfflineCtx.createBiquadFilter();
+                notch1.type = 'peaking';
+                notch1.frequency.value = 550; // Male/Female chest voice fundamental
+                notch1.Q.value = 1.1;
+                notch1.gain.value = cutGain;
 
-                // STEP 4: Normalize Peak Volume so both tracks sound loud and clear
+                const notch2 = musicOfflineCtx.createBiquadFilter();
+                notch2.type = 'peaking';
+                notch2.frequency.value = 1150; // Core Tamil vowel frequency
+                notch2.Q.value = 1.1;
+                notch2.gain.value = cutGain;
+
+                const notch3 = musicOfflineCtx.createBiquadFilter();
+                notch3.type = 'peaking';
+                notch3.frequency.value = 2100; // Vocal projection & consonant clarity
+                notch3.Q.value = 1.1;
+                notch3.gain.value = cutGain;
+
+                const notch4 = musicOfflineCtx.createBiquadFilter();
+                notch4.type = 'peaking';
+                notch4.frequency.value = 3100; // Singer presence harmonic
+                notch4.Q.value = 1.2;
+                notch4.gain.value = cutGain;
+
+                // Boost Sub-Bass & Beats (< 180Hz) so Karaoke Music sounds punchy & full
+                const bassBoost = musicOfflineCtx.createBiquadFilter();
+                bassBoost.type = 'lowshelf';
+                bassBoost.frequency.value = 180;
+                bassBoost.gain.value = 7.5;
+
+                // Boost High Musical Instruments (> 4500Hz)
+                const trebleBoost = musicOfflineCtx.createBiquadFilter();
+                trebleBoost.type = 'highshelf';
+                trebleBoost.frequency.value = 4500;
+                trebleBoost.gain.value = 5.0;
+
+                mSrc.connect(notch1);
+                notch1.connect(notch2);
+                notch2.connect(notch3);
+                notch3.connect(notch4);
+                notch4.connect(bassBoost);
+                bassBoost.connect(trebleBoost);
+                trebleBoost.connect(musicOfflineCtx.destination);
+                mSrc.start(0);
+
+                const renderedMusicBuffer = await musicOfflineCtx.startRendering();
+
+                // Normalize both tracks to 92% maximum volume so neither is ever quiet
                 normalizeAudioBuffer(renderedVocalBuffer, 0.92);
                 normalizeAudioBuffer(renderedMusicBuffer, 0.92);
 
-                // Convert to WAV Blobs
                 separatedVocalsBlob = audioBufferToWavBlob(renderedVocalBuffer);
                 separatedMusicBlob = audioBufferToWavBlob(renderedMusicBuffer);
 
@@ -568,7 +593,7 @@
             }
         }
 
-        // Peak Audio Normalizer (Ensures separated voice & music are loud and clear)
+        // Peak Audio Normalizer (Guarantees loud & clear sound on both tracks)
         function normalizeAudioBuffer(buffer, targetPeak) {
             let maxPeak = 0;
             for (let c = 0; c < buffer.numberOfChannels; c++) {
@@ -578,7 +603,7 @@
                     if (abs > maxPeak) maxPeak = abs;
                 }
             }
-            if (maxPeak > 0.001) {
+            if (maxPeak > 0.0001) {
                 const gain = targetPeak / maxPeak;
                 for (let c = 0; c < buffer.numberOfChannels; c++) {
                     const data = buffer.getChannelData(c);
