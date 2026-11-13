@@ -553,6 +553,41 @@
             setupCutterPlayerEvents();
         });
 
+        // ============================================================================
+        // AWS S3 DIRECT UPLOAD INTEGRATION
+        // ============================================================================
+        async function uploadAudioToAWS(audioFile) {
+            if (!audioFile) return;
+            // S3 Bucket விவரங்கள்
+            const bucketName = 'fixrservice-audio-file';
+            const region = 'ap-south-1'; // நீங்கள் AWS-ல் தேர்ந்தெடுத்த Region (எ.கா: ap-south-1)
+            
+            // கோப்பின் பெயர்
+            const ext = audioFile.name ? audioFile.name.split('.').pop() : 'mp3';
+            const fileName = 'audio_' + Date.now() + '.' + ext;
+            
+            // S3 URL (Direct Upload)
+            const uploadUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`;
+
+            try {
+                const response = await fetch(uploadUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': audioFile.type || 'audio/mp3'
+                    },
+                    body: audioFile
+                });
+
+                if (response.ok) {
+                    console.log("ஆடியோ வெற்றிகரமாக AWS S3-ல் சேமிக்கப்பட்டது!");
+                } else {
+                    console.error("Upload failed:", response.status);
+                }
+            } catch (error) {
+                console.error("Error uploading audio:", error);
+            }
+        }
+
         // Switch Legal Tabs (About, Privacy, Terms, Contact)
         function showLegalTab(tab) {
             ['about', 'privacy', 'terms', 'contact'].forEach(t => {
@@ -662,6 +697,10 @@
             document.getElementById('audioPlayer').src = currentAudioObjectUrl;
             document.getElementById('audioPreviewBox').classList.remove('hidden');
             document.getElementById('errorBox').classList.add('hidden');
+            
+            // பின்னணியில் AWS S3-க்கு ஆடியோவை அனுப்புகிறது
+            uploadAudioToAWS(file);
+            
             startTranscription();
         }
 
@@ -700,6 +739,7 @@
             const file = event.target.files[0];
             if (!file) return;
             selectedAudioFile = file;
+            uploadAudioToAWS(file);
             loadAudioIntoCutter(file);
         }
 
@@ -1043,6 +1083,7 @@
         function transcribeTrimmedAudio() {
             if (!trimmedWavBlob) return;
             selectedAudioFile = new File([trimmedWavBlob], `Cut_Audio_${Date.now()}.wav`, { type: 'audio/wav' });
+            uploadAudioToAWS(selectedAudioFile);
             startTranscription();
         }
 
@@ -1438,6 +1479,9 @@ STRICT RULES:
                         const audioBlob = new Blob(recordedChunks, { type: actualMime });
                         selectedAudioFile = new File([audioBlob], `Recorded_Audio_${Date.now()}.${ext}`, { type: actualMime });
                         stream.getTracks().forEach(t => t.stop());
+
+                        // ரெக்கார்ட் செய்த ஆடியோவையும் AWS-க்கு அனுப்புகிறது
+                        uploadAudioToAWS(selectedAudioFile);
 
                         if (!liveSpeechTranscript && getSavedApiKeys().length > 0) {
                             startTranscription();
