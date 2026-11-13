@@ -85,7 +85,7 @@
         <!-- App Card Box -->
         <div id="uploadSection" class="max-w-2xl w-full bg-[#0d1021]/95 rounded-3xl shadow-2xl shadow-indigo-950/60 border border-indigo-500/20 p-4 sm:p-7 mb-12 backdrop-blur-xl">
             
-            <!-- 5 Main Tool Tabs Navigation (Matches Screenshot Layout) -->
+            <!-- 5 Main Tool Tabs Navigation -->
             <div class="grid grid-cols-2 sm:grid-cols-5 bg-[#070914] p-1.5 rounded-2xl mb-5 text-xs sm:text-sm font-bold gap-1.5 border border-indigo-500/10">
                 <button onclick="switchTab('upload')" id="tabUpload" class="py-3 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-600/30 transition flex items-center justify-center space-x-1.5">
                     <span>🎙️</span><span data-i18n="tab_transcribe">Transcribe</span>
@@ -126,6 +126,8 @@
                         <select id="outputMode" class="w-full bg-[#0d1224] text-white font-bold text-xs sm:text-sm px-3.5 py-3 rounded-xl border border-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                             <option value="Pure Transcription">Pure Transcription</option>
                             <option value="Transcription with short bullet-point summary">Transcription + Summary Points</option>
+                            <option value="YouTube Video Titles, Timestamp Chapters (00:00 format), engaging Instagram Reels Caption, Trending Hashtags, followed by the Full Transcript">🎬 YouTube Chapters & Reels Caption</option>
+                            <option value="Multi-Speaker Dialogue format (Speaker 1, Speaker 2) with timestamps">👥 Multi-Speaker Interview Mode</option>
                             <option value="Translation into Tamil script (தமிழ்)">Translate to Tamil (தமிழ்)</option>
                             <option value="Translation into English">English Translation</option>
                             <option value="Romanized phonetic script (Tanglish/Manglish)">Romanized Script (Tanglish)</option>
@@ -320,7 +322,7 @@
                     </div>
                 </div>
 
-                <textarea id="ttsInputText" rows="5" class="w-full p-4 bg-[#070914] border border-indigo-500/30 rounded-2xl text-white text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="இங்கே தமிழ் அல்லது பிற மொழி உரையை டைப் செய்யவும்... (வணக்கம், யுகமுகேஷ் ஆடியோ ஸ்டுடியோவிற்கு வரவேற்கிறோம்!)">வணக்கம்! யுகமுகேஷ் ஏஐ ஆடியோ ஸ்டுடியோவிற்கு உங்களை அன்புடன் வரவேற்கிறோம்.</textarea>
+                <textarea id="ttsInputText" rows="5" class="w-full p-4 bg-[#070914] border border-indigo-500/30 rounded-2xl text-white text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="இங்கே தமிழ் அல்லது பிற மொழி உரையை டைப் செய்யவும்...">வணக்கம்! யுகமுகேஷ் ஏஐ ஆடியோ ஸ்டுடியோவிற்கு உங்களை அன்புடன் வரவேற்கிறோம்.</textarea>
 
                 <div class="grid grid-cols-3 gap-2.5">
                     <button onclick="playTextToSpeech()" class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 text-white font-bold text-xs sm:text-sm py-3.5 rounded-xl shadow-lg transition">
@@ -425,7 +427,7 @@
                     </div>
                 </div>
 
-                <textarea id="outputText" rows="6" class="w-full p-4 bg-[#070914] border border-indigo-500/30 rounded-2xl text-white text-sm sm:text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4 select-text" placeholder="மாற்றப்பட்ட தமிழ் / பிற மொழி எழுத்துக்கள் இங்கே தோன்றும்..."></textarea>
+                <textarea id="outputText" rows="7" class="w-full p-4 bg-[#070914] border border-indigo-500/30 rounded-2xl text-white text-sm sm:text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4 select-text" placeholder="மாற்றப்பட்ட தமிழ் / பிற மொழி எழுத்துக்கள் இங்கே தோன்றும்..."></textarea>
 
                 <!-- 5 Action Buttons: Copy, TXT, DOC, SRT & WhatsApp -->
                 <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
@@ -512,9 +514,9 @@
                     </p>
                 </div>
                 <div class="p-4 bg-[#070914] rounded-2xl border border-indigo-500/15">
-                    <h3 class="text-sm font-bold text-indigo-300 mb-1">🎬 SRT Subtitles & Video Visualizer</h3>
+                    <h3 class="text-sm font-bold text-indigo-300 mb-1">🎬 YouTube Chapters, SRT & Visualizer</h3>
                     <p class="text-xs text-slate-400 leading-relaxed">
-                        யூடியூப் மற்றும் இன்ஸ்டாகிராம் ரீல்ஸ் வீடியோக்களுக்குத் தேவையான .SRT சப்-டைட்டில் கோப்பு மற்றும் ஆடியோ விஷுவலைசர் வீடியோவை உடனடியாக உருவாக்கலாம்.
+                        யூடியூப் மற்றும் இன்ஸ்டாகிராம் ரீல்ஸ் வீடியோக்களுக்குத் தேவையான YouTube Chapters, .SRT சப்-டைட்டில் கோப்பு மற்றும் ஆடியோ விஷுவலைசர் வீடியோவை உடனடியாக உருவாக்கலாம்.
                     </p>
                 </div>
                 <div class="p-4 bg-[#070914] rounded-2xl border border-indigo-500/15">
@@ -1328,7 +1330,6 @@
                 visAnimId = requestAnimationFrame(renderFrame);
                 visAnalyser.getByteFrequencyData(dataArray);
 
-                // Dark Studio Gradient Background
                 const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
                 grad.addColorStop(0, "#070914");
                 grad.addColorStop(0.5, "#15163c");
@@ -1336,7 +1337,6 @@
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Title Header
                 ctx.fillStyle = "#e0e7ff";
                 ctx.font = "bold 16px 'Plus Jakarta Sans', sans-serif";
                 ctx.textAlign = "center";
@@ -1346,7 +1346,6 @@
                 ctx.font = "11px 'Plus Jakarta Sans', sans-serif";
                 ctx.fillText("audio.fixrservice.in", canvas.width / 2, 54);
 
-                // Frequency Bars
                 const barWidth = (canvas.width - 80) / bufferLength;
                 let x = 40;
                 for (let i = 0; i < bufferLength; i++) {
@@ -1438,7 +1437,6 @@
                 src.buffer = audioBuf;
 
                 if (useNoiseReduction) {
-                    // Highpass removes low fan/wind rumble (<85Hz), Lowpass removes high hiss (>7500Hz)
                     const highpass = offCtx.createBiquadFilter();
                     highpass.type = "highpass";
                     highpass.frequency.value = 85;
@@ -1493,16 +1491,17 @@
             return fixed;
         }
 
-        async function autoCorrectTamilSpelling(rawText, groqKeys, geminiKeys) {
+        async function autoCorrectTamilSpelling(rawText, groqKeys, geminiKeys, requestedMode = "Pure Transcription") {
             if (!rawText || rawText.trim().length < 3) return rawText;
             const targetLang = document.getElementById('targetLanguage').value || 'Tamil';
             const preFixed = applyInstantTamilFixes(rawText);
 
-            const systemPrompt = `You are an expert ${targetLang} proofreader.
+            const systemPrompt = `You are an expert ${targetLang} proofreader and content formatter.
 Correct any phonetic spelling mistakes or sandhi errors in the user's ${targetLang} transcription so that every word is a valid, grammatically and contextually accurate ${targetLang} word.
+Requested Output Mode: ${requestedMode}.
 STRICT RULES:
-1. Do NOT invent, add, or insert lines that are not in the user's text.
-2. Return ONLY the corrected ${targetLang} text without any notes or headings.`;
+1. Do NOT invent lines from other songs that are not in the user's text.
+2. Format the corrected output strictly according to the Requested Output Mode in ${targetLang} without extra meta notes.`;
 
             for (let i = 0; i < geminiKeys.length; i++) {
                 for (let m = 0; m < GEMINI_MODELS.length; m++) {
@@ -1562,10 +1561,11 @@ STRICT RULES:
             if (keys.length === 0) return openApiKeyModal();
             const groqKeys = keys.filter(k => k.startsWith('gsk_'));
             const geminiKeys = keys.filter(k => !k.startsWith('gsk_'));
+            const mode = document.getElementById('outputMode').value;
 
             const btn = document.getElementById('fixSpellingBtn');
             btn.textContent = "⏳ Fixing...";
-            const corrected = await autoCorrectTamilSpelling(current, groqKeys, geminiKeys);
+            const corrected = await autoCorrectTamilSpelling(current, groqKeys, geminiKeys, mode);
             textArea.value = corrected;
             btn.textContent = "✅ Spelling Fixed!";
             setTimeout(() => { btn.textContent = "✨ Fix Spelling"; }, 2500);
@@ -1706,7 +1706,7 @@ STRICT RULES:
                                     body: JSON.stringify({
                                         contents: [{
                                             parts: [
-                                                { text: `Listen to this audio carefully and transcribe the exact speech or lyrics in ${targetLang} language. Output format: ${mode}. Ensure 100% accurate native script spelling and grammar. Return ONLY the clean text without any extra comments.` },
+                                                { text: `Listen to this audio carefully and transcribe the exact speech or lyrics in ${targetLang} language. Output format: ${mode}. Ensure 100% accurate native script spelling and grammar. Return ONLY the clean formatted output without any extra meta comments.` },
                                                 { inline_data: { mime_type: mimeType, data: base64Audio } }
                                             ]
                                         }]
@@ -1750,7 +1750,7 @@ STRICT RULES:
                             if (res.ok && data.text) {
                                 const rawTranscript = data.text.trim();
                                 document.getElementById('keyStatusText').textContent = `Step 2/2: AI மூலம் எழுத்துப் பிழைகள் திருத்தப்படுகின்றன...`;
-                                successText = await autoCorrectTamilSpelling(rawTranscript, groqKeys, geminiKeys);
+                                successText = await autoCorrectTamilSpelling(rawTranscript, groqKeys, geminiKeys, mode);
                                 usedBadge = `✓ Whisper-v3 (${targetLang})`;
                                 break;
                             } else {
