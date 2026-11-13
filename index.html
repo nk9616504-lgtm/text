@@ -2,12 +2,23 @@
 <html lang="ta">
 <head><meta name="google-adsense-account" content="ca-pub-2364261268133710">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Yugamugesh - Smart Audio & Voice AI Studio | Multi-Language Transcriber & MP3 Cutter</title>
     <meta name="description" content="Convert MP3, WAV audio files and voice recordings into 100% accurate Tamil, English, Hindi, Telugu, and Malayalam text online for free. Includes Waveform Cutter, TTS, Visualizer & SRT export.">
     <meta name="keywords" content="Tamil Audio to Text, Multi-Language Speech to Text, MP3 to Tamil Text Converter, Online Audio Cutter, SRT Subtitle Generator, Audio Visualizer, Yugamugesh AI Studio, FixrService">
     <meta name="author" content="Yugamugesh AI Studio">
     <meta name="robots" content="index, follow">
+
+    <!-- PWA & Mobile App (APK / AAB) Meta Tags -->
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Yuga Studio">
+    <link rel="manifest" id="pwaManifestLink" href="/manifest.json">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%234f46e5'/><text x='50%' y='54%' dominant-baseline='central' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='800' font-size='58'>Y</text></svg>">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- lamejs for Instant Client-Side MP3 Encoding -->
     <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
@@ -51,19 +62,20 @@
             <a href="#faqSection" class="hover:text-indigo-400 transition">FAQ</a>
             <a href="#legalSection" class="hover:text-indigo-400 transition">Privacy & Terms</a>
         </nav>
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-1.5 sm:space-x-2">
             <!-- Page Language Switcher (Tamil / English) -->
-            <button onclick="togglePageLanguage()" id="pageLangBtn" class="text-xs bg-slate-900/90 border border-indigo-500/30 px-3 py-2 rounded-full font-bold text-indigo-300 hover:bg-slate-800 transition">
+            <button onclick="togglePageLanguage()" id="pageLangBtn" class="text-xs bg-slate-900/90 border border-indigo-500/30 px-2.5 sm:px-3 py-2 rounded-full font-bold text-indigo-300 hover:bg-slate-800 transition">
                 🌐 தமிழ்
             </button>
-            <!-- Shows AI Active to users; owner can still tap if custom keys are needed -->
-            <button onclick="openApiKeyModal()" title="AI Engine Active" class="text-xs bg-slate-900/90 border border-emerald-500/30 px-3 py-2 rounded-full font-semibold text-emerald-300 hover:bg-slate-800 transition shadow-sm flex items-center space-x-1.5">
-                <span>⚡ AI Active</span>
+            <!-- Built-in AI Active Status -->
+            <button onclick="openApiKeyModal()" title="AI Engine Active" class="text-xs bg-slate-900/90 border border-emerald-500/30 px-2.5 sm:px-3 py-2 rounded-full font-semibold text-emerald-300 hover:bg-slate-800 transition shadow-sm flex items-center space-x-1">
+                <span>⚡ AI</span>
                 <span id="keyCountDot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
             </button>
-            <a href="#uploadSection" onclick="runSampleTest()" class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-full shadow-lg shadow-indigo-600/30 transition">
-                Get Started
-            </a>
+            <!-- PWA Direct App Install Button -->
+            <button onclick="installPwaApp()" id="installAppBtn" class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-bold px-3.5 sm:px-4 py-2 rounded-full shadow-lg shadow-indigo-600/30 transition flex items-center space-x-1">
+                <span>📲</span><span>App</span>
+            </button>
         </div>
     </header>
 
@@ -598,7 +610,7 @@
 
     </main>
 
-    <!-- Optional Custom API Key Modal (Built-in keys are already active by default) -->
+    <!-- Optional Custom API Key Modal -->
     <div id="apiKeyModal" class="fixed inset-0 bg-black/75 hidden items-center justify-center p-4 z-50 backdrop-blur-sm">
         <div class="bg-[#0d1021] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-indigo-500/30 text-white">
             <div class="flex items-center justify-between mb-2">
@@ -662,6 +674,7 @@
         let timerInterval = null;
         let secondsElapsed = 0;
         let currentPageLang = 'en';
+        let deferredPwaPrompt = null;
 
         // Audio Cutter & Waveform State
         let cutterAudioBuffer = null;
@@ -686,7 +699,38 @@
             updateKeyIndicator();
             setupCutterPlayerEvents();
             drawIdleVisualizerCanvas();
+            initSingleFilePwaSupport();
         });
+
+        // ============================================================================
+        // PWA & APK / AAB INSTALLER SUPPORT (WORKS IN SINGLE FILE OR WITH MANIFEST.JSON)
+        // ============================================================================
+        function initSingleFilePwaSupport() {
+            // Capture browser install prompt
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPwaPrompt = e;
+            });
+
+            // Register Service Worker if /sw.js exists
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js').catch(() => {});
+                });
+            }
+        }
+
+        async function installPwaApp() {
+            if (deferredPwaPrompt) {
+                deferredPwaPrompt.prompt();
+                const { outcome } = await deferredPwaPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    deferredPwaPrompt = null;
+                }
+            } else {
+                alert("📲 மொபைலில் ஆப்பாக இன்ஸ்டால் செய்ய:\nஉங்கள் Chrome பிரவுசரின் வலது மேல் மூலையில் உள்ள 3 புள்ளிகளைத் (⋮) தட்டி 'Add to Home screen' அல்லது 'Install app' என்பதைத் தேர்ந்தெடுக்கவும்!");
+            }
+        }
 
         // ============================================================================
         // PAGE LANGUAGE SWITCHER (TAMIL / ENGLISH UI)
@@ -779,7 +823,7 @@
             return `${m}:${s}`;
         }
 
-        // Key Management (Combines any custom keys with the 4 Built-in Keys)
+        // Key Management
         function toggleKeyVisibility() {
             const input = document.getElementById('apiKeyInput');
             const btn = document.getElementById('toggleMaskBtn');
