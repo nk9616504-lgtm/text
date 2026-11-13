@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yugamugesh - Tamil Audio to Text & Audio Cutter</title>
+    <title>Yugamugesh - Tamil Audio to Text & MP3 Audio Cutter</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- lamejs for Instant Client-Side MP3 Encoding -->
+    <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -45,7 +47,7 @@
         <div class="text-center mb-6">
             <span class="inline-block text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-50 px-3 py-1 rounded-full mb-3">YUGAMUGESH AI STUDIO</span>
             <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">Tamil Audio to Text & Cutter</h1>
-            <p class="text-slate-600 text-xs sm:text-base max-w-md mx-auto">Convert MP3/WAV to 100% error-free <span class="text-blue-600 font-semibold">Tamil (தமிழ்)</span> text or <span class="text-indigo-600 font-semibold">Cut / Trim Audio</span> easily.</p>
+            <p class="text-slate-600 text-xs sm:text-base max-w-md mx-auto">Convert MP3/WAV to 100% error-free <span class="text-blue-600 font-semibold">Tamil (தமிழ்)</span> text or <span class="text-indigo-600 font-semibold">Cut Audio as MP3 & WAV</span>.</p>
         </div>
 
         <!-- App Card Box -->
@@ -99,32 +101,63 @@
                 </div>
             </div>
 
-            <!-- TAB 2: Audio Cutter & Trimmer (NEW) -->
+            <!-- TAB 2: Visual Audio Cutter & Trimmer with MP3 + WAV Export -->
             <div id="panelCutter" class="hidden">
                 <div class="bg-indigo-50/80 border border-indigo-100 rounded-2xl p-4 mb-4">
                     <div class="flex items-center justify-between mb-1">
-                        <h3 class="text-sm font-extrabold text-indigo-950">✂️ Studio Audio Cutter & Trimmer</h3>
-                        <span class="text-[11px] bg-indigo-600 text-white px-2.5 py-0.5 rounded-full font-bold">Fast & Lossless</span>
+                        <h3 class="text-sm font-extrabold text-indigo-950">✂️ Studio Audio Cutter (MP3 & WAV)</h3>
+                        <span class="text-[11px] bg-indigo-600 text-white px-2.5 py-0.5 rounded-full font-bold">Live Waveform</span>
                     </div>
                     <p class="text-xs text-indigo-700 leading-relaxed">
-                        MP3 அல்லது WAV ஆடியோவில் உங்களுக்குத் தேவையான பகுதியை மட்டும் (Start & End Time) கட் செய்து டவுன்லோட் செய்யலாம் அல்லது அந்தப் பகுதியை மட்டும் தமிழ் எழுத்துக்களாக மாற்றலாம்.
+                        கீழே உள்ள ஆடியோ பிரேமில் பாட்டை பிளே செய்து கேட்டுக்கொண்டே வேண்டிய பகுதியை கட் செய்து <b>.MP3</b> அல்லது <b>.WAV</b> வடிவில் டவுன்லோட் செய்யலாம்.
                     </p>
                 </div>
 
-                <label for="cutterFileInput" class="border-2 border-dashed border-indigo-300 hover:border-indigo-500 bg-indigo-50/20 hover:bg-indigo-50/50 transition rounded-2xl p-5 flex flex-col items-center justify-center cursor-pointer text-center">
-                    <div class="w-11 h-11 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-2">
-                        <span class="text-xl">✂️</span>
+                <label for="cutterFileInput" class="border-2 border-dashed border-indigo-300 hover:border-indigo-500 bg-indigo-50/20 hover:bg-indigo-50/50 transition rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer text-center">
+                    <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-1.5">
+                        <span class="text-lg">✂️</span>
                     </div>
                     <span id="cutterFileName" class="text-sm font-bold text-slate-800 mb-0.5">Tap to Select MP3 or WAV to Cut</span>
                     <span class="text-[11px] text-slate-500">Trim Ringtone, Speech Clip, or Song Portion</span>
                     <input type="file" id="cutterFileInput" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg" class="hidden" onclick="this.value=null" onchange="handleCutterFile(event)">
                 </label>
 
-                <!-- Cutter Controls Box -->
+                <!-- Cutter Workspace with Live Audio Frame -->
                 <div id="cutterWorkspace" class="hidden mt-4 bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-4">
+                    
+                    <!-- LIVE VISUAL WAVEFORM & PLAYER FRAME -->
+                    <div class="bg-slate-900 text-white p-3.5 rounded-2xl shadow-inner space-y-2.5">
+                        <div class="flex items-center justify-between text-[11px] font-semibold text-slate-300">
+                            <span>🎧 Live Audio Frame (Tap wave to jump)</span>
+                            <span class="font-mono text-amber-400">Now Playing: <b id="liveCurrentTime">0:00</b> / <span id="totalDurationLabel">0:00</span></span>
+                        </div>
+
+                        <!-- Interactive Waveform Canvas -->
+                        <div class="relative w-full h-24 bg-slate-800 rounded-xl overflow-hidden border border-slate-700 cursor-pointer" onclick="seekWaveformClick(event)">
+                            <canvas id="waveformCanvas" class="w-full h-full block"></canvas>
+                        </div>
+
+                        <!-- Original Source Audio Player -->
+                        <audio id="cutterSourcePlayer" controls class="w-full h-10 rounded-lg"></audio>
+
+                        <!-- Quick Live Capture Buttons while listening -->
+                        <div class="grid grid-cols-3 gap-2 pt-1">
+                            <button onclick="setMarkAtCurrentTime('start')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold py-2 px-2 rounded-xl transition flex items-center justify-center space-x-1 shadow-xs">
+                                <span>📍 Set Start Here</span>
+                            </button>
+                            <button onclick="playSelectedRegionOnly()" id="previewRegionBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold py-2 px-2 rounded-xl transition flex items-center justify-center space-x-1 shadow-xs">
+                                <span>▶️ Play Selection</span>
+                            </button>
+                            <button onclick="setMarkAtCurrentTime('end')" class="bg-rose-600 hover:bg-rose-500 text-white text-[11px] font-bold py-2 px-2 rounded-xl transition flex items-center justify-center space-x-1 shadow-xs">
+                                <span>🏁 Set End Here</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Duration Summary Bar -->
                     <div class="flex items-center justify-between text-xs font-bold text-slate-700 bg-white p-3 rounded-xl border border-slate-200">
-                        <div>Total Duration: <span id="totalDurationLabel" class="text-slate-900">0:00</span></div>
-                        <div class="text-indigo-600">Selected Length: <span id="cutLengthLabel">0:00</span></div>
+                        <div>Cut Range: <span id="cutRangeSummary" class="text-slate-900 font-mono">0:00 - 0:00</span></div>
+                        <div class="text-indigo-600">Selected Length: <span id="cutLengthLabel" class="font-mono">0:00</span></div>
                     </div>
 
                     <!-- Start Time Slider & Input -->
@@ -132,11 +165,11 @@
                         <div class="flex items-center justify-between text-xs">
                             <span class="font-bold text-emerald-700">🟢 Start Time (தொடங்கும் நேரம்):</span>
                             <div class="flex items-center space-x-1">
-                                <input type="number" id="startSecInput" min="0" step="1" value="0" onchange="syncCutterFromInputs()" class="w-16 px-2 py-1 text-center font-mono font-bold border border-slate-300 rounded-lg text-xs">
+                                <input type="number" id="startSecInput" min="0" step="1" value="0" onchange="syncCutterFromInputs('start')" class="w-16 px-2 py-1 text-center font-mono font-bold border border-slate-300 rounded-lg text-xs">
                                 <span class="text-[11px] text-slate-500">sec (<span id="startFormatted">0:00</span>)</span>
                             </div>
                         </div>
-                        <input type="range" id="startRangeSlider" min="0" max="100" step="0.5" value="0" oninput="onCutterSliderChange('start')" class="w-full accent-emerald-600 h-2 bg-slate-200 rounded-lg cursor-pointer">
+                        <input type="range" id="startRangeSlider" min="0" max="100" step="0.1" value="0" oninput="onCutterSliderChange('start')" class="w-full accent-emerald-600 h-2 bg-slate-200 rounded-lg cursor-pointer">
                     </div>
 
                     <!-- End Time Slider & Input -->
@@ -144,30 +177,35 @@
                         <div class="flex items-center justify-between text-xs">
                             <span class="font-bold text-rose-700">🔴 End Time (முடியும் நேரம்):</span>
                             <div class="flex items-center space-x-1">
-                                <input type="number" id="endSecInput" min="1" step="1" value="10" onchange="syncCutterFromInputs()" class="w-16 px-2 py-1 text-center font-mono font-bold border border-slate-300 rounded-lg text-xs">
+                                <input type="number" id="endSecInput" min="1" step="1" value="10" onchange="syncCutterFromInputs('end')" class="w-16 px-2 py-1 text-center font-mono font-bold border border-slate-300 rounded-lg text-xs">
                                 <span class="text-[11px] text-slate-500">sec (<span id="endFormatted">0:10</span>)</span>
                             </div>
                         </div>
-                        <input type="range" id="endRangeSlider" min="1" max="100" step="0.5" value="10" oninput="onCutterSliderChange('end')" class="w-full accent-rose-600 h-2 bg-slate-200 rounded-lg cursor-pointer">
+                        <input type="range" id="endRangeSlider" min="1" max="100" step="0.1" value="10" oninput="onCutterSliderChange('end')" class="w-full accent-rose-600 h-2 bg-slate-200 rounded-lg cursor-pointer">
                     </div>
 
-                    <button onclick="cutAudioNow()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl shadow-md shadow-indigo-500/20 transition flex items-center justify-center space-x-1.5">
+                    <button onclick="cutAudioNow()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm py-3.5 px-4 rounded-xl shadow-md shadow-indigo-500/20 transition flex items-center justify-center space-x-1.5">
                         <span>✂️ Cut Audio Now</span>
                     </button>
 
-                    <!-- Trimmed Output Preview & Actions -->
+                    <!-- Trimmed Output Preview & MP3 / WAV Actions -->
                     <div id="trimmedOutputBox" class="hidden pt-3 border-t border-slate-200 space-y-3">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-extrabold text-emerald-900">✅ Cut Audio Ready (கட் செய்யப்பட்ட ஆடியோ)</span>
                             <span id="trimmedSizeBadge" class="text-[11px] bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full font-bold">Ready</span>
                         </div>
                         <audio id="trimmedAudioPlayer" controls class="w-full h-10"></audio>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <button onclick="downloadTrimmedAudio()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-3 px-3 rounded-xl transition shadow-sm flex items-center justify-center space-x-1">
-                                <span>⬇️ Download Cut Audio (.WAV)</span>
+                        
+                        <!-- MP3, WAV & Convert to Text Buttons -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            <button onclick="downloadTrimmedMp3()" id="mp3DownloadBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-3 px-3 rounded-xl transition shadow-sm flex items-center justify-center space-x-1">
+                                <span>🎵 Download .MP3</span>
                             </button>
-                            <button onclick="transcribeTrimmedAudio()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-3 px-3 rounded-xl transition shadow-sm flex items-center justify-center space-x-1">
-                                <span>📝 Convert Cut Part to Tamil Text</span>
+                            <button onclick="downloadTrimmedAudio()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-3 px-3 rounded-xl transition shadow-sm flex items-center justify-center space-x-1">
+                                <span>⬇️ Download .WAV</span>
+                            </button>
+                            <button onclick="transcribeTrimmedAudio()" class="col-span-2 sm:col-span-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-3 px-3 rounded-xl transition shadow-sm flex items-center justify-center space-x-1">
+                                <span>📝 Convert to Tamil Text</span>
                             </button>
                         </div>
                     </div>
@@ -279,7 +317,7 @@
 
     <!-- Footer -->
     <footer class="text-center py-4 text-xs text-slate-400">
-        <span>🔒 100% Error-Free Tamil Text Engine • ✂️ Lossless Audio Cutter • ⚡ Gemini & Whisper AI</span>
+        <span>🔒 100% Error-Free Tamil Text Engine • ✂️ MP3 & WAV Audio Cutter • ⚡ Gemini & Whisper AI</span>
     </footer>
 
     <script>
@@ -293,12 +331,20 @@
         let timerInterval = null;
         let secondsElapsed = 0;
 
-        // Audio Cutter State
+        // Audio Cutter & Waveform State
         let cutterAudioBuffer = null;
+        let lastCutBuffer = null;
+        let cutterSourceUrl = null;
+        let waveformPeaks = [];
+        let isPlayingSelectionOnly = false;
         let trimmedWavBlob = null;
+        let trimmedMp3Blob = null;
         let trimmedAudioUrl = null;
 
-        window.addEventListener('DOMContentLoaded', updateKeyIndicator);
+        window.addEventListener('DOMContentLoaded', () => {
+            updateKeyIndicator();
+            setupCutterPlayerEvents();
+        });
 
         function updateKeyIndicator() {
             const keys = getSavedApiKeys();
@@ -314,6 +360,9 @@
             });
             document.getElementById('panel' + capitalize(tab)).classList.remove('hidden');
             document.getElementById('tab' + capitalize(tab)).className = "py-2.5 rounded-xl bg-white text-blue-600 shadow-sm transition";
+            if (tab === 'cutter' && cutterAudioBuffer) {
+                setTimeout(drawWaveformCanvas, 50);
+            }
         }
 
         function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
@@ -406,8 +455,30 @@
         }
 
         // ============================================================================
-        // TAB 2: STUDIO AUDIO CUTTER & TRIMMER
+        // TAB 2: VISUAL WAVEFORM AUDIO CUTTER & MP3/WAV EXPORTER
         // ============================================================================
+        function setupCutterPlayerEvents() {
+            const player = document.getElementById('cutterSourcePlayer');
+            player.addEventListener('timeupdate', () => {
+                const cur = player.currentTime;
+                document.getElementById('liveCurrentTime').textContent = formatSeconds(cur);
+
+                const eVal = parseFloat(document.getElementById('endRangeSlider').value);
+                if (isPlayingSelectionOnly && cur >= eVal) {
+                    player.pause();
+                    isPlayingSelectionOnly = false;
+                    document.getElementById('previewRegionBtn').innerHTML = "<span>▶️ Play Selection</span>";
+                }
+                drawWaveformCanvas();
+            });
+
+            player.addEventListener('pause', () => {
+                isPlayingSelectionOnly = false;
+                document.getElementById('previewRegionBtn').innerHTML = "<span>▶️ Play Selection</span>";
+                drawWaveformCanvas();
+            });
+        }
+
         function handleCutterFile(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -420,6 +491,11 @@
             document.getElementById('trimmedOutputBox').classList.add('hidden');
 
             try {
+                if (cutterSourceUrl) URL.revokeObjectURL(cutterSourceUrl);
+                cutterSourceUrl = URL.createObjectURL(file);
+                const sourcePlayer = document.getElementById('cutterSourcePlayer');
+                sourcePlayer.src = cutterSourceUrl;
+
                 const arrayBuffer = await file.arrayBuffer();
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 cutterAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
@@ -427,6 +503,9 @@
 
                 const totalDur = Math.floor(cutterAudioBuffer.duration * 10) / 10;
                 document.getElementById('totalDurationLabel').textContent = formatSeconds(totalDur);
+                document.getElementById('liveCurrentTime').textContent = "0:00";
+
+                computeWaveformPeaks(cutterAudioBuffer, 180);
 
                 const startSlider = document.getElementById('startRangeSlider');
                 const endSlider = document.getElementById('endRangeSlider');
@@ -443,11 +522,141 @@
                 startInput.value = 0;
                 endInput.value = Math.floor(totalDur);
 
-                updateCutterLabels();
                 document.getElementById('cutterWorkspace').classList.remove('hidden');
+                updateCutterLabels();
             } catch (err) {
                 alert("ஆடியோ கோப்பைப் படிப்பதில் சிக்கல்: " + err.message);
             }
+        }
+
+        function computeWaveformPeaks(buffer, numBars) {
+            const data = buffer.getChannelData(0);
+            const step = Math.floor(data.length / numBars);
+            waveformPeaks = [];
+            let maxPeak = 0.01;
+            for (let i = 0; i < numBars; i++) {
+                let sum = 0;
+                const start = i * step;
+                for (let j = 0; j < step; j += 4) {
+                    const val = Math.abs(data[start + j] || 0);
+                    if (val > sum) sum = val;
+                }
+                waveformPeaks.push(sum);
+                if (sum > maxPeak) maxPeak = sum;
+            }
+            waveformPeaks = waveformPeaks.map(p => p / maxPeak);
+        }
+
+        function drawWaveformCanvas() {
+            if (!cutterAudioBuffer || waveformPeaks.length === 0) return;
+            const canvas = document.getElementById('waveformCanvas');
+            const rect = canvas.parentElement.getBoundingClientRect();
+            if (rect.width === 0) return;
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width;
+            const H = canvas.height;
+            const totalDur = cutterAudioBuffer.duration;
+
+            const sVal = parseFloat(document.getElementById('startRangeSlider').value);
+            const eVal = parseFloat(document.getElementById('endRangeSlider').value);
+            const curTime = document.getElementById('cutterSourcePlayer').currentTime || 0;
+
+            const startX = (sVal / totalDur) * W;
+            const endX = (eVal / totalDur) * W;
+            const playheadX = (curTime / totalDur) * W;
+
+            ctx.clearRect(0, 0, W, H);
+
+            // 1. Highlight Selected Cut Region background
+            ctx.fillStyle = "rgba(79, 70, 229, 0.22)";
+            ctx.fillRect(startX, 0, Math.max(2, endX - startX), H);
+
+            // 2. Draw Waveform Bars
+            const numBars = waveformPeaks.length;
+            const barWidth = W / numBars;
+            for (let i = 0; i < numBars; i++) {
+                const x = i * barWidth;
+                const barH = Math.max(4, waveformPeaks[i] * (H * 0.78));
+                const y = (H - barH) / 2;
+
+                if (x >= startX && x <= endX) {
+                    ctx.fillStyle = "#38bdf8";
+                } else {
+                    ctx.fillStyle = "#475569";
+                }
+                ctx.fillRect(x + 1, y, Math.max(1.5, barWidth - 2), barH);
+            }
+
+            // 3. Draw Start Marker Line (Green)
+            ctx.fillStyle = "#10b981";
+            ctx.fillRect(startX, 0, 3, H);
+
+            // 4. Draw End Marker Line (Red)
+            ctx.fillStyle = "#f43f5e";
+            ctx.fillRect(Math.max(0, endX - 3), 0, 3, H);
+
+            // 5. Draw Live Playhead Line (Yellow)
+            ctx.fillStyle = "#facc15";
+            ctx.fillRect(playheadX, 0, 2.5, H);
+        }
+
+        function seekWaveformClick(event) {
+            if (!cutterAudioBuffer) return;
+            const canvas = document.getElementById('waveformCanvas');
+            const rect = canvas.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+            const targetTime = ratio * cutterAudioBuffer.duration;
+
+            const player = document.getElementById('cutterSourcePlayer');
+            player.currentTime = targetTime;
+            player.play();
+            drawWaveformCanvas();
+        }
+
+        function setMarkAtCurrentTime(which) {
+            if (!cutterAudioBuffer) return;
+            const player = document.getElementById('cutterSourcePlayer');
+            const cur = Math.round(player.currentTime * 10) / 10;
+            const startSlider = document.getElementById('startRangeSlider');
+            const endSlider = document.getElementById('endRangeSlider');
+
+            if (which === 'start') {
+                if (cur >= parseFloat(endSlider.value) - 0.5) {
+                    endSlider.value = cutterAudioBuffer.duration;
+                }
+                startSlider.value = cur;
+                onCutterSliderChange('start');
+            } else {
+                if (cur <= parseFloat(startSlider.value) + 0.5) {
+                    alert("End Time ஆனது Start Time-ஐ விட அதிகமாக இருக்க வேண்டும்!");
+                    return;
+                }
+                endSlider.value = cur;
+                onCutterSliderChange('end');
+            }
+        }
+
+        function playSelectedRegionOnly() {
+            if (!cutterAudioBuffer) return;
+            const player = document.getElementById('cutterSourcePlayer');
+            const btn = document.getElementById('previewRegionBtn');
+
+            if (!player.paused && isPlayingSelectionOnly) {
+                player.pause();
+                isPlayingSelectionOnly = false;
+                btn.innerHTML = "<span>▶️ Play Selection</span>";
+                return;
+            }
+
+            const sVal = parseFloat(document.getElementById('startRangeSlider').value);
+            player.currentTime = sVal;
+            isPlayingSelectionOnly = true;
+            btn.innerHTML = "<span>⏸️ Stop Preview</span>";
+            player.play();
         }
 
         function onCutterSliderChange(which) {
@@ -466,10 +675,15 @@
 
             document.getElementById('startSecInput').value = Math.floor(sVal);
             document.getElementById('endSecInput').value = Math.floor(eVal);
+
+            const player = document.getElementById('cutterSourcePlayer');
+            if (which === 'start') {
+                player.currentTime = sVal;
+            }
             updateCutterLabels();
         }
 
-        function syncCutterFromInputs() {
+        function syncCutterFromInputs(which) {
             if (!cutterAudioBuffer) return;
             const maxDur = cutterAudioBuffer.duration;
             let sVal = parseFloat(document.getElementById('startSecInput').value) || 0;
@@ -482,6 +696,10 @@
             document.getElementById('endSecInput').value = eVal;
             document.getElementById('startRangeSlider').value = sVal;
             document.getElementById('endRangeSlider').value = eVal;
+
+            if (which === 'start') {
+                document.getElementById('cutterSourcePlayer').currentTime = sVal;
+            }
             updateCutterLabels();
         }
 
@@ -490,7 +708,9 @@
             const eVal = parseFloat(document.getElementById('endRangeSlider').value);
             document.getElementById('startFormatted').textContent = formatSeconds(sVal);
             document.getElementById('endFormatted').textContent = formatSeconds(eVal);
+            document.getElementById('cutRangeSummary').textContent = `${formatSeconds(sVal)} - ${formatSeconds(eVal)}`;
             document.getElementById('cutLengthLabel').textContent = formatSeconds(Math.max(0, eVal - sVal));
+            drawWaveformCanvas();
         }
 
         function cutAudioNow() {
@@ -498,6 +718,8 @@
             const sVal = parseFloat(document.getElementById('startRangeSlider').value);
             const eVal = parseFloat(document.getElementById('endRangeSlider').value);
             if (eVal <= sVal) return alert("End Time ஆனது Start Time-ஐ விட அதிகமாக இருக்க வேண்டும்!");
+
+            document.getElementById('cutterSourcePlayer').pause();
 
             const sampleRate = cutterAudioBuffer.sampleRate;
             const numChannels = cutterAudioBuffer.numberOfChannels;
@@ -517,14 +739,84 @@
             }
             tempCtx.close();
 
+            lastCutBuffer = cutBuffer;
+            trimmedMp3Blob = null; // Reset cached MP3 blob for new cut
             trimmedWavBlob = audioBufferToWavBlob(cutBuffer);
             if (trimmedAudioUrl) URL.revokeObjectURL(trimmedAudioUrl);
             trimmedAudioUrl = URL.createObjectURL(trimmedWavBlob);
 
             document.getElementById('trimmedAudioPlayer').src = trimmedAudioUrl;
-            document.getElementById('trimmedSizeBadge').textContent = `${formatSeconds(eVal - sVal)} • ${(trimmedWavBlob.size / 1024 / 1024).toFixed(2)} MB`;
+            document.getElementById('trimmedSizeBadge').textContent = `${formatSeconds(eVal - sVal)} • Ready`;
             document.getElementById('trimmedOutputBox').classList.remove('hidden');
+            document.getElementById('trimmedOutputBox').scrollIntoView({ behavior: 'smooth' });
             document.getElementById('trimmedAudioPlayer').play();
+        }
+
+        // Convert AudioBuffer to MP3 Blob using lamejs (128kbps)
+        function audioBufferToMp3Blob(buffer) {
+            const numChannels = buffer.numberOfChannels >= 2 ? 2 : 1;
+            const sampleRate = buffer.sampleRate;
+            const mp3encoder = new lamejs.Mp3Encoder(numChannels, sampleRate, 128);
+            const mp3Data = [];
+
+            const leftFloat = buffer.getChannelData(0);
+            const rightFloat = numChannels === 2 ? buffer.getChannelData(1) : leftFloat;
+            const len = leftFloat.length;
+
+            const leftPCM = new Int16Array(len);
+            const rightPCM = numChannels === 2 ? new Int16Array(len) : null;
+
+            for (let i = 0; i < len; i++) {
+                const sL = Math.max(-1, Math.min(1, leftFloat[i]));
+                leftPCM[i] = sL < 0 ? sL * 0x8000 : sL * 0x7FFF;
+                if (numChannels === 2) {
+                    const sR = Math.max(-1, Math.min(1, rightFloat[i]));
+                    rightPCM[i] = sR < 0 ? sR * 0x8000 : sR * 0x7FFF;
+                }
+            }
+
+            const sampleBlockSize = 1152;
+            for (let i = 0; i < len; i += sampleBlockSize) {
+                const leftChunk = leftPCM.subarray(i, i + sampleBlockSize);
+                let mp3buf;
+                if (numChannels === 2) {
+                    const rightChunk = rightPCM.subarray(i, i + sampleBlockSize);
+                    mp3buf = mp3encoder.encodeBuffer(leftChunk, rightChunk);
+                } else {
+                    mp3buf = mp3encoder.encodeBuffer(leftChunk);
+                }
+                if (mp3buf.length > 0) mp3Data.push(mp3buf);
+            }
+
+            const endBuf = mp3encoder.flush();
+            if (endBuf.length > 0) mp3Data.push(endBuf);
+
+            return new Blob(mp3Data, { type: 'audio/mp3' });
+        }
+
+        async function downloadTrimmedMp3() {
+            if (!lastCutBuffer) return;
+            const btn = document.getElementById('mp3DownloadBtn');
+            btn.innerHTML = "<span>⏳ Encoding MP3...</span>";
+            await new Promise(r => setTimeout(r, 30));
+
+            try {
+                if (!trimmedMp3Blob) {
+                    trimmedMp3Blob = audioBufferToMp3Blob(lastCutBuffer);
+                }
+                const mp3Url = URL.createObjectURL(trimmedMp3Blob);
+                const a = document.createElement('a');
+                a.href = mp3Url;
+                a.download = `Yugamugesh_Cut_Audio_${Date.now()}.mp3`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(mp3Url), 2000);
+            } catch (err) {
+                alert("MP3 மாற்றத்தில் சிக்கல்: " + err.message);
+            } finally {
+                btn.innerHTML = "<span>🎵 Download .MP3</span>";
+            }
         }
 
         function downloadTrimmedAudio() {
@@ -575,7 +867,7 @@
         }
 
         // ============================================================================
-        // PURE TAMIL SPELLING & LYRICS PROOFREADER (Zero Hallucinations!)
+        // PURE TAMIL SPELLING & LYRICS PROOFREADER
         // ============================================================================
         function applyInstantTamilFixes(text) {
             if (!text) return "";
@@ -614,7 +906,6 @@ STRICT RULES:
 2. Fix only phonetic mishears (for example: "ஏன் பாதை" -> "நீயே என் பாதி", "எந்தம் கேடலே" -> "எந்தன் தேடலே", "ஏகாங்க பூவே" -> "ஏகாந்த பூவே").
 3. Return ONLY the corrected Tamil text without any notes or headings.`;
 
-            // 1. Try Gemini 3.8 Flash first
             for (let i = 0; i < geminiKeys.length; i++) {
                 for (let m = 0; m < GEMINI_MODELS.length; m++) {
                     try {
@@ -638,7 +929,6 @@ STRICT RULES:
                 }
             }
 
-            // 2. Fallback to Groq Llama-3.3-70B-Versatile
             for (let g = 0; g < groqKeys.length; g++) {
                 try {
                     const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -764,7 +1054,7 @@ STRICT RULES:
         }
 
         // ============================================================================
-        // MASTER TAMIL LYRICS & SPEECH TRANSCRIPTION ENGINE (Zero Prompt Hallucination!)
+        // MASTER TAMIL LYRICS & SPEECH TRANSCRIPTION ENGINE
         // ============================================================================
         async function startTranscription() {
             const keys = getSavedApiKeys();
@@ -839,7 +1129,7 @@ STRICT RULES:
                     }
                 }
 
-                // PRIORITY 2: Groq Whisper-Large-v3 (NO song-lyric prompt so it NEVER hallucinates other songs!)
+                // PRIORITY 2: Groq Whisper-Large-v3 + Llama-3.3-70B Tamil Proofreader
                 if (!successText && groqKeys.length > 0) {
                     for (let g = 0; g < groqKeys.length; g++) {
                         document.getElementById('keyStatusText').textContent = `Step 1/2: Transcribing with Whisper-Large-v3...`;
