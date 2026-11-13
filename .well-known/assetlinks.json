@@ -1,1 +1,9 @@
 
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "in.fixrservice.audio.twa",
+        "sha256_cert_fingerprints": ["CC:77:42:59:68:64:3A:B3:3D:76:65:D0:D2:0B:14:43:9A:0B:DF:F2:E2:DA:C4:66:66:19:62:EC:93:25:DA:10"]
+      }
+    }]
