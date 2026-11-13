@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yugamugesh - Tamil Audio to Text & MP3 Audio Cutter</title>
+    <title>Yugamugesh - Free Tamil Audio to Text Converter & Online MP3 Cutter</title>
+    <meta name="description" content="Convert MP3, WAV audio files and voice recordings into 100% accurate Tamil script (தமிழ்) text online for free. Includes a visual waveform MP3/WAV audio cutter and trimmer.">
+    <meta name="keywords" content="Tamil Audio to Text, Tamil Speech to Text, MP3 to Tamil Text Converter, Online Audio Cutter, Tamil Voice Typing, Yugamugesh AI Studio, FixrService">
+    <meta name="author" content="Yugamugesh AI Studio">
+    <meta name="robots" content="index, follow">
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- lamejs for Instant Client-Side MP3 Encoding -->
     <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
         .spinner {
             border: 3px solid rgba(59, 130, 246, 0.2);
             border-top-color: #2563eb;
@@ -25,14 +29,24 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-b from-sky-50 via-indigo-50/30 to-white min-h-screen text-slate-800 flex flex-col justify-between select-none">
+<body class="bg-gradient-to-b from-sky-50 via-indigo-50/30 to-white min-h-screen text-slate-800 flex flex-col justify-between">
 
     <!-- Top Navigation -->
-    <header class="max-w-4xl w-full mx-auto px-4 py-4 flex items-center justify-between">
-        <div class="flex items-center space-x-2">
+    <header class="max-w-5xl w-full mx-auto px-4 py-4 flex items-center justify-between border-b border-slate-200/60 bg-white/70 backdrop-blur-md sticky top-0 z-40">
+        <div class="flex items-center space-x-2.5">
             <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md shadow-blue-500/20">Y</div>
-            <span class="text-xl font-bold tracking-tight text-slate-900">Yugamugesh</span>
+            <div>
+                <span class="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 block leading-none">Yugamugesh</span>
+                <span class="text-[10px] text-slate-500 font-semibold">Tamil AI Audio Studio</span>
+            </div>
         </div>
+        <nav class="hidden md:flex items-center space-x-6 text-xs font-semibold text-slate-600">
+            <a href="#uploadSection" class="hover:text-blue-600 transition">Audio Tool</a>
+            <a href="#howItWorks" class="hover:text-blue-600 transition">How It Works</a>
+            <a href="#featuresSection" class="hover:text-blue-600 transition">Features</a>
+            <a href="#faqSection" class="hover:text-blue-600 transition">FAQ</a>
+            <a href="#legalSection" class="hover:text-blue-600 transition">Privacy & Terms</a>
+        </nav>
         <div class="flex items-center space-x-2">
             <button onclick="openApiKeyModal()" class="text-xs bg-white border border-slate-200 px-3 py-2 rounded-full font-semibold text-slate-700 hover:bg-slate-50 transition shadow-sm flex items-center space-x-1">
                 <span>🔒 Key Setup</span>
@@ -43,15 +57,19 @@
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-2xl w-full mx-auto px-4 py-4 flex-grow flex flex-col items-center">
-        <div class="text-center mb-6">
+    <main class="max-w-4xl w-full mx-auto px-4 py-6 flex-grow flex flex-col items-center">
+        
+        <!-- Hero Title -->
+        <div class="text-center mb-6 max-w-2xl">
             <span class="inline-block text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-50 px-3 py-1 rounded-full mb-3">YUGAMUGESH AI STUDIO</span>
-            <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">Tamil Audio to Text & Cutter</h1>
-            <p class="text-slate-600 text-xs sm:text-base max-w-md mx-auto">Convert MP3/WAV to 100% error-free <span class="text-blue-600 font-semibold">Tamil (தமிழ்)</span> text or <span class="text-indigo-600 font-semibold">Cut Audio as MP3 & WAV</span>.</p>
+            <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">Tamil Audio to Text Converter & MP3 Cutter</h1>
+            <p class="text-slate-600 text-xs sm:text-base mx-auto leading-relaxed">
+                ஆடியோ கோப்புகள் (MP3/WAV) மற்றும் குரல் பதிவுகளை 100% துல்லியமான <span class="text-blue-600 font-semibold">தமிழ் எழுத்துக்களாக (Tamil Script)</span> மாற்றவும், ஆடியோவை கட் (Cut/Trim) செய்யவும் உதவும் இலவச இணையச் செயலி.
+            </p>
         </div>
 
         <!-- App Card Box -->
-        <div id="uploadSection" class="w-full bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 p-4 sm:p-8">
+        <div id="uploadSection" class="max-w-2xl w-full bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 p-4 sm:p-8 mb-12">
             
             <!-- Tabs Navigation -->
             <div class="grid grid-cols-4 bg-slate-100 p-1.5 rounded-2xl mb-5 text-xs sm:text-sm font-semibold gap-1">
@@ -285,6 +303,185 @@
             </div>
 
         </div>
+
+        <!-- ========================================================================= -->
+        <!-- ADSENSE & SEO CONTENT SECTIONS (HOW IT WORKS, ARTICLES, FAQ & LEGAL) -->
+        <!-- ========================================================================= -->
+
+        <!-- Section 1: How It Works (Step-by-Step Guide) -->
+        <section id="howItWorks" class="w-full mb-12">
+            <div class="text-center mb-8">
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full">Step-by-Step Guide</span>
+                <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">ஆடியோவைத் தமிழ் எழுத்துக்களாக மாற்றுவது எப்படி? (How It Works)</h2>
+                <p class="text-xs sm:text-sm text-slate-600 mt-1">வெறும் 3 எளிய படிகளில் உங்கள் ஆடியோ அல்லது குரல் பதிவைத் தமிழ் உரையாக மாற்றலாம்.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+                    <div class="w-10 h-10 bg-blue-100 text-blue-700 font-extrabold rounded-xl flex items-center justify-center mb-4">1</div>
+                    <h3 class="text-base font-bold text-slate-900 mb-2">ஆடியோவைப் பதிவேற்றவும் (Upload or Record)</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        உங்கள் மொபைல் அல்லது கம்ப்யூட்டரில் உள்ள MP3, WAV, M4A ஆடியோ கோப்பைத் தேர்ந்தெடுக்கவும். அல்லது 'Record' டேப்பைப் பயன்படுத்தி நேரடியாகத் தமிழில் பேசவும்.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+                    <div class="w-10 h-10 bg-indigo-100 text-indigo-700 font-extrabold rounded-xl flex items-center justify-center mb-4">2</div>
+                    <h3 class="text-base font-bold text-slate-900 mb-2">AI மூலம் துல்லியமான மாற்றம் (AI Transcription)</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        நமது மேம்படுத்தப்பட்ட AI தொழில்நுட்பம் உங்கள் ஆடியோவை ஆய்வு செய்து, இலக்கண மற்றும் எழுத்துப் பிழைகள் இல்லாமல் தூய தமிழ் எழுத்துக்களாக (Tamil Script) மாற்றுகிறது.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+                    <div class="w-10 h-10 bg-emerald-100 text-emerald-700 font-extrabold rounded-xl flex items-center justify-center mb-4">3</div>
+                    <h3 class="text-base font-bold text-slate-900 mb-2">பதிவிறக்கம் & பகிர்வு (Download TXT / DOC)</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        மாற்றப்பட்ட தமிழ் உரையை உடனடியாக Copy செய்யலாம், .TXT அல்லது MS Word (.DOC) கோப்பாகப் பதிவிறக்கம் செய்யலாம், அல்லது நேரடியாக WhatsApp-ல் பகிரலாம்.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Detailed SEO Articles & Features -->
+        <section id="featuresSection" class="w-full bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 mb-12 shadow-sm space-y-6">
+            <div>
+                <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 mb-3">Why Use Yugamugesh Tamil Audio to Text Converter & MP3 Cutter?</h2>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-3">
+                    <strong>Yugamugesh AI Studio</strong> is a comprehensive, browser-based audio utility designed specifically for Tamil content creators, journalists, students, researchers, and media professionals. Converting spoken Tamil audio lectures, interviews, podcasts, and song lyrics into written Tamil script manually takes hours of effort. Our intelligent speech-to-text platform automates this entire workflow within seconds while maintaining high grammatical and phonetic accuracy.
+                </p>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    தமிழ் கன்டென்ட் கிரியேட்டர்கள், பத்திரிகையாளர்கள், மாணவர்கள் மற்றும் எழுத்தாளர்களுக்குத் தேவையான மிக முக்கியமான கருவி இதுவாகும். மணிக்கணக்கில் டைப் செய்ய வேண்டிய ஆடியோ நேர்காணல்கள், வகுப்புக் குறிப்புகள் மற்றும் பாடல்களைச் சில விநாடிகளில் பிழையற்ற தமிழ் எழுத்துக்களாக மாற்றி நேரத்தை மிச்சப்படுத்துகிறது.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <h3 class="text-sm font-bold text-slate-900 mb-1">🎯 100% Automatic Tamil Spell-Check</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        சாதாரண வாய்ஸ் டைப்பிங் போல இல்லாமல், வாக்கியத்தின் பொருள் உணர்ந்து சந்திப் பிழைகள் மற்றும் எழுத்துப் பிழைகளைத் தானாகவே திருத்தும் AI Proofreader வசதி கொண்டது.
+                    </p>
+                </div>
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <h3 class="text-sm font-bold text-slate-900 mb-1">✂️ Visual Waveform MP3 & WAV Cutter</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        ஆடியோ அலைவரிசையைப் (Waveform) பார்த்துக்கொண்டே தேவையான பகுதியை மட்டும் துல்லியமாக கட் செய்து .MP3 அல்லது .WAV வடிவில் டவுன்லோட் செய்யலாம்.
+                    </p>
+                </div>
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <h3 class="text-sm font-bold text-slate-900 mb-1">🔒 100% Client-Side Privacy</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        உங்கள் ஆடியோ கோப்புகளும் API Key விவரங்களும் உங்கள் பிரவுசரிலேயே பாதுகாப்பாகக் கையாளப்படுகின்றன. எங்களது சர்வரில் எந்த ஆடியோவும் சேமிக்கப்படுவதில்லை.
+                    </p>
+                </div>
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <h3 class="text-sm font-bold text-slate-900 mb-1">📄 Multiple Export Formats</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        தமிழ் எழுத்துக்கள் மட்டுமின்றி ஆங்கில மொழிபெயர்ப்பு (English Translation), சுருக்கக் குறிப்புகள் (Summary Points) மற்றும் Tanglish வடிவிலும் மாற்றிக் கொள்ளலாம்.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Frequently Asked Questions (FAQ) -->
+        <section id="faqSection" class="w-full mb-12">
+            <div class="text-center mb-6">
+                <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">அடிக்கடி கேட்கப்படும் கேள்விகள் (FAQ)</h2>
+                <p class="text-xs sm:text-sm text-slate-600 mt-1">Common questions about Tamil Audio Transcription and MP3 Cutting.</p>
+            </div>
+
+            <div class="space-y-3">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                    <h3 class="text-sm font-bold text-slate-900 mb-1">1. எந்தெந்த ஆடியோ வடிவங்களை (Audio Formats) இதில் பயன்படுத்தலாம்?</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        MP3, WAV, M4A, AAC மற்றும் OGG ஆகிய அனைத்து முக்கிய ஆடியோ வடிவங்களையும் நீங்கள் பதிவேற்றம் செய்யலாம். மேலும் மைக்ரோஃபோன் மூலம் நேரடியாகப் பேசியும் தமிழ் எழுத்துக்களாக மாற்றலாம்.
+                    </p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                    <h3 class="text-sm font-bold text-slate-900 mb-1">2. நீண்ட ஆடியோவில் ஒரு குறிப்பிட்ட பகுதியை மட்டும் தமிழ் உரையாக மாற்ற முடியுமா?</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        நிச்சயமாக! மேலே உள்ள '✂️ Cutter' டேப்பைத் தேர்ந்தெடுத்து, ஆடியோவை பிளே செய்து உங்களுக்குத் தேவையான Start மற்றும் End நேரத்தைத் தேர்வு செய்து கட் செய்யவும். பின்னர் 'Convert to Tamil Text' பட்டனை அழுத்தினால் அந்தப் பகுதி மட்டும் தமிழ் எழுத்துக்களாக மாறிவிடும்.
+                    </p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                    <h3 class="text-sm font-bold text-slate-900 mb-1">3. எனது ஆடியோ கோப்புகள் மற்றும் API Key பாதுகாப்பாக இருக்குமா?</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        100% பாதுகாப்பாக இருக்கும். நீங்கள் உள்ளிடும் API Key உங்கள் பிரவுசரின் LocalStorage-ல் மட்டுமே சேமிக்கப்படும். வேறு யாராலும் அதைப் பார்க்க முடியாது. ஆடியோ கட்டர் முழுமையாக உங்கள் பிரவுசருக்குள்ளேயே (Offline Web Audio API) இயங்குகிறது.
+                    </p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                    <h3 class="text-sm font-bold text-slate-900 mb-1">4. கட் செய்த ஆடியோவை எந்த வடிவில் பதிவிறக்கம் செய்யலாம்?</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        கட் செய்யப்பட்ட ஆடியோவை சுத்தமான MP3 (.mp3) கோப்பாகவோ அல்லது Lossless WAV (.wav) கோப்பாகவோ உடனடியாக டவுன்லோட் செய்து கொள்ளலாம்.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: About Us, Privacy Policy, Terms & Contact (AdSense Mandatory Compliance) -->
+        <section id="legalSection" class="w-full bg-slate-50 rounded-3xl border border-slate-200/80 p-6 sm:p-8 mb-8 space-y-6 text-xs sm:text-sm text-slate-600 leading-relaxed">
+            <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-4">
+                <button onclick="showLegalTab('about')" id="btnLegalAbout" class="px-4 py-2 rounded-xl font-bold bg-blue-600 text-white text-xs transition">About Us</button>
+                <button onclick="showLegalTab('privacy')" id="btnLegalPrivacy" class="px-4 py-2 rounded-xl font-bold bg-white text-slate-700 border border-slate-200 text-xs transition">Privacy Policy</button>
+                <button onclick="showLegalTab('terms')" id="btnLegalTerms" class="px-4 py-2 rounded-xl font-bold bg-white text-slate-700 border border-slate-200 text-xs transition">Terms & Conditions</button>
+                <button onclick="showLegalTab('contact')" id="btnLegalContact" class="px-4 py-2 rounded-xl font-bold bg-white text-slate-700 border border-slate-200 text-xs transition">Contact Us</button>
+            </div>
+
+            <!-- About Us Content -->
+            <div id="legalContentAbout" class="space-y-3 block">
+                <h3 class="text-base font-extrabold text-slate-900">About Yugamugesh AI Studio</h3>
+                <p>
+                    Welcome to <strong>Yugamugesh AI Studio</strong> (operated under FixrService Digital Solutions), an innovative web utility platform dedicated to simplifying Tamil digital content creation. Our mission is to bridge the language technology gap by providing fast, accessible, and highly accurate Tamil speech-to-text transcription and browser-based audio editing tools.
+                </p>
+                <p>
+                    Whether you are a student transcribing educational lectures, a journalist documenting interviews, or a media creator trimming audio clips, our platform delivers studio-grade utilities directly inside your web browser without requiring heavy software installations.
+                </p>
+            </div>
+
+            <!-- Privacy Policy Content (Includes Google AdSense DART Cookie Compliance) -->
+            <div id="legalContentPrivacy" class="space-y-3 hidden">
+                <h3 class="text-base font-extrabold text-slate-900">Privacy Policy</h3>
+                <p><strong>Last Updated:</strong> November 2026</p>
+                <p>
+                    At Yugamugesh AI Studio, accessible from our official domain and subdomains, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by our website and how we use it.
+                </p>
+                <p>
+                    <strong>1. Audio Data & Local Storage Processing:</strong> All audio trimming and waveform visualizations happen 100% locally inside your web browser using the HTML5 Web Audio API. We do not store, archive, or sell your personal audio files on any external servers. Any API keys configured by the user are stored strictly in the user's local browser storage (<code>localStorage</code>).
+                </p>
+                <p>
+                    <strong>2. Google DoubleClick DART Cookie & AdSense:</strong> Google is one of a third-party vendor on our site. It also uses cookies, known as DART cookies, to serve ads to our site visitors based upon their visit to our site and other sites on the internet. However, visitors may choose to decline the use of DART cookies by visiting the Google ad and content network Privacy Policy at the following URL – <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener" class="text-blue-600 underline">https://policies.google.com/technologies/ads</a>.
+                </p>
+                <p>
+                    <strong>3. Log Files & Analytics:</strong> Like many other Web sites, we make use of standard log files to analyze trends, administer the site, and gather demographic information. IP addresses and other such information are not linked to any information that is personally identifiable.
+                </p>
+            </div>
+
+            <!-- Terms & Conditions Content -->
+            <div id="legalContentTerms" class="space-y-3 hidden">
+                <h3 class="text-base font-extrabold text-slate-900">Terms and Conditions</h3>
+                <p>
+                    By accessing and using Yugamugesh AI Studio, you accept and agree to be bound by the terms and provision of this agreement:
+                </p>
+                <ul class="list-disc pl-5 space-y-1.5">
+                    <li><strong>Permitted Use:</strong> You may use our audio-to-text converter and MP3 cutter for personal, educational, and commercial content creation purposes.</li>
+                    <li><strong>Copyright Responsibility:</strong> Users are solely responsible for ensuring they hold the necessary rights or permissions for any audio files they upload, trim, or transcribe using this tool.</li>
+                    <li><strong>Service Availability:</strong> The tools are provided on an "as-is" basis. While we strive for 100% accuracy in Tamil transcription, automated AI outputs should be reviewed for critical documents.</li>
+                </ul>
+            </div>
+
+            <!-- Contact Us Content -->
+            <div id="legalContentContact" class="space-y-3 hidden">
+                <h3 class="text-base font-extrabold text-slate-900">Contact Us</h3>
+                <p>
+                    If you have any questions regarding our Tamil Audio to Text Converter, MP3 Cutter, business inquiries, or privacy practices, please reach out to us:
+                </p>
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-1.5">
+                    <p><strong>Platform Name:</strong> Yugamugesh AI Studio / FixrService Digital</p>
+                    <p><strong>Location:</strong> Tamil Nadu, India</p>
+                    <p><strong>Support Email:</strong> <a href="mailto:support@fixrservice.in" class="text-blue-600 font-semibold underline">support@fixrservice.in</a></p>
+                    <p><strong>Response Time:</strong> Within 24 to 48 Business Hours</p>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- Secure API Key Setup Modal -->
@@ -316,8 +513,18 @@
     </div>
 
     <!-- Footer -->
-    <footer class="text-center py-4 text-xs text-slate-400">
-        <span>🔒 100% Error-Free Tamil Text Engine • ✂️ MP3 & WAV Audio Cutter • ⚡ Gemini & Whisper AI</span>
+    <footer class="bg-white border-t border-slate-200/80 py-6 px-4 text-center text-xs text-slate-500">
+        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="font-semibold text-slate-700">
+                © 2026 Yugamugesh AI Studio (FixrService.in). All rights reserved.
+            </div>
+            <div class="flex flex-wrap justify-center gap-4 font-medium">
+                <a href="#legalSection" onclick="showLegalTab('about')" class="hover:text-blue-600">About Us</a>
+                <a href="#legalSection" onclick="showLegalTab('privacy')" class="hover:text-blue-600">Privacy Policy</a>
+                <a href="#legalSection" onclick="showLegalTab('terms')" class="hover:text-blue-600">Terms of Service</a>
+                <a href="#legalSection" onclick="showLegalTab('contact')" class="hover:text-blue-600">Contact Us</a>
+            </div>
+        </div>
     </footer>
 
     <script>
@@ -346,13 +553,23 @@
             setupCutterPlayerEvents();
         });
 
+        // Switch Legal Tabs (About, Privacy, Terms, Contact)
+        function showLegalTab(tab) {
+            ['about', 'privacy', 'terms', 'contact'].forEach(t => {
+                document.getElementById('legalContent' + capitalize(t)).classList.add('hidden');
+                document.getElementById('btnLegal' + capitalize(t)).className = "px-4 py-2 rounded-xl font-bold bg-white text-slate-700 border border-slate-200 text-xs transition";
+            });
+            document.getElementById('legalContent' + capitalize(tab)).classList.remove('hidden');
+            document.getElementById('btnLegal' + capitalize(tab)).className = "px-4 py-2 rounded-xl font-bold bg-blue-600 text-white text-xs transition";
+        }
+
         function updateKeyIndicator() {
             const keys = getSavedApiKeys();
             const dot = document.getElementById('keyCountDot');
             dot.className = keys.length > 0 ? "w-2 h-2 rounded-full bg-emerald-500 ml-1" : "w-2 h-2 rounded-full bg-amber-500 ml-1";
         }
 
-        // Switch Tabs
+        // Switch Main Tool Tabs
         function switchTab(tab) {
             ['upload', 'cutter', 'record', 'sample'].forEach(t => {
                 document.getElementById('panel' + capitalize(t)).classList.add('hidden');
@@ -570,11 +787,9 @@
 
             ctx.clearRect(0, 0, W, H);
 
-            // 1. Highlight Selected Cut Region background
             ctx.fillStyle = "rgba(79, 70, 229, 0.22)";
             ctx.fillRect(startX, 0, Math.max(2, endX - startX), H);
 
-            // 2. Draw Waveform Bars
             const numBars = waveformPeaks.length;
             const barWidth = W / numBars;
             for (let i = 0; i < numBars; i++) {
@@ -590,15 +805,12 @@
                 ctx.fillRect(x + 1, y, Math.max(1.5, barWidth - 2), barH);
             }
 
-            // 3. Draw Start Marker Line (Green)
             ctx.fillStyle = "#10b981";
             ctx.fillRect(startX, 0, 3, H);
 
-            // 4. Draw End Marker Line (Red)
             ctx.fillStyle = "#f43f5e";
             ctx.fillRect(Math.max(0, endX - 3), 0, 3, H);
 
-            // 5. Draw Live Playhead Line (Yellow)
             ctx.fillStyle = "#facc15";
             ctx.fillRect(playheadX, 0, 2.5, H);
         }
@@ -740,7 +952,7 @@
             tempCtx.close();
 
             lastCutBuffer = cutBuffer;
-            trimmedMp3Blob = null; // Reset cached MP3 blob for new cut
+            trimmedMp3Blob = null;
             trimmedWavBlob = audioBufferToWavBlob(cutBuffer);
             if (trimmedAudioUrl) URL.revokeObjectURL(trimmedAudioUrl);
             trimmedAudioUrl = URL.createObjectURL(trimmedWavBlob);
@@ -752,7 +964,6 @@
             document.getElementById('trimmedAudioPlayer').play();
         }
 
-        // Convert AudioBuffer to MP3 Blob using lamejs (128kbps)
         function audioBufferToMp3Blob(buffer) {
             const numChannels = buffer.numberOfChannels >= 2 ? 2 : 1;
             const sampleRate = buffer.sampleRate;
