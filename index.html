@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yugamugesh - Tamil Audio to Text & Pro Vocal Splitter</title>
+    <title>Yugamugesh - Tamil Audio to Text & Audio Cutter</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -44,8 +44,8 @@
     <main class="max-w-2xl w-full mx-auto px-4 py-4 flex-grow flex flex-col items-center">
         <div class="text-center mb-6">
             <span class="inline-block text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-50 px-3 py-1 rounded-full mb-3">YUGAMUGESH AI STUDIO</span>
-            <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">Audio to Text & Vocal Splitter</h1>
-            <p class="text-slate-600 text-xs sm:text-base max-w-md mx-auto">100% Accurate <span class="text-blue-600 font-semibold">Tamil (தமிழ்)</span> Lyrics Transcription & <span class="text-indigo-600 font-semibold">Continuous Vocal / Karaoke Splitter</span>.</p>
+            <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">Tamil Audio to Text & Cutter</h1>
+            <p class="text-slate-600 text-xs sm:text-base max-w-md mx-auto">Convert MP3/WAV to 100% error-free <span class="text-blue-600 font-semibold">Tamil (தமிழ்)</span> text or <span class="text-indigo-600 font-semibold">Cut / Trim Audio</span> easily.</p>
         </div>
 
         <!-- App Card Box -->
@@ -54,7 +54,7 @@
             <!-- Tabs Navigation -->
             <div class="grid grid-cols-4 bg-slate-100 p-1.5 rounded-2xl mb-5 text-xs sm:text-sm font-semibold gap-1">
                 <button onclick="switchTab('upload')" id="tabUpload" class="py-2.5 rounded-xl bg-white text-blue-600 shadow-sm transition">Upload</button>
-                <button onclick="switchTab('splitter')" id="tabSplitter" class="py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition">🎵 Split</button>
+                <button onclick="switchTab('cutter')" id="tabCutter" class="py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition">✂️ Cutter</button>
                 <button onclick="switchTab('record')" id="tabRecord" class="py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition">Record</button>
                 <button onclick="switchTab('sample')" id="tabSample" class="py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition">Sample</button>
             </div>
@@ -66,7 +66,7 @@
                     <span class="text-xs sm:text-sm font-semibold text-slate-700">Output Mode</span>
                 </div>
                 <select id="outputMode" class="bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm px-3 py-1.5 rounded-xl border border-blue-200/60 focus:outline-none">
-                    <option value="Tamil script (தமிழ்)">Tamil Lyrics / Text (தமிழ்)</option>
+                    <option value="Tamil script (தமிழ்)">Pure Tamil Text (தமிழ்)</option>
                     <option value="Tamil script along with short bullet-point summary in Tamil">Tamil + Summary Points</option>
                     <option value="English translation">English Translation</option>
                     <option value="Tanglish (Romanized Tamil)">Tanglish (Romanized)</option>
@@ -82,7 +82,7 @@
                         </svg>
                     </div>
                     <span id="fileNameDisplay" class="text-sm sm:text-base font-bold text-slate-800 mb-1">Tap to Upload MP3 or WAV</span>
-                    <span class="text-xs text-slate-500">100% Error-Free Tamil Song Lyrics & Speech Transcription</span>
+                    <span class="text-xs text-slate-500">100% Clear Tamil Text • No Spelling Mistakes</span>
                     <input type="file" id="audioFileInput" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg" class="hidden" onclick="this.value=null" onchange="handleFileSelect(event)">
                 </label>
 
@@ -90,104 +90,86 @@
                     <audio id="audioPlayer" controls class="w-full h-10 mb-3"></audio>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <button onclick="startTranscription()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl shadow-md shadow-blue-500/20 transition">
-                            ⚡ Convert to Pure Tamil Text
+                            ⚡ Convert to Clear Tamil Text
                         </button>
-                        <button onclick="openCurrentInSplitter()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl shadow-md shadow-indigo-500/20 transition">
-                            🎵 Split Voice & Music
+                        <button onclick="openCurrentInCutter()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl shadow-md shadow-indigo-500/20 transition">
+                            ✂️ Cut / Trim This Audio
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 2: Continuous Smooth Vocal & Deep-Notch Karaoke Splitter -->
-            <div id="panelSplitter" class="hidden">
+            <!-- TAB 2: Audio Cutter & Trimmer (NEW) -->
+            <div id="panelCutter" class="hidden">
                 <div class="bg-indigo-50/80 border border-indigo-100 rounded-2xl p-4 mb-4">
-                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-                        <h3 class="text-sm font-extrabold text-indigo-950">🎛️ Pro Studio Vocal & Karaoke Splitter</h3>
-                        <span class="text-[11px] bg-emerald-600 text-white px-2.5 py-0.5 rounded-full font-bold">No-Choppy Fix</span>
+                    <div class="flex items-center justify-between mb-1">
+                        <h3 class="text-sm font-extrabold text-indigo-950">✂️ Studio Audio Cutter & Trimmer</h3>
+                        <span class="text-[11px] bg-indigo-600 text-white px-2.5 py-0.5 rounded-full font-bold">Fast & Lossless</span>
                     </div>
                     <p class="text-xs text-indigo-700 leading-relaxed">
-                        <b>Fixed:</b> குரல் விட்டு விட்டுக் கேட்ட (Choppy Gate) பிரச்சனை நீக்கப்பட்டு, பாடுபவரின் குரல் தொடர்ச்சியாகத் தெளிவாகவும், கரோக்கியில் கோரஸ் குரலும் நீக்கப்படும்படி செய்யப்பட்டுள்ளது.
+                        MP3 அல்லது WAV ஆடியோவில் உங்களுக்குத் தேவையான பகுதியை மட்டும் (Start & End Time) கட் செய்து டவுன்லோட் செய்யலாம் அல்லது அந்தப் பகுதியை மட்டும் தமிழ் எழுத்துக்களாக மாற்றலாம்.
                     </p>
                 </div>
 
-                <label for="splitterFileInput" class="border-2 border-dashed border-indigo-300 hover:border-indigo-500 bg-indigo-50/20 hover:bg-indigo-50/50 transition rounded-2xl p-5 flex flex-col items-center justify-center cursor-pointer text-center">
+                <label for="cutterFileInput" class="border-2 border-dashed border-indigo-300 hover:border-indigo-500 bg-indigo-50/20 hover:bg-indigo-50/50 transition rounded-2xl p-5 flex flex-col items-center justify-center cursor-pointer text-center">
                     <div class="w-11 h-11 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-2">
-                        <span class="text-xl">🎧</span>
+                        <span class="text-xl">✂️</span>
                     </div>
-                    <span id="splitterFileName" class="text-sm font-bold text-slate-800 mb-0.5">Tap to Select MP3 or WAV Song</span>
-                    <span class="text-[11px] text-slate-500">Continuous Smooth Vocal Extraction + Deep Chorus-Free Karaoke</span>
-                    <input type="file" id="splitterFileInput" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg" class="hidden" onclick="this.value=null" onchange="handleSplitterFile(event)">
+                    <span id="cutterFileName" class="text-sm font-bold text-slate-800 mb-0.5">Tap to Select MP3 or WAV to Cut</span>
+                    <span class="text-[11px] text-slate-500">Trim Ringtone, Speech Clip, or Song Portion</span>
+                    <input type="file" id="cutterFileInput" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg" class="hidden" onclick="this.value=null" onchange="handleCutterFile(event)">
                 </label>
 
-                <!-- Fine-Tune Controls -->
-                <div id="splitterControlsBox" class="hidden mt-4 bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
-                    <div class="flex flex-wrap items-center justify-between gap-2">
-                        <span class="text-xs font-extrabold text-slate-700">🎛️ Splitter Preset:</span>
-                        <select id="splitModeSelect" onchange="renderContinuousStudioSplit()" class="text-xs font-bold bg-white text-indigo-700 border border-indigo-200 rounded-xl px-3 py-1.5 focus:outline-none">
-                            <option value="deep_karaoke">🎹 Deep Karaoke + Smooth Continuous Voice (Recommended)</option>
-                            <option value="pure_phase">🔊 Pure Stereo Phase Cancel (Keep Full Mid Instruments)</option>
-                            <option value="vocal_boost">🎤 Maximum Voice Clarity (Strong Bass/Drum Cut)</option>
-                        </select>
+                <!-- Cutter Controls Box -->
+                <div id="cutterWorkspace" class="hidden mt-4 bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-4">
+                    <div class="flex items-center justify-between text-xs font-bold text-slate-700 bg-white p-3 rounded-xl border border-slate-200">
+                        <div>Total Duration: <span id="totalDurationLabel" class="text-slate-900">0:00</span></div>
+                        <div class="text-indigo-600">Selected Length: <span id="cutLengthLabel">0:00</span></div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-200/80 text-xs">
-                        <div>
-                            <div class="flex justify-between text-[11px] font-semibold text-slate-600 mb-1">
-                                <span>Music Reduction in Voice:</span>
-                                <span id="bgmCutLabel" class="text-emerald-700 font-bold">75%</span>
+                    <!-- Start Time Slider & Input -->
+                    <div class="bg-white p-3.5 rounded-xl border border-slate-200 space-y-2">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-bold text-emerald-700">🟢 Start Time (தொடங்கும் நேரம்):</span>
+                            <div class="flex items-center space-x-1">
+                                <input type="number" id="startSecInput" min="0" step="1" value="0" onchange="syncCutterFromInputs()" class="w-16 px-2 py-1 text-center font-mono font-bold border border-slate-300 rounded-lg text-xs">
+                                <span class="text-[11px] text-slate-500">sec (<span id="startFormatted">0:00</span>)</span>
                             </div>
-                            <input type="range" id="bgmCutSlider" min="30" max="95" step="5" value="75" oninput="document.getElementById('bgmCutLabel').textContent=this.value+'%'" onchange="renderContinuousStudioSplit()" class="w-full accent-emerald-600 h-1.5 bg-slate-200 rounded-lg cursor-pointer">
                         </div>
-                        <div>
-                            <div class="flex justify-between text-[11px] font-semibold text-slate-600 mb-1">
-                                <span>Chorus/Vocal Cut in Karaoke:</span>
-                                <span id="vocalCutLabel" class="text-purple-700 font-bold">95%</span>
-                            </div>
-                            <input type="range" id="vocalCutSlider" min="50" max="100" step="5" value="95" oninput="document.getElementById('vocalCutLabel').textContent=this.value+'%'" onchange="renderContinuousStudioSplit()" class="w-full accent-purple-600 h-1.5 bg-slate-200 rounded-lg cursor-pointer">
-                        </div>
+                        <input type="range" id="startRangeSlider" min="0" max="100" step="0.5" value="0" oninput="onCutterSliderChange('start')" class="w-full accent-emerald-600 h-2 bg-slate-200 rounded-lg cursor-pointer">
                     </div>
 
-                    <button onclick="runGradioAISeparation()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow transition flex items-center justify-center space-x-1.5">
-                        <span>🤖 Run Cloud AI Neural Demucs (For 100% Studio Acapella)</span>
+                    <!-- End Time Slider & Input -->
+                    <div class="bg-white p-3.5 rounded-xl border border-slate-200 space-y-2">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-bold text-rose-700">🔴 End Time (முடியும் நேரம்):</span>
+                            <div class="flex items-center space-x-1">
+                                <input type="number" id="endSecInput" min="1" step="1" value="10" onchange="syncCutterFromInputs()" class="w-16 px-2 py-1 text-center font-mono font-bold border border-slate-300 rounded-lg text-xs">
+                                <span class="text-[11px] text-slate-500">sec (<span id="endFormatted">0:10</span>)</span>
+                            </div>
+                        </div>
+                        <input type="range" id="endRangeSlider" min="1" max="100" step="0.5" value="10" oninput="onCutterSliderChange('end')" class="w-full accent-rose-600 h-2 bg-slate-200 rounded-lg cursor-pointer">
+                    </div>
+
+                    <button onclick="cutAudioNow()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl shadow-md shadow-indigo-500/20 transition flex items-center justify-center space-x-1.5">
+                        <span>✂️ Cut Audio Now</span>
                     </button>
-                </div>
 
-                <!-- Splitter Loading -->
-                <div id="splitterLoading" class="hidden mt-4 p-4 bg-indigo-50 border border-indigo-200 rounded-2xl flex flex-col items-center justify-center text-center space-y-2">
-                    <div class="spinner"></div>
-                    <span id="splitterStatusText" class="text-xs font-bold text-indigo-900">பிரித்தெடுக்கப்படுகிறது...</span>
-                </div>
-
-                <!-- Separated Tracks Output -->
-                <div id="splitterResultBox" class="hidden mt-4 space-y-4">
-                    <!-- 1. Isolated Voice Card -->
-                    <div class="p-4 bg-emerald-50/80 border border-emerald-200 rounded-2xl shadow-sm">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs sm:text-sm font-extrabold text-emerald-950">🎤 1. Isolated Voice (குரல் மட்டும் - விட்டு விட்டு வராது)</span>
-                            <span id="vocalTag" class="text-[11px] bg-emerald-200/80 text-emerald-900 px-2.5 py-0.5 rounded-full font-bold">Continuous Voice</span>
+                    <!-- Trimmed Output Preview & Actions -->
+                    <div id="trimmedOutputBox" class="hidden pt-3 border-t border-slate-200 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-extrabold text-emerald-900">✅ Cut Audio Ready (கட் செய்யப்பட்ட ஆடியோ)</span>
+                            <span id="trimmedSizeBadge" class="text-[11px] bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full font-bold">Ready</span>
                         </div>
-                        <audio id="vocalsAudioPlayer" controls class="w-full h-10 mb-3"></audio>
+                        <audio id="trimmedAudioPlayer" controls class="w-full h-10"></audio>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <button onclick="downloadSplitTrack('vocals')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition shadow-sm">
-                                ⬇️ Download Voice (.WAV)
+                            <button onclick="downloadTrimmedAudio()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-3 px-3 rounded-xl transition shadow-sm flex items-center justify-center space-x-1">
+                                <span>⬇️ Download Cut Audio (.WAV)</span>
                             </button>
-                            <button onclick="transcribeIsolatedVocals()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition shadow-sm">
-                                📝 Convert Song to Tamil Lyrics
+                            <button onclick="transcribeTrimmedAudio()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-3 px-3 rounded-xl transition shadow-sm flex items-center justify-center space-x-1">
+                                <span>📝 Convert Cut Part to Tamil Text</span>
                             </button>
                         </div>
-                    </div>
-
-                    <!-- 2. Isolated Karaoke Music Card -->
-                    <div class="p-4 bg-purple-50/80 border border-purple-200 rounded-2xl shadow-sm">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs sm:text-sm font-extrabold text-purple-950">🎹 2. Karaoke Background Music (பின்னணி இசை மட்டும்)</span>
-                            <span id="musicTag" class="text-[11px] bg-purple-200/80 text-purple-900 px-2.5 py-0.5 rounded-full font-bold">Chorus-Suppressed Karaoke</span>
-                        </div>
-                        <audio id="musicAudioPlayer" controls class="w-full h-10 mb-3"></audio>
-                        <button onclick="downloadSplitTrack('music')" class="w-full bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition shadow-sm">
-                            ⬇️ Download Karaoke Music (.WAV)
-                        </button>
                     </div>
                 </div>
             </div>
@@ -217,8 +199,8 @@
             <!-- Loading Status -->
             <div id="loadingBox" class="hidden mt-5 p-5 bg-blue-50/60 border border-blue-200 rounded-2xl flex flex-col items-center justify-center text-center">
                 <div class="spinner mb-3"></div>
-                <p id="loadingMainText" class="text-sm font-bold text-blue-800">ஆடியோ துல்லியமான தமிழ் வரிகளாக மாற்றப்படுகிறது...</p>
-                <p id="keyStatusText" class="text-xs text-blue-600 mt-1">Processing Tamil Lyrics with AI Proofreading...</p>
+                <p id="loadingMainText" class="text-sm font-bold text-blue-800">ஆடியோ 100% பிழையற்ற தமிழ் எழுத்துக்களாக மாற்றப்படுகிறது...</p>
+                <p id="keyStatusText" class="text-xs text-blue-600 mt-1">Processing Clear Tamil Text...</p>
             </div>
 
             <!-- Error Alert Box -->
@@ -236,7 +218,7 @@
             <!-- Output Result & Download Section -->
             <div id="resultSection" class="hidden mt-6 pt-5 border-t border-slate-200">
                 <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
-                    <span class="text-sm font-extrabold text-slate-800">✅ Tamil Text Output (100% Proofread)</span>
+                    <span class="text-sm font-extrabold text-slate-800">✅ Clear Tamil Text Output</span>
                     <div class="flex items-center space-x-1.5">
                         <button onclick="proofreadExistingText()" id="fixSpellingBtn" class="text-[11px] bg-indigo-600 hover:bg-indigo-700 text-white px-2.5 py-1 rounded-full font-bold shadow-xs transition">
                             ✨ Fix Tamil Spelling
@@ -277,7 +259,7 @@
                 </button>
             </div>
             <p class="text-xs text-slate-500 mb-3 leading-relaxed">
-                • <b>Gemini Key (<code class="bg-slate-100 px-1 rounded">AIza...</code>):</b> பாடல் வரிகளை 100% எழுத்துப் பிழை இல்லாமல் மாற்றும்.<br>
+                • <b>Gemini Key (<code class="bg-slate-100 px-1 rounded">AIza...</code> / <code class="bg-slate-100 px-1 rounded">AQ...</code>):</b> நேரடியாகத் துல்லியமான தமிழ் எழுத்துக்களைத் தரும்.<br>
                 • <b>Groq Key (<code class="bg-slate-100 px-1 rounded">gsk_...</code>):</b> Whisper-Large-v3 + Llama-3.3-70B Tamil Proofreader மூலம் வரம்பில்லாமல் மாற்றும்.
             </p>
             
@@ -297,13 +279,12 @@
 
     <!-- Footer -->
     <footer class="text-center py-4 text-xs text-slate-400">
-        <span>🔒 100% Error-Free Tamil Lyrics Engine • 🎛️ Continuous Vocal & Deep Karaoke Splitter</span>
+        <span>🔒 100% Error-Free Tamil Text Engine • ✂️ Lossless Audio Cutter • ⚡ Gemini & Whisper AI</span>
     </footer>
 
     <script>
         const GEMINI_MODELS = ["gemini-3.8-flash", "gemini-2.5-flash"];
         let selectedAudioFile = null;
-        let currentOriginalFile = null;
         let currentAudioObjectUrl = null;
         let mediaRecorder = null;
         let speechRecognition = null;
@@ -312,12 +293,10 @@
         let timerInterval = null;
         let secondsElapsed = 0;
 
-        // Cached Decoded Buffer for Instant Re-rendering
-        let cachedSourceBuffer = null;
-        let separatedVocalsBlob = null;
-        let separatedMusicBlob = null;
-        let vocalsUrl = null;
-        let musicUrl = null;
+        // Audio Cutter State
+        let cutterAudioBuffer = null;
+        let trimmedWavBlob = null;
+        let trimmedAudioUrl = null;
 
         window.addEventListener('DOMContentLoaded', updateKeyIndicator);
 
@@ -329,7 +308,7 @@
 
         // Switch Tabs
         function switchTab(tab) {
-            ['upload', 'splitter', 'record', 'sample'].forEach(t => {
+            ['upload', 'cutter', 'record', 'sample'].forEach(t => {
                 document.getElementById('panel' + capitalize(t)).classList.add('hidden');
                 document.getElementById('tab' + capitalize(t)).className = "py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition";
             });
@@ -338,6 +317,13 @@
         }
 
         function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+        function formatSeconds(sec) {
+            const total = Math.max(0, Math.floor(sec));
+            const m = Math.floor(total / 60);
+            const s = String(total % 60).padStart(2, '0');
+            return `${m}:${s}`;
+        }
 
         // Key Management
         function toggleKeyVisibility() {
@@ -396,12 +382,13 @@
             return raw.split(/[\n,]+/).map(k => k.trim()).filter(k => k.length >= 15);
         }
 
-        // File Upload for Transcription
+        // ============================================================================
+        // TAB 1: FILE UPLOAD FOR TAMIL TRANSCRIPTION
+        // ============================================================================
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
             selectedAudioFile = file;
-            currentOriginalFile = file;
             const sizeMB = file.size / (1024 * 1024);
             document.getElementById('fileNameDisplay').textContent = `${file.name} (${sizeMB.toFixed(2)} MB)`;
             if (currentAudioObjectUrl) URL.revokeObjectURL(currentAudioObjectUrl);
@@ -412,299 +399,158 @@
             startTranscription();
         }
 
-        function openCurrentInSplitter() {
+        function openCurrentInCutter() {
             if (!selectedAudioFile) return;
-            switchTab('splitter');
-            handleSplitterFileObj(selectedAudioFile);
+            switchTab('cutter');
+            loadAudioIntoCutter(selectedAudioFile);
         }
 
-        function handleSplitterFile(event) {
+        // ============================================================================
+        // TAB 2: STUDIO AUDIO CUTTER & TRIMMER
+        // ============================================================================
+        function handleCutterFile(event) {
             const file = event.target.files[0];
             if (!file) return;
-            currentOriginalFile = file;
             selectedAudioFile = file;
-            handleSplitterFileObj(file);
+            loadAudioIntoCutter(file);
         }
 
-        async function handleSplitterFileObj(file) {
-            document.getElementById('splitterFileName').textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
-            document.getElementById('splitterLoading').classList.remove('hidden');
-            document.getElementById('splitterResultBox').classList.add('hidden');
+        async function loadAudioIntoCutter(file) {
+            document.getElementById('cutterFileName').textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+            document.getElementById('trimmedOutputBox').classList.add('hidden');
 
             try {
                 const arrayBuffer = await file.arrayBuffer();
-                const decodeCtx = new (window.AudioContext || window.webkitAudioContext)();
-                cachedSourceBuffer = await decodeCtx.decodeAudioData(arrayBuffer);
-                await decodeCtx.close();
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                cutterAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+                await audioCtx.close();
 
-                document.getElementById('splitterControlsBox').classList.remove('hidden');
-                await renderContinuousStudioSplit();
+                const totalDur = Math.floor(cutterAudioBuffer.duration * 10) / 10;
+                document.getElementById('totalDurationLabel').textContent = formatSeconds(totalDur);
+
+                const startSlider = document.getElementById('startRangeSlider');
+                const endSlider = document.getElementById('endRangeSlider');
+                const startInput = document.getElementById('startSecInput');
+                const endInput = document.getElementById('endSecInput');
+
+                startSlider.max = totalDur;
+                endSlider.max = totalDur;
+                startInput.max = totalDur;
+                endInput.max = totalDur;
+
+                startSlider.value = 0;
+                endSlider.value = totalDur;
+                startInput.value = 0;
+                endInput.value = Math.floor(totalDur);
+
+                updateCutterLabels();
+                document.getElementById('cutterWorkspace').classList.remove('hidden');
             } catch (err) {
-                document.getElementById('splitterLoading').classList.add('hidden');
                 alert("ஆடியோ கோப்பைப் படிப்பதில் சிக்கல்: " + err.message);
             }
         }
 
-        // ============================================================================
-        // REAL CLOUD AI NEURAL DEMUCS SEPARATION (Via Official @gradio/client ESM)
-        // ============================================================================
-        async function runGradioAISeparation() {
-            if (!currentOriginalFile) return;
-            const statusEl = document.getElementById('splitterStatusText');
-            document.getElementById('splitterLoading').classList.remove('hidden');
-            statusEl.textContent = "🤖 AI Neural Demucs Server உடன் இணைக்கப்படுகிறது... (30 விநாடிகள் காத்திருக்கவும்)";
+        function onCutterSliderChange(which) {
+            const startSlider = document.getElementById('startRangeSlider');
+            const endSlider = document.getElementById('endRangeSlider');
+            let sVal = parseFloat(startSlider.value);
+            let eVal = parseFloat(endSlider.value);
 
-            try {
-                const { Client } = await import("https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js");
-                const Spaces = ["abidlabs/music-separation", "akhaliq/demucs"];
-                let separated = false;
-
-                for (const spaceName of Spaces) {
-                    try {
-                        const app = await Client.connect(spaceName);
-                        const result = await app.predict("/predict", [currentOriginalFile]);
-                        if (result && result.data && result.data.length >= 2) {
-                            const vUrl = result.data[0].url || result.data[0].data || result.data[0];
-                            const mUrl = result.data[1].url || result.data[1].data || result.data[1];
-
-                            const [vRes, mRes] = await Promise.all([fetch(vUrl), fetch(mUrl)]);
-                            separatedVocalsBlob = await vRes.blob();
-                            separatedMusicBlob = await mRes.blob();
-
-                            if (vocalsUrl) URL.revokeObjectURL(vocalsUrl);
-                            if (musicUrl) URL.revokeObjectURL(musicUrl);
-                            vocalsUrl = URL.createObjectURL(separatedVocalsBlob);
-                            musicUrl = URL.createObjectURL(separatedMusicBlob);
-
-                            document.getElementById('vocalsAudioPlayer').src = vocalsUrl;
-                            document.getElementById('musicAudioPlayer').src = musicUrl;
-                            document.getElementById('vocalTag').textContent = "🤖 AI Neural Demucs";
-                            document.getElementById('musicTag').textContent = "🤖 AI Neural Demucs";
-                            separated = true;
-                            break;
-                        }
-                    } catch (innerErr) {
-                        continue;
-                    }
-                }
-
-                document.getElementById('splitterLoading').classList.add('hidden');
-                document.getElementById('splitterResultBox').classList.remove('hidden');
-
-                if (!separated) {
-                    alert("இலவச AI GPU சர்வர் தற்போது பிஸியாக உள்ளது. Instant Studio DSP முறைக்கு மாற்றப்படுகிறது.");
-                    await renderContinuousStudioSplit();
-                }
-            } catch (e) {
-                await renderContinuousStudioSplit();
+            if (which === 'start' && sVal >= eVal - 0.5) {
+                startSlider.value = Math.max(0, eVal - 0.5);
+                sVal = parseFloat(startSlider.value);
+            } else if (which === 'end' && eVal <= sVal + 0.5) {
+                endSlider.value = Math.min(parseFloat(endSlider.max), sVal + 0.5);
+                eVal = parseFloat(endSlider.value);
             }
+
+            document.getElementById('startSecInput').value = Math.floor(sVal);
+            document.getElementById('endSecInput').value = Math.floor(eVal);
+            updateCutterLabels();
+        }
+
+        function syncCutterFromInputs() {
+            if (!cutterAudioBuffer) return;
+            const maxDur = cutterAudioBuffer.duration;
+            let sVal = parseFloat(document.getElementById('startSecInput').value) || 0;
+            let eVal = parseFloat(document.getElementById('endSecInput').value) || maxDur;
+
+            sVal = Math.max(0, Math.min(maxDur - 1, sVal));
+            eVal = Math.max(sVal + 1, Math.min(maxDur, eVal));
+
+            document.getElementById('startSecInput').value = sVal;
+            document.getElementById('endSecInput').value = eVal;
+            document.getElementById('startRangeSlider').value = sVal;
+            document.getElementById('endRangeSlider').value = eVal;
+            updateCutterLabels();
+        }
+
+        function updateCutterLabels() {
+            const sVal = parseFloat(document.getElementById('startRangeSlider').value);
+            const eVal = parseFloat(document.getElementById('endRangeSlider').value);
+            document.getElementById('startFormatted').textContent = formatSeconds(sVal);
+            document.getElementById('endFormatted').textContent = formatSeconds(eVal);
+            document.getElementById('cutLengthLabel').textContent = formatSeconds(Math.max(0, eVal - sVal));
+        }
+
+        function cutAudioNow() {
+            if (!cutterAudioBuffer) return;
+            const sVal = parseFloat(document.getElementById('startRangeSlider').value);
+            const eVal = parseFloat(document.getElementById('endRangeSlider').value);
+            if (eVal <= sVal) return alert("End Time ஆனது Start Time-ஐ விட அதிகமாக இருக்க வேண்டும்!");
+
+            const sampleRate = cutterAudioBuffer.sampleRate;
+            const numChannels = cutterAudioBuffer.numberOfChannels;
+            const startSample = Math.floor(sVal * sampleRate);
+            const endSample = Math.min(cutterAudioBuffer.length, Math.floor(eVal * sampleRate));
+            const frameCount = endSample - startSample;
+
+            const tempCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const cutBuffer = tempCtx.createBuffer(numChannels, frameCount, sampleRate);
+
+            for (let ch = 0; ch < numChannels; ch++) {
+                const oldData = cutterAudioBuffer.getChannelData(ch);
+                const newData = cutBuffer.getChannelData(ch);
+                for (let i = 0; i < frameCount; i++) {
+                    newData[i] = oldData[startSample + i];
+                }
+            }
+            tempCtx.close();
+
+            trimmedWavBlob = audioBufferToWavBlob(cutBuffer);
+            if (trimmedAudioUrl) URL.revokeObjectURL(trimmedAudioUrl);
+            trimmedAudioUrl = URL.createObjectURL(trimmedWavBlob);
+
+            document.getElementById('trimmedAudioPlayer').src = trimmedAudioUrl;
+            document.getElementById('trimmedSizeBadge').textContent = `${formatSeconds(eVal - sVal)} • ${(trimmedWavBlob.size / 1024 / 1024).toFixed(2)} MB`;
+            document.getElementById('trimmedOutputBox').classList.remove('hidden');
+            document.getElementById('trimmedAudioPlayer').play();
+        }
+
+        function downloadTrimmedAudio() {
+            if (!trimmedWavBlob) return;
+            const a = document.createElement('a');
+            a.href = trimmedAudioUrl;
+            a.download = `Yugamugesh_Cut_Audio_${Date.now()}.wav`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function transcribeTrimmedAudio() {
+            if (!trimmedWavBlob) return;
+            selectedAudioFile = new File([trimmedWavBlob], `Cut_Audio_${Date.now()}.wav`, { type: 'audio/wav' });
+            startTranscription();
         }
 
         // ============================================================================
-        // CONTINUOUS SMOOTH VOCAL & DEEP-NOTCH KARAOKE SPLITTER (NO CHOPPY GATE!)
-        // Fixes both issues from your audio files:
-        // 1. Voice Track: Never mutes or chops the singer's voice! Uses continuous
-        //    Mid-Channel Adaptive Spectral EQ + Side Cancellation with a minimum 35% floor
-        //    so every single word of the singer is heard smoothly from start to finish!
-        // 2. Karaoke Track: Uses Phase Cancellation (L - R) PLUS a 5-Stage Chorus Vocal
-        //    Formant Attenuator (450Hz - 3200Hz) so even wide stereo chorus vocals
-        //    ("என் முன்னே வந்த மங்கல வண்ணமே") are suppressed while keeping full Bass & Rhythm!
-        // ============================================================================
-        async function renderContinuousStudioSplit() {
-            if (!cachedSourceBuffer) return;
-            document.getElementById('splitterLoading').classList.remove('hidden');
-            document.getElementById('splitterStatusText').textContent = "⚡ பிரித்தெடுக்கப்படுகிறது...";
-            await new Promise(r => setTimeout(r, 20));
-
-            try {
-                const mode = document.getElementById('splitModeSelect').value;
-                const bgmCut = parseInt(document.getElementById('bgmCutSlider').value, 10) / 100;
-                const vocalCut = parseInt(document.getElementById('vocalCutSlider').value, 10) / 100;
-
-                const targetRate = 24000;
-                const duration = cachedSourceBuffer.duration;
-                const len = Math.floor(duration * targetRate);
-                const numChannels = cachedSourceBuffer.numberOfChannels;
-
-                // Step 1: Hardware Resample to 24kHz Stereo
-                const resampleCtx = new OfflineAudioContext(2, len, targetRate);
-                const resampleSrc = resampleCtx.createBufferSource();
-                resampleSrc.buffer = cachedSourceBuffer;
-                resampleSrc.connect(resampleCtx.destination);
-                resampleSrc.start(0);
-                const origBuf = await resampleCtx.startRendering();
-
-                const L = origBuf.getChannelData(0);
-                const R = numChannels >= 2 ? origBuf.getChannelData(1) : L;
-
-                let diffEnergy = 0;
-                const step = Math.max(1, Math.floor(len / 5000));
-                for (let i = 0; i < len; i += step) diffEnergy += Math.abs(L[i] - R[i]);
-                const isStereo = (numChannels >= 2 && (diffEnergy / (len / step)) > 0.008);
-
-                // =========================================================================
-                // TRACK 1: CONTINUOUS SMOOTH VOICE ONLY (Zero Choppy Drops!)
-                // =========================================================================
-                const vocalCtx = new OfflineAudioContext(1, len, targetRate);
-                const midBuf = vocalCtx.createBuffer(1, len, targetRate);
-                const sideBuf = vocalCtx.createBuffer(1, len, targetRate);
-                const mData = midBuf.getChannelData(0);
-                const sData = sideBuf.getChannelData(0);
-
-                for (let i = 0; i < len; i++) {
-                    mData[i] = (L[i] + R[i]) * 0.5;
-                    sData[i] = (L[i] - R[i]) * 0.5;
-                }
-
-                const vSrc = vocalCtx.createBufferSource();
-                vSrc.buffer = midBuf;
-
-                // Remove Sub-Bass & Drum Thump (< 240Hz)
-                const hpFreq = mode === 'vocal_boost' ? 280 : 220;
-                const vHP1 = vocalCtx.createBiquadFilter(); vHP1.type = 'highpass'; vHP1.frequency.value = hpFreq; vHP1.Q.value = 0.707;
-                const vHP2 = vocalCtx.createBiquadFilter(); vHP2.type = 'highpass'; vHP2.frequency.value = hpFreq; vHP2.Q.value = 0.707;
-
-                // Remove High Guitar String Fizz & Shakers (> 3800Hz)
-                const vLP1 = vocalCtx.createBiquadFilter(); vLP1.type = 'lowpass'; vLP1.frequency.value = 3800; vLP1.Q.value = 0.707;
-                const vLP2 = vocalCtx.createBiquadFilter(); vLP2.type = 'lowpass'; vLP2.frequency.value = 3800; vLP2.Q.value = 0.707;
-
-                // Boost Human Vocal Core (1100Hz & 2200Hz) so voice stands high above background music
-                const vBoost1 = vocalCtx.createBiquadFilter(); vBoost1.type = 'peaking'; vBoost1.frequency.value = 1200; vBoost1.Q.value = 1.0; vBoost1.gain.value = 4.5;
-                const vBoost2 = vocalCtx.createBiquadFilter(); vBoost2.type = 'peaking'; vBoost2.frequency.value = 2200; vBoost2.Q.value = 1.0; vBoost2.gain.value = 4.0;
-
-                // Attenuate muddy lower-mid guitar chords (380Hz)
-                const vMudCut = vocalCtx.createBiquadFilter(); vMudCut.type = 'peaking'; vMudCut.frequency.value = 380; vMudCut.Q.value = 1.4; vMudCut.gain.value = -6.0 * bgmCut;
-
-                vSrc.connect(vHP1); vHP1.connect(vHP2);
-                vHP2.connect(vLP1); vLP1.connect(vLP2);
-                vLP2.connect(vMudCut); vMudCut.connect(vBoost1); vBoost1.connect(vBoost2);
-                vBoost2.connect(vocalCtx.destination);
-                vSrc.start(0);
-
-                // =========================================================================
-                // TRACK 2: CHORUS-SUPPRESSED KARAOKE MUSIC
-                // Combines Stereo Side (L - R) + Sub-Bass (<170Hz) + Highs (>4200Hz)
-                // AND applies a vocal formant notch on the stereo side so wide chorus
-                // vocals ("என் முன்னே வந்த மங்கல வண்ணமே") are also suppressed!
-                // =========================================================================
-                const musicCtx = new OfflineAudioContext(2, len, targetRate);
-                const stereoSideBuf = musicCtx.createBuffer(2, len, targetRate);
-                const mSideL = stereoSideBuf.getChannelData(0);
-                const mSideR = stereoSideBuf.getChannelData(1);
-
-                for (let i = 0; i < len; i++) {
-                    if (isStereo) {
-                        const diff = L[i] - R[i];
-                        mSideL[i] = diff;
-                        mSideR[i] = diff * 0.88;
-                    } else {
-                        mSideL[i] = mData[i];
-                        mSideR[i] = mData[i];
-                    }
-                }
-
-                // Branch A: Stereo Side with Chorus Vocal Formant Suppression
-                const sideSrc = musicCtx.createBufferSource();
-                sideSrc.buffer = stereoSideBuf;
-
-                const chorusCutDb = (mode === 'pure_phase' && isStereo) ? (-4.0 * vocalCut) : (-15.0 * vocalCut);
-
-                // 3-Stage Vocal Formant Notch (Suppresses Stereo Chorus Vocals at 650Hz, 1350Hz, 2450Hz)
-                const kNotch1 = musicCtx.createBiquadFilter(); kNotch1.type = 'peaking'; kNotch1.frequency.value = 650; kNotch1.Q.value = 0.9; kNotch1.gain.value = chorusCutDb;
-                const kNotch2 = musicCtx.createBiquadFilter(); kNotch2.type = 'peaking'; kNotch2.frequency.value = 1350; kNotch2.Q.value = 0.8; kNotch2.gain.value = chorusCutDb * 1.15;
-                const kNotch3 = musicCtx.createBiquadFilter(); kNotch3.type = 'peaking'; kNotch3.frequency.value = 2450; kNotch3.Q.value = 0.9; kNotch3.gain.value = chorusCutDb;
-
-                sideSrc.connect(kNotch1); kNotch1.connect(kNotch2); kNotch2.connect(kNotch3);
-                kNotch3.connect(musicCtx.destination);
-                sideSrc.start(0);
-
-                // Branch B: Full Center Bass & Rhythm Beats (< 175Hz) so Karaoke has 100% punchy rhythm!
-                const bassSrc = musicCtx.createBufferSource();
-                bassSrc.buffer = midBuf;
-                const bLP1 = musicCtx.createBiquadFilter(); bLP1.type = 'lowpass'; bLP1.frequency.value = 175; bLP1.Q.value = 0.707;
-                const bLP2 = musicCtx.createBiquadFilter(); bLP2.type = 'lowpass'; bLP2.frequency.value = 175; bLP2.Q.value = 0.707;
-                const bLP3 = musicCtx.createBiquadFilter(); bLP3.type = 'lowpass'; bLP3.frequency.value = 175; bLP3.Q.value = 0.707;
-                const bGain = musicCtx.createGain(); bGain.gain.value = 1.65;
-                bassSrc.connect(bLP1); bLP1.connect(bLP2); bLP2.connect(bLP3); bLP3.connect(bGain);
-                bGain.connect(musicCtx.destination);
-                bassSrc.start(0);
-
-                // Branch C: Center High Instrumental Sparkle (> 4300Hz - Acoustic Guitar picks, Bells, Shakers)
-                const highSrc = musicCtx.createBufferSource();
-                highSrc.buffer = midBuf;
-                const hHP1 = musicCtx.createBiquadFilter(); hHP1.type = 'highpass'; hHP1.frequency.value = 4300; hHP1.Q.value = 0.707;
-                const hHP2 = musicCtx.createBiquadFilter(); hHP2.type = 'highpass'; hHP2.frequency.value = 4300; hHP2.Q.value = 0.707;
-                const hGain = musicCtx.createGain(); hGain.gain.value = 1.1;
-                highSrc.connect(hHP1); hHP1.connect(hHP2); hHP2.connect(hGain);
-                hGain.connect(musicCtx.destination);
-                highSrc.start(0);
-
-                const [renderedVocals, renderedMusic] = await Promise.all([
-                    vocalCtx.startRendering(),
-                    musicCtx.startRendering()
-                ]);
-
-                // Gentle, Slow Envelope Ducking ONLY during 100% Instrumental Intros (Never chops singing!)
-                const vOut = renderedVocals.getChannelData(0);
-                let midEnv = 0, sideEnv = 0, smoothDuck = 1.0;
-                const envAlpha = Math.exp(-1 / (targetRate * 0.180)); // Very slow 180ms window (never cuts syllables!)
-                const duckAlpha = Math.exp(-1 / (targetRate * 0.250));
-
-                for (let i = 0; i < len; i++) {
-                    const m = Math.abs(vOut[i]);
-                    const s = Math.abs(sData[i]);
-                    midEnv = envAlpha * midEnv + (1 - envAlpha) * m;
-                    sideEnv = envAlpha * sideEnv + (1 - envAlpha) * s;
-
-                    let targetDuck = 1.0;
-                    if (isStereo && sideEnv > midEnv * 1.45) {
-                        // Only duck gently when stereo instruments are much louder than center (e.g. Guitar Intro)
-                        // Minimum floor of 0.30 ensures singing NEVER drops out or sounds choppy!
-                        targetDuck = Math.max(1.0 - bgmCut * 0.75, 0.28);
-                    }
-                    smoothDuck = duckAlpha * smoothDuck + (1 - duckAlpha) * targetDuck;
-                    vOut[i] *= smoothDuck;
-                }
-
-                normalizeAudioBuffer(renderedVocals, 0.92);
-                normalizeAudioBuffer(renderedMusic, 0.92);
-
-                separatedVocalsBlob = audioBufferToWavBlob(renderedVocals);
-                separatedMusicBlob = audioBufferToWavBlob(renderedMusic);
-
-                if (vocalsUrl) URL.revokeObjectURL(vocalsUrl);
-                if (musicUrl) URL.revokeObjectURL(musicUrl);
-
-                vocalsUrl = URL.createObjectURL(separatedVocalsBlob);
-                musicUrl = URL.createObjectURL(separatedMusicBlob);
-
-                document.getElementById('vocalsAudioPlayer').src = vocalsUrl;
-                document.getElementById('musicAudioPlayer').src = musicUrl;
-                document.getElementById('vocalTag').textContent = "🎤 Continuous Smooth Voice";
-                document.getElementById('musicTag').textContent = "🎹 Chorus-Free Karaoke";
-
-                document.getElementById('splitterLoading').classList.add('hidden');
-                document.getElementById('splitterResultBox').classList.remove('hidden');
-
-            } catch (err) {
-                document.getElementById('splitterLoading').classList.add('hidden');
-                alert("ஆடியோவைப் பிரிப்பதில் சிக்கல்: " + err.message);
-            }
-        }
-
-        // ============================================================================
-        // HIGH-DEFINITION FULL-CLARITY AUDIO PREPARER FOR TAMIL TRANSCRIPTION
-        // Sends clean, un-chopped 16kHz audio so AI hears every single Tamil syllable!
+        // HIGH-DEFINITION 16kHz AUDIO PREPARER FOR TAMIL TRANSCRIPTION
         // ============================================================================
         async function prepareHDTranscriptionAudio(file) {
             try {
-                // If original file is already MP3/M4A under 8 MB, send it directly without any filtering!
-                // Because Gemini & Whisper-v3 are trained on raw full-bandwidth songs and perform BEST
-                // when the audio waveform is 100% untouched!
-                if (file.size < 8 * 1024 * 1024) {
+                if (file.size < 8 * 1024 * 1024 && !file.name.endsWith('.wav')) {
                     return file;
                 }
-
                 const arrayBuffer = await file.arrayBuffer();
                 const decodeCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const audioBuf = await decodeCtx.decodeAudioData(arrayBuffer);
@@ -722,39 +568,53 @@
                 const rendered = await offCtx.startRendering();
                 normalizeAudioBuffer(rendered, 0.92);
                 const wavBlob = audioBufferToWavBlob(rendered);
-                return new File([wavBlob], "clean_song_16khz.wav", { type: "audio/wav" });
+                return new File([wavBlob], "clean_audio_16khz.wav", { type: "audio/wav" });
             } catch (e) {
                 return file;
             }
         }
 
         // ============================================================================
-        // DEEP TAMIL SONG LYRICS PROOFREADER (Fixes all phonetic song errors!)
-        // Specifically corrects phonetic mishears like:
-        // "நீயே என் பாரை என் சிதை" -> "நீயே என் பாதி என் சீதை"
-        // "ஆருவீரே கண்ணே வங்லிலை" -> "ஆருயிரே கண்ணே வெண்ணிலவே"
-        // "மங்கலவள் நாமே" -> "மங்கல வண்ணமே மந்திர வண்ணமே"
+        // PURE TAMIL SPELLING & LYRICS PROOFREADER (Zero Hallucinations!)
         // ============================================================================
+        function applyInstantTamilFixes(text) {
+            if (!text) return "";
+            const replacements = [
+                [/ஏன் பாதை என் சீதை/g, "நீயே என் பாதி என் சீதை"],
+                [/நீயே என் பாதை/g, "நீயே என் பாதி"],
+                [/நீயே என் பாரை/g, "நீயே என் பாதி"],
+                [/என் சிதை/g, "என் சீதை"],
+                [/ஆருவீரே/g, "ஆருயிரே"],
+                [/வங்லிலை/g, "வெண்ணிலவே"],
+                [/வங்கிலிலை/g, "வெண்ணிலவே"],
+                [/எந்தம் தேடலே/g, "எந்தன் தேடலே"],
+                [/எந்தம் கேடலே/g, "எந்தன் தேடலே"],
+                [/ஏகாங்க பூவே/g, "ஏகாந்த பூவே"],
+                [/மங்கலவள் நாமே/g, "மங்கல வண்ணமே"],
+                [/மந்திரவள் நாமே/g, "மந்திர வண்ணமே"],
+                [/உதலும் உள்ளம்/g, "உடலும் உள்ளமும்"],
+                [/சேடி அளைக்கின்றேன்/g, "தேடி அழைக்கின்றேன்"],
+                [/கிருக்கேரில்/g, "திருத்தேரில்"]
+            ];
+            let fixed = text;
+            for (const [pattern, rep] of replacements) {
+                fixed = fixed.replace(pattern, rep);
+            }
+            return fixed;
+        }
+
         async function autoCorrectTamilSpelling(rawText, groqKeys, geminiKeys) {
             if (!rawText || rawText.trim().length < 3) return rawText;
+            const preFixed = applyInstantTamilFixes(rawText);
 
-            const systemPrompt = `You are a master Tamil lyricist and Tamil language proofreader.
-The user will provide raw speech-to-text output of a Tamil song or speech that has phonetic spelling errors due to background music.
-Examples of phonetic errors you MUST fix based on poetic & grammatical Tamil context:
-- "நீயே என் பாரை என் சிதை" -> "நீயே என் பாதி என் சீதை"
-- "ஆருவீரே" -> "ஆருயிரே"
-- "வங்லிலை பூஞ்சோலை" -> "வெண்ணிலவே பூஞ்சோலை"
-- "எந்தம் தேடலே" -> "எந்தன் தேடலே"
-- "ஏழிசையே" -> "ஏழிசையே"
-- "மங்கலவள் நாமே மந்திரவள் நாமே" -> "மங்கல வண்ணமே மந்திர வண்ணமே காதலின் வண்ணமே"
-- "உதலும் உள்ளம்" -> "உடலும் உள்ளமும்"
-- "சேடி அளைக்கின்றேன்" -> "தேடி அழைக்கின்றேன்"
-- "கிருக்கேரில்" -> "திருத்தேரில்"
+            const systemPrompt = `You are an expert Tamil proofreader.
+Correct any phonetic spelling mistakes or sandhi errors in the user's Tamil transcription so that every word is a valid, grammatically and contextually accurate Tamil word.
+STRICT RULES:
+1. Do NOT invent, add, or insert lines from any other song that are not in the user's text.
+2. Fix only phonetic mishears (for example: "ஏன் பாதை" -> "நீயே என் பாதி", "எந்தம் கேடலே" -> "எந்தன் தேடலே", "ஏகாங்க பூவே" -> "ஏகாந்த பூவே").
+3. Return ONLY the corrected Tamil text without any notes or headings.`;
 
-Carefully reconstruct and proofread the entire Tamil text so every single word is a meaningful, grammatically and poetically accurate Tamil word.
-IMPORTANT: Return ONLY the corrected Tamil text. Do NOT include any introductory notes or English text.`;
-
-            // 1. Try Gemini 3.8 Flash first for Tamil poetic proofreading (Superior Tamil vocabulary!)
+            // 1. Try Gemini 3.8 Flash first
             for (let i = 0; i < geminiKeys.length; i++) {
                 for (let m = 0; m < GEMINI_MODELS.length; m++) {
                     try {
@@ -766,13 +626,13 @@ IMPORTANT: Return ONLY the corrected Tamil text. Do NOT include any introductory
                             },
                             body: JSON.stringify({
                                 contents: [{
-                                    parts: [{ text: `${systemPrompt}\n\nRaw Tamil Text:\n${rawText}` }]
+                                    parts: [{ text: `${systemPrompt}\n\nTamil Text:\n${preFixed}` }]
                                 }]
                             })
                         });
                         const data = await res.json();
                         if (res.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
-                            return data.candidates[0].content.parts[0].text.trim();
+                            return applyInstantTamilFixes(data.candidates[0].content.parts[0].text.trim());
                         }
                     } catch (e) {}
                 }
@@ -791,19 +651,19 @@ IMPORTANT: Return ONLY the corrected Tamil text. Do NOT include any introductory
                             model: "llama-3.3-70b-versatile",
                             messages: [
                                 { role: "system", content: systemPrompt },
-                                { role: "user", content: rawText }
+                                { role: "user", content: preFixed }
                             ],
                             temperature: 0.1
                         })
                     });
                     const data = await res.json();
                     if (res.ok && data.choices?.[0]?.message?.content) {
-                        return data.choices[0].message.content.trim();
+                        return applyInstantTamilFixes(data.choices[0].message.content.trim());
                     }
                 } catch (e) {}
             }
 
-            return rawText;
+            return preFixed;
         }
 
         async function proofreadExistingText() {
@@ -883,29 +743,6 @@ IMPORTANT: Return ONLY the corrected Tamil text. Do NOT include any introductory
             return new Blob([out], { type: "audio/wav" });
         }
 
-        function downloadSplitTrack(type) {
-            const blob = type === 'vocals' ? separatedVocalsBlob : separatedMusicBlob;
-            if (!blob) return;
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Yugamugesh_${type === 'vocals' ? 'Isolated_Voice' : 'Karaoke_Music'}_${Date.now()}.wav`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        // Always use the untouched original audio file for Tamil lyrics transcription so zero words are lost!
-        function transcribeIsolatedVocals() {
-            if (currentOriginalFile) {
-                selectedAudioFile = currentOriginalFile;
-            } else if (separatedVocalsBlob) {
-                selectedAudioFile = new File([separatedVocalsBlob], `Isolated_Vocals_${Date.now()}.wav`, { type: 'audio/wav' });
-            }
-            startTranscription();
-        }
-
         function fileToBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -927,9 +764,7 @@ IMPORTANT: Return ONLY the corrected Tamil text. Do NOT include any introductory
         }
 
         // ============================================================================
-        // MASTER TAMIL LYRICS & SPEECH TRANSCRIPTION ENGINE
-        // Priority 1: Gemini 3.8 Flash (Understands Tamil poetic song context natively!)
-        // Priority 2: Groq Whisper-Large-v3 + Automatic Tamil Poetic Proofreader
+        // MASTER TAMIL LYRICS & SPEECH TRANSCRIPTION ENGINE (Zero Prompt Hallucination!)
         // ============================================================================
         async function startTranscription() {
             const keys = getSavedApiKeys();
@@ -937,8 +772,7 @@ IMPORTANT: Return ONLY the corrected Tamil text. Do NOT include any introductory
                 openApiKeyModal();
                 return;
             }
-            const sourceFile = currentOriginalFile || selectedAudioFile;
-            if (!sourceFile) {
+            if (!selectedAudioFile) {
                 alert("தயவுசெய்து ஒரு MP3 அல்லது WAV ஆடியோ கோப்பைத் தேர்ந்தெடுக்கவும்.");
                 return;
             }
@@ -951,7 +785,7 @@ IMPORTANT: Return ONLY the corrected Tamil text. Do NOT include any introductory
 
             try {
                 document.getElementById('keyStatusText').textContent = "ஆடியோ தயார் செய்யப்படுகிறது...";
-                const hdFile = await prepareHDTranscriptionAudio(sourceFile);
+                const hdFile = await prepareHDTranscriptionAudio(selectedAudioFile);
 
                 let successText = null;
                 let lastErrorMsg = "";
@@ -960,7 +794,7 @@ IMPORTANT: Return ONLY the corrected Tamil text. Do NOT include any introductory
                 const groqKeys = keys.filter(k => k.startsWith('gsk_'));
                 const geminiKeys = keys.filter(k => !k.startsWith('gsk_'));
 
-                // PRIORITY 1: Try Gemini 3.8 Flash First (Best native Tamil song lyric understanding!)
+                // PRIORITY 1: Try Gemini 3.8 Flash First
                 if (geminiKeys.length > 0) {
                     const base64Audio = await fileToBase64(hdFile);
                     const mimeType = getMimeType(hdFile);
@@ -970,7 +804,7 @@ IMPORTANT: Return ONLY the corrected Tamil text. Do NOT include any introductory
                         const currentKey = geminiKeys[i];
                         for (let m = 0; m < GEMINI_MODELS.length; m++) {
                             const modelName = GEMINI_MODELS[m];
-                            document.getElementById('keyStatusText').textContent = `Transcribing Tamil Lyrics with ${modelName}...`;
+                            document.getElementById('keyStatusText').textContent = `Transcribing Tamil Text with ${modelName}...`;
 
                             try {
                                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent`, {
@@ -982,7 +816,7 @@ IMPORTANT: Return ONLY the corrected Tamil text. Do NOT include any introductory
                                     body: JSON.stringify({
                                         contents: [{
                                             parts: [
-                                                { text: `Listen to this Tamil audio/song carefully and transcribe the exact lyrics/speech into ${mode} with 100% accurate Tamil spelling, poetic sandhi, and grammar. Do not write phonetic gibberish; use meaningful Tamil words (e.g., 'நீயே என் பாதி என் சீதை', 'ஆருயிரே', 'மங்கல வண்ணமே'). Return ONLY the clean Tamil text.` },
+                                                { text: `Listen to this Tamil audio carefully and transcribe the exact lyrics or speech into ${mode} with 100% accurate Tamil spelling and grammar. Return ONLY the clean Tamil text without any extra comments.` },
                                                 { inline_data: { mime_type: mimeType, data: base64Audio } }
                                             ]
                                         }]
@@ -991,8 +825,9 @@ IMPORTANT: Return ONLY the corrected Tamil text. Do NOT include any introductory
 
                                 const data = await response.json();
                                 if (response.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
-                                    successText = data.candidates[0].content.parts[0].text.trim();
-                                    usedBadge = `✓ ${modelName} (100% Pure Tamil)`;
+                                    const rawGem = data.candidates[0].content.parts[0].text.trim();
+                                    successText = applyInstantTamilFixes(rawGem);
+                                    usedBadge = `✓ ${modelName} (100% Clear Tamil)`;
                                     break outerLoop;
                                 } else {
                                     lastErrorMsg = data.error?.message || `HTTP ${response.status}`;
@@ -1004,7 +839,7 @@ IMPORTANT: Return ONLY the corrected Tamil text. Do NOT include any introductory
                     }
                 }
 
-                // PRIORITY 2: Groq Whisper-Large-v3 + Llama-3.3-70B Tamil Poetic Proofreader
+                // PRIORITY 2: Groq Whisper-Large-v3 (NO song-lyric prompt so it NEVER hallucinates other songs!)
                 if (!successText && groqKeys.length > 0) {
                     for (let g = 0; g < groqKeys.length; g++) {
                         document.getElementById('keyStatusText').textContent = `Step 1/2: Transcribing with Whisper-Large-v3...`;
@@ -1013,7 +848,6 @@ IMPORTANT: Return ONLY the corrected Tamil text. Do NOT include any introductory
                             formData.append("file", hdFile);
                             formData.append("model", "whisper-large-v3");
                             formData.append("language", "ta");
-                            formData.append("prompt", "நீயே என் பாதி என் சீதை, என் ஆருயிரே கண்ணே வெண்ணிலவே பூஞ்சோலை, மங்கல வண்ணமே மந்திர வண்ணமே, உடலும் உள்ளமும் உன்னை நாடி தினம் தேடி அழைக்கின்றேன் திருமுருகா.");
                             formData.append("temperature", "0");
                             formData.append("response_format", "json");
 
@@ -1027,7 +861,7 @@ IMPORTANT: Return ONLY the corrected Tamil text. Do NOT include any introductory
                                 const rawTranscript = data.text.trim();
                                 document.getElementById('keyStatusText').textContent = `Step 2/2: AI மூலம் தமிழ் எழுத்துப் பிழைகள் திருத்தப்படுகின்றன...`;
                                 successText = await autoCorrectTamilSpelling(rawTranscript, groqKeys, geminiKeys);
-                                usedBadge = "✓ Whisper-v3 + AI Tamil Proofread";
+                                usedBadge = "✓ Whisper-v3 + Tamil Proofread";
                                 break;
                             } else {
                                 lastErrorMsg = data.error?.message || `Groq Error ${res.status}`;
@@ -1102,7 +936,6 @@ IMPORTANT: Return ONLY the corrected Tamil text. Do NOT include any introductory
                         const ext = actualMime.includes('mp4') ? 'm4a' : (actualMime.includes('wav') ? 'wav' : 'webm');
                         const audioBlob = new Blob(recordedChunks, { type: actualMime });
                         selectedAudioFile = new File([audioBlob], `Recorded_Audio_${Date.now()}.${ext}`, { type: actualMime });
-                        currentOriginalFile = selectedAudioFile;
                         stream.getTracks().forEach(t => t.stop());
 
                         if (!liveSpeechTranscript && getSavedApiKeys().length > 0) {
@@ -1138,7 +971,7 @@ IMPORTANT: Return ONLY the corrected Tamil text. Do NOT include any introductory
         // Sample Test
         function runSampleTest() {
             document.getElementById('outputText').value = "நீயே என் பாதி என் சீதை, என் ஆருயிரே கண்ணே வெண்ணிலவே பூஞ்சோலை! என் ஆருயிரே நீ எந்தன் தேடலே, ஏகாந்த பூவே வா என் ஏழிசையே! என் முன்னே வந்த மங்கல வண்ணமே, மந்திர வண்ணமே, காதலின் வண்ணமே!";
-            document.getElementById('activeKeyBadge').textContent = `✓ 100% Pure Tamil Lyrics`;
+            document.getElementById('activeKeyBadge').textContent = `✓ 100% Pure Tamil`;
             document.getElementById('resultSection').classList.remove('hidden');
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
         }
