@@ -1,9 +1,523 @@
-<script>
+<!DOCTYPE html>
+<html lang="ta">
+<head><meta name="google-adsense-account" content="ca-pub-2364261268133710">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Yugamugesh - Smart Audio & Voice AI Studio | Multi-Language Transcriber & MP3 Cutter</title>
+    <meta name="description" content="Convert MP3, WAV audio files and voice recordings into 100% accurate Tamil, English, Hindi, Telugu, and Malayalam text online for free. Includes Waveform Cutter, TTS, Visualizer & SRT export.">
+    <meta name="keywords" content="Tamil Audio to Text, Multi-Language Speech to Text, MP3 to Tamil Text Converter, Online Audio Cutter, SRT Subtitle Generator, Audio Visualizer, Yugamugesh AI Studio, FixrService">
+    <meta name="author" content="Yugamugesh AI Studio">
+    <meta name="robots" content="index, follow">
+
+    <!-- PWA & Mobile App (APK / AAB) Meta Tags -->
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Yuga Studio">
+    <link rel="manifest" id="pwaManifestLink" href="/manifest.json">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%234f46e5'/><text x='50%' y='54%' dominant-baseline='central' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='800' font-size='58'>Y</text></svg>">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        .spinner {
+            border: 3px solid rgba(99, 102, 241, 0.25);
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .masked-key {
+            -webkit-text-security: disc;
+            text-security: disc;
+        }
+        select option {
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-[#070913] via-[#111132] to-[#070913] min-h-screen text-slate-100 flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+    <!-- Top Navigation -->
+    <header class="max-w-6xl w-full mx-auto px-4 py-4 flex items-center justify-between border-b border-indigo-500/20 bg-[#0b0d1e]/90 backdrop-blur-md sticky top-0 z-40">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-2xl flex items-center justify-center text-white font-extrabold text-xl shadow-lg shadow-indigo-500/30">Y</div>
+            <div>
+                <span class="text-lg sm:text-xl font-extrabold tracking-tight text-white block leading-none">Yugamugesh</span>
+                <span class="text-[10px] text-indigo-400 font-bold uppercase tracking-widest">AI AUDIO STUDIO</span>
+            </div>
+        </div>
+        <nav class="hidden lg:flex items-center space-x-6 text-xs font-semibold text-slate-300">
+            <a href="#uploadSection" class="hover:text-indigo-400 transition">Studio Tool</a>
+            <a href="#howItWorks" class="hover:text-indigo-400 transition">How It Works</a>
+            <a href="#featuresSection" class="hover:text-indigo-400 transition">Features</a>
+            <a href="#faqSection" class="hover:text-indigo-400 transition">FAQ</a>
+            <a href="#legalSection" class="hover:text-indigo-400 transition">Privacy & Terms</a>
+        </nav>
+        <div class="flex items-center space-x-1.5 sm:space-x-2">
+            <button onclick="togglePageLanguage()" id="pageLangBtn" class="text-xs bg-slate-900/90 border border-indigo-500/30 px-2.5 sm:px-3 py-2 rounded-full font-bold text-indigo-300 hover:bg-slate-800 transition">
+                🌐 தமிழ்
+            </button>
+            <button onclick="openApiKeyModal()" title="AI Engine Active" class="text-xs bg-slate-900/90 border border-emerald-500/30 px-2.5 sm:px-3 py-2 rounded-full font-semibold text-emerald-300 hover:bg-slate-800 transition shadow-sm flex items-center space-x-1">
+                <span>⚡ AI</span>
+                <span id="keyCountDot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            </button>
+            <button onclick="installPwaApp()" id="installAppBtn" class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-bold px-3.5 sm:px-4 py-2 rounded-full shadow-lg shadow-indigo-600/30 transition flex items-center space-x-1">
+                <span>📲</span><span>App</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl w-full mx-auto px-4 py-7 flex-grow flex flex-col items-center">
+        
+        <!-- Hero Title -->
+        <div class="text-center mb-7 max-w-2xl">
+            <span class="inline-block text-[11px] font-extrabold tracking-widest text-indigo-400 uppercase bg-indigo-500/10 border border-indigo-500/20 px-4 py-1.5 rounded-full mb-3">
+                NEXT-GEN MULTI-LANGUAGE AUDIO SUITE
+            </span>
+            <h1 id="heroHeading" class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-3 leading-tight">
+                Smart Audio & Voice AI Studio
+            </h1>
+            <p id="heroSubtext" class="text-slate-400 text-xs sm:text-sm mx-auto leading-relaxed">
+                Translate, Transcribe, Cut, and Export audio in <span class="text-indigo-400 font-semibold">Tamil, English, Hindi, Telugu, & Malayalam</span> with studio visualizer, AI noise reduction, and SRT subtitles.
+            </p>
+        </div>
+
+        <!-- App Card Box -->
+        <div id="uploadSection" class="max-w-2xl w-full bg-[#0d1021]/95 rounded-3xl shadow-2xl shadow-indigo-950/60 border border-indigo-500/20 p-4 sm:p-7 mb-12 backdrop-blur-xl">
+            
+            <!-- 5 Main Tool Tabs Navigation -->
+            <div class="grid grid-cols-2 sm:grid-cols-5 bg-[#070914] p-1.5 rounded-2xl mb-5 text-xs sm:text-sm font-bold gap-1.5 border border-indigo-500/10">
+                <button onclick="switchTab('upload')" id="tabUpload" class="py-3 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-600/30 transition flex items-center justify-center space-x-1.5">
+                    <span>🎙️</span><span data-i18n="tab_transcribe">Transcribe</span>
+                </button>
+                <button onclick="switchTab('cutter')" id="tabCutter" class="py-3 rounded-xl text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5">
+                    <span>✂️</span><span data-i18n="tab_cutter">Cutter</span>
+                </button>
+                <button onclick="switchTab('tts')" id="tabTts" class="py-3 rounded-xl text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5">
+                    <span>🗣️</span><span data-i18n="tab_tts">Text-to-Speech</span>
+                </button>
+                <button onclick="switchTab('visualizer')" id="tabVisualizer" class="py-3 rounded-xl text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5">
+                    <span>🎥</span><span data-i18n="tab_visualizer">Visualizer</span>
+                </button>
+                <button onclick="switchTab('record')" id="tabRecord" class="col-span-2 sm:col-span-1 py-3 rounded-xl text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5">
+                    <span>🔴</span><span data-i18n="tab_record">Record</span>
+                </button>
+            </div>
+
+            <!-- Language, Output Mode & AI Noise Reduction Box -->
+            <div id="langSelectorBox" class="bg-[#070914]/90 border border-indigo-500/15 rounded-2xl p-4 mb-5 space-y-3.5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                        <label class="block text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-1.5" data-i18n="lbl_select_lang">
+                            SELECT LANGUAGE (மொழி)
+                        </label>
+                        <select id="targetLanguage" class="w-full bg-[#0d1224] text-white font-bold text-xs sm:text-sm px-3.5 py-3 rounded-xl border border-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="Tamil">🇮🇳 Tamil (தமிழ்)</option>
+                            <option value="English">🇬🇧 English</option>
+                            <option value="Hindi">🇮🇳 Hindi (हिन्दी)</option>
+                            <option value="Telugu">🇮🇳 Telugu (తెలుగు)</option>
+                            <option value="Malayalam">🇮🇳 Malayalam (മലയാളം)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-1.5" data-i18n="lbl_output_mode">
+                            OUTPUT MODE
+                        </label>
+                        <select id="outputMode" class="w-full bg-[#0d1224] text-white font-bold text-xs sm:text-sm px-3.5 py-3 rounded-xl border border-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="Pure Transcription">Pure Transcription</option>
+                            <option value="Transcription with short bullet-point summary">Transcription + Summary Points</option>
+                            <option value="YouTube Video Titles, Timestamp Chapters (00:00 format), engaging Instagram Reels Caption, Trending Hashtags, followed by the Full Transcript">🎬 YouTube Chapters & Reels Caption</option>
+                            <option value="Multi-Speaker Dialogue format (Speaker 1, Speaker 2) with timestamps">👥 Multi-Speaker Interview Mode</option>
+                            <option value="Translation into Tamil script (தமிழ்)">Translate to Tamil (தமிழ்)</option>
+                            <option value="Translation into English">English Translation</option>
+                            <option value="Romanized phonetic script (Tanglish/Manglish)">Romanized Script (Tanglish)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-indigo-500/10 text-xs">
+                    <label class="flex items-center space-x-2 cursor-pointer select-none">
+                        <input type="checkbox" id="noiseReduceToggle" checked class="w-4 h-4 accent-indigo-500 rounded cursor-pointer">
+                        <span class="font-semibold text-slate-300" data-i18n="lbl_noise_reduce">🔇 AI Noise Reduction (பின்னணி இரைச்சல் நீக்கம்)</span>
+                    </label>
+                    <button onclick="runSampleTest()" class="text-indigo-400 hover:text-indigo-300 font-bold underline text-[11px]">
+                        ✨ View Sample Output & Downloads
+                    </button>
+                </div>
+            </div>
+
+            <!-- TAB 1: FILE UPLOAD & TRANSCRIBE -->
+            <div id="panelUpload" class="block">
+                <label for="audioFileInput" class="border-2 border-dashed border-indigo-500/40 hover:border-indigo-400 bg-[#090c1b] hover:bg-indigo-950/30 transition rounded-2xl p-7 sm:p-9 flex flex-col items-center justify-center cursor-pointer text-center group">
+                    <div class="w-16 h-16 bg-indigo-600/20 text-indigo-400 rounded-2xl flex items-center justify-center mb-3.5 group-hover:scale-105 transition shadow-inner border border-indigo-500/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                    </div>
+                    <span id="fileNameDisplay" class="text-sm sm:text-base font-extrabold text-white mb-1" data-i18n="upload_title">Click to Upload MP3, WAV, M4A</span>
+                    <span class="text-xs text-slate-400" data-i18n="upload_sub">Auto-saves to AWS S3 & 24hr Auto-Delete Active</span>
+                    <input type="file" id="audioFileInput" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg" class="hidden" onclick="this.value=null" onchange="handleFileSelect(event)">
+                </label>
+
+                <div id="audioPreviewBox" class="hidden mt-4 bg-[#070914] p-4 rounded-2xl border border-indigo-500/25 space-y-3">
+                    <audio id="audioPlayer" controls class="w-full h-10"></audio>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <button onclick="startTranscription()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs py-3 px-3 rounded-xl shadow-md shadow-indigo-600/20 transition">
+                            ⚡ Convert to Text
+                        </button>
+                        <button onclick="openCurrentInCutter()" class="w-full bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-500/30 font-bold text-xs py-3 px-3 rounded-xl transition">
+                            ✂️ Cut / Trim Audio
+                        </button>
+                        <button onclick="openCurrentInVisualizer()" class="w-full bg-slate-800 hover:bg-slate-700 text-violet-300 border border-violet-500/30 font-bold text-xs py-3 px-3 rounded-xl transition">
+                            🎥 Audio Visualizer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: VISUAL WAVEFORM AUDIO CUTTER -->
+            <div id="panelCutter" class="hidden">
+                <div class="bg-indigo-950/40 border border-indigo-500/25 rounded-2xl p-4 mb-4">
+                    <div class="flex items-center justify-between mb-1">
+                        <h3 class="text-sm font-extrabold text-indigo-300">✂️ Studio Audio Cutter (MP3 & WAV)</h3>
+                        <span class="text-[11px] bg-indigo-600 text-white px-2.5 py-0.5 rounded-full font-bold">Live Waveform</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        கீழே உள்ள ஆடியோ பிரேமில் பாட்டை பிளே செய்து கேட்டுக்கொண்டே வேண்டிய பகுதியை கட் செய்து <b>.MP3</b> அல்லது <b>.WAV</b> வடிவில் டவுன்லோட் செய்யலாம்.
+                    </p>
+                </div>
+
+                <label for="cutterFileInput" class="border-2 border-dashed border-indigo-500/40 hover:border-indigo-400 bg-[#090c1b] transition rounded-2xl p-5 flex flex-col items-center justify-center cursor-pointer text-center">
+                    <div class="w-11 h-11 bg-indigo-600/20 text-indigo-400 rounded-2xl flex items-center justify-center mb-2">
+                        <span class="text-lg">✂️</span>
+                    </div>
+                    <span id="cutterFileName" class="text-sm font-bold text-white mb-0.5">Tap to Select MP3 or WAV to Cut</span>
+                    <span class="text-[11px] text-slate-400">Trim Ringtone, Speech Clip, or Song Portion</span>
+                    <input type="file" id="cutterFileInput" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg" class="hidden" onclick="this.value=null" onchange="handleCutterFile(event)">
+                </label>
+
+                <div id="cutterWorkspace" class="hidden mt-4 bg-[#070914] p-4 rounded-2xl border border-indigo-500/25 space-y-4">
+                    <div class="bg-slate-950 text-white p-3.5 rounded-2xl border border-slate-800 space-y-2.5">
+                        <div class="flex items-center justify-between text-[11px] font-semibold text-slate-300">
+                            <span>🎧 Live Audio Frame (Tap wave to jump)</span>
+                            <span class="font-mono text-amber-400">Now Playing: <b id="liveCurrentTime">0:00</b> / <span id="totalDurationLabel">0:00</span></span>
+                        </div>
+                        <div class="relative w-full h-24 bg-slate-900 rounded-xl overflow-hidden border border-slate-700 cursor-pointer" onclick="seekWaveformClick(event)">
+                            <canvas id="waveformCanvas" class="w-full h-full block"></canvas>
+                        </div>
+                        <audio id="cutterSourcePlayer" controls class="w-full h-10 rounded-lg"></audio>
+                        <div class="grid grid-cols-3 gap-2 pt-1">
+                            <button onclick="setMarkAtCurrentTime('start')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold py-2.5 px-2 rounded-xl transition">
+                                📍 Set Start Here
+                            </button>
+                            <button onclick="playSelectedRegionOnly()" id="previewRegionBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold py-2.5 px-2 rounded-xl transition">
+                                ▶️ Play Selection
+                            </button>
+                            <button onclick="setMarkAtCurrentTime('end')" class="bg-rose-600 hover:bg-rose-500 text-white text-[11px] font-bold py-2.5 px-2 rounded-xl transition">
+                                🏁 Set End Here
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between text-xs font-bold text-slate-200 bg-slate-900 p-3 rounded-xl border border-indigo-500/20">
+                        <div>Cut Range: <span id="cutRangeSummary" class="text-white font-mono">0:00 - 0:00</span></div>
+                        <div class="text-indigo-400">Selected Length: <span id="cutLengthLabel" class="font-mono">0:00</span></div>
+                    </div>
+
+                    <div class="bg-slate-900 p-3.5 rounded-xl border border-indigo-500/20 space-y-2">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-bold text-emerald-400">🟢 Start Time (தொடங்கும் நேரம்):</span>
+                            <div class="flex items-center space-x-1">
+                                <input type="number" id="startSecInput" min="0" step="1" value="0" onchange="syncCutterFromInputs('start')" class="w-16 px-2 py-1 text-center font-mono font-bold bg-slate-950 text-white border border-slate-700 rounded-lg text-xs">
+                                <span class="text-[11px] text-slate-400">sec (<span id="startFormatted">0:00</span>)</span>
+                            </div>
+                        </div>
+                        <input type="range" id="startRangeSlider" min="0" max="100" step="0.1" value="0" oninput="onCutterSliderChange('start')" class="w-full accent-emerald-500 h-2 bg-slate-800 rounded-lg cursor-pointer">
+                    </div>
+
+                    <div class="bg-slate-900 p-3.5 rounded-xl border border-indigo-500/20 space-y-2">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-bold text-rose-400">🔴 End Time (முடியும் நேரம்):</span>
+                            <div class="flex items-center space-x-1">
+                                <input type="number" id="endSecInput" min="1" step="1" value="10" onchange="syncCutterFromInputs('end')" class="w-16 px-2 py-1 text-center font-mono font-bold bg-slate-950 text-white border border-slate-700 rounded-lg text-xs">
+                                <span class="text-[11px] text-slate-400">sec (<span id="endFormatted">0:10</span>)</span>
+                            </div>
+                        </div>
+                        <input type="range" id="endRangeSlider" min="1" max="100" step="0.1" value="10" oninput="onCutterSliderChange('end')" class="w-full accent-rose-500 h-2 bg-slate-800 rounded-lg cursor-pointer">
+                    </div>
+
+                    <button onclick="cutAudioNow()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 text-white font-bold text-xs sm:text-sm py-3.5 px-4 rounded-xl shadow-lg transition">
+                        ✂️ Cut Audio Now
+                    </button>
+
+                    <div id="trimmedOutputBox" class="hidden pt-3 border-t border-indigo-500/20 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-extrabold text-emerald-400">✅ Cut Audio Ready</span>
+                            <span id="trimmedSizeBadge" class="text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-bold">Ready</span>
+                        </div>
+                        <audio id="trimmedAudioPlayer" controls class="w-full h-10"></audio>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            <button onclick="downloadTrimmedMp3()" id="mp3DownloadBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-3 px-3 rounded-xl transition shadow-sm">
+                                🎵 Download .MP3
+                            </button>
+                            <button onclick="downloadTrimmedAudio()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-3 px-3 rounded-xl transition shadow-sm">
+                                ⬇️ Download .WAV
+                            </button>
+                            <button onclick="transcribeTrimmedAudio()" class="col-span-2 sm:col-span-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-3 px-3 rounded-xl transition shadow-sm">
+                                📝 Convert to Text
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: TEXT-TO-SPEECH (TTS) -->
+            <div id="panelTts" class="hidden space-y-4">
+                <div class="bg-indigo-950/40 border border-indigo-500/25 rounded-2xl p-4">
+                    <div class="flex items-center justify-between mb-1">
+                        <h3 class="text-sm font-extrabold text-indigo-300">🗣️ Multi-Language Text-to-Speech (TTS)</h3>
+                        <button onclick="copyTranscriptToTts()" class="text-[11px] bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-200 px-2.5 py-1 rounded-lg font-bold border border-indigo-500/30 transition">
+                            📥 Use Transcribed Text
+                        </button>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        தமிழ், ஆங்கிலம், இந்தி, தெலுங்கு அல்லது மலையாள உரையை இயற்கையான குரலில் (Voiceover) உடனடியாகக் கேட்கலாம்.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#070914] p-3.5 rounded-2xl border border-indigo-500/20">
+                    <div>
+                        <label class="block text-[11px] font-bold text-indigo-300 mb-1">Voice Language</label>
+                        <select id="ttsLangSelect" class="w-full bg-slate-900 text-white text-xs font-bold px-3 py-2.5 rounded-xl border border-indigo-500/30">
+                            <option value="ta-IN">🇮🇳 Tamil (தமிழ் - ta-IN)</option>
+                            <option value="en-IN">🇮🇳 English (India - en-IN)</option>
+                            <option value="hi-IN">🇮🇳 Hindi (हिन्दी - hi-IN)</option>
+                            <option value="te-IN">🇮🇳 Telugu (తెలుగు - te-IN)</option>
+                            <option value="ml-IN">🇮🇳 Malayalam (മലയാളം - ml-IN)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-indigo-300 mb-1">Speech Speed: <span id="ttsRateLabel">1.0x</span></label>
+                        <input type="range" id="ttsRateSlider" min="0.5" max="1.8" step="0.1" value="1.0" oninput="document.getElementById('ttsRateLabel').textContent=this.value+'x'" class="w-full accent-indigo-500 h-2 bg-slate-800 rounded-lg mt-2 cursor-pointer">
+                    </div>
+                </div>
+
+                <textarea id="ttsInputText" rows="5" class="w-full p-4 bg-[#070914] border border-indigo-500/30 rounded-2xl text-white text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="இங்கே தமிழ் அல்லது பிற மொழி உரையை டைப் செய்யவும்...">வணக்கம்! யுகமுகேஷ் ஏஐ ஆடியோ ஸ்டுடியோவிற்கு உங்களை அன்புடன் வரவேற்கிறோம்.</textarea>
+
+                <div class="grid grid-cols-3 gap-2.5">
+                    <button onclick="playTextToSpeech()" class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 text-white font-bold text-xs sm:text-sm py-3.5 rounded-xl shadow-lg transition">
+                        ▶️ Speak Now
+                    </button>
+                    <button onclick="pauseResumeTts()" class="bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-500/30 font-bold text-xs sm:text-sm py-3.5 rounded-xl transition">
+                        ⏯️ Pause / Resume
+                    </button>
+                    <button onclick="stopTextToSpeech()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs sm:text-sm py-3.5 rounded-xl transition">
+                        ⏹️ Stop
+                    </button>
+                </div>
+            </div>
+
+            <!-- TAB 4: AUDIO VISUALIZER & VIDEO EXPORT -->
+            <div id="panelVisualizer" class="hidden space-y-4">
+                <div class="bg-indigo-950/40 border border-indigo-500/25 rounded-2xl p-4">
+                    <div class="flex items-center justify-between mb-1">
+                        <h3 class="text-sm font-extrabold text-indigo-300">🎥 Studio Audio Visualizer & Video Export</h3>
+                        <span id="visRecBadge" class="text-[11px] bg-violet-600 text-white px-2.5 py-0.5 rounded-full font-bold">HD Canvas</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        ஆடியோ அலைவரிசை அசைவூட்டத்துடன் (Waveform Animation) கூடிய வீடியோவாக ரெக்கார்ட் செய்து YouTube / Reels / WhatsApp Status-க்காக டவுன்லோட் செய்யலாம்.
+                    </p>
+                </div>
+
+                <label for="visFileInput" class="border-2 border-dashed border-indigo-500/40 hover:border-indigo-400 bg-[#090c1b] transition rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer text-center">
+                    <span id="visFileName" class="text-sm font-bold text-white">🎵 Tap to Select Audio for Visualizer</span>
+                    <span class="text-[11px] text-slate-400 mt-0.5">MP3, WAV, M4A supported</span>
+                    <input type="file" id="visFileInput" accept="audio/*" class="hidden" onchange="handleVisualizerFile(event)">
+                </label>
+
+                <div class="relative w-full h-52 bg-[#050711] rounded-2xl overflow-hidden border border-indigo-500/30 shadow-inner">
+                    <canvas id="videoCanvas" width="640" height="360" class="w-full h-full block"></canvas>
+                </div>
+
+                <audio id="visAudioPlayer" controls class="w-full h-10"></audio>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <button onclick="startVisualizerVideoExport()" id="visExportBtn" class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 text-white font-bold text-xs sm:text-sm py-3.5 px-4 rounded-xl shadow-lg transition">
+                        🎥 Record & Download Video (.WEBM)
+                    </button>
+                    <button onclick="stopVisualizerVideoExport()" class="bg-rose-600/90 hover:bg-rose-600 text-white font-bold text-xs sm:text-sm py-3.5 px-4 rounded-xl transition">
+                        ⏹️ Stop & Save Video Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- TAB 5: LIVE VOICE RECORD -->
+            <div id="panelRecord" class="hidden text-center py-7 bg-[#070914] rounded-2xl border border-indigo-500/25 p-5">
+                <div class="mb-4">
+                    <span class="inline-block text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold px-3 py-1 rounded-full mb-2">
+                        🆓 Live Multi-Language Voice Recorder
+                    </span>
+                    <div id="recordStatus" class="text-sm font-bold text-white">Tap microphone to speak in your selected language</div>
+                </div>
+                <button id="recordBtn" onclick="toggleRecording()" class="w-20 h-20 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center mx-auto shadow-xl shadow-red-600/40 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    </svg>
+                </button>
+                <div id="recordTimer" class="text-sm font-mono font-bold text-amber-400 mt-3 hidden">00:00</div>
+            </div>
+
+            <!-- Loading Status -->
+            <div id="loadingBox" class="hidden mt-5 p-5 bg-indigo-950/50 border border-indigo-500/30 rounded-2xl flex flex-col items-center justify-center text-center">
+                <div class="spinner mb-3"></div>
+                <p id="loadingMainText" class="text-sm font-bold text-white">ஆடியோ அதிவேகமாக எழுத்துக்களாக மாற்றப்படுகிறது...</p>
+                <p id="keyStatusText" class="text-xs text-indigo-300 mt-1">⚡ Whisper-Turbo Processing...</p>
+            </div>
+
+            <!-- Error Alert Box -->
+            <div id="errorBox" class="hidden mt-5 p-4 bg-rose-950/60 border border-rose-500/40 rounded-2xl text-rose-200 text-sm">
+                <div class="font-bold flex items-center space-x-1.5 mb-1.5 text-rose-300">
+                    <span>⚠️ Transcription Notice</span>
+                </div>
+                <p id="errorMessage" class="text-xs leading-relaxed break-words text-rose-200 mb-3 select-text"></p>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="startTranscription()" class="bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition">🔄 Retry Now</button>
+                </div>
+            </div>
+
+            <!-- OUTPUT RESULT & DOWNLOAD SECTION -->
+            <div id="resultSection" class="mt-6 pt-5 border-t border-indigo-500/20">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <span class="text-sm font-extrabold text-white">✅ AI Transcription Output & Downloads</span>
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <button onclick="proofreadExistingText()" id="fixSpellingBtn" class="text-[11px] bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded-full font-bold shadow-xs transition">
+                            ✨ Fix Spelling
+                        </button>
+                        <button onclick="speakCurrentOutput()" class="text-[11px] bg-violet-600 hover:bg-violet-500 text-white px-3 py-1 rounded-full font-bold shadow-xs transition">
+                            🗣️ Speak Output
+                        </button>
+                        <span id="activeKeyBadge" class="text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-semibold">Ready</span>
+                    </div>
+                </div>
+
+                <textarea id="outputText" rows="7" class="w-full p-4 bg-[#070914] border border-indigo-500/30 rounded-2xl text-white text-sm sm:text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4 select-text" placeholder="மாற்றப்பட்ட தமிழ் / பிற மொழி எழுத்துக்கள் இங்கே தோன்றும்..."></textarea>
+
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+                    <button onclick="copyResultText()" id="copyBtn" class="bg-slate-800 hover:bg-slate-700 text-white border border-indigo-500/20 font-bold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center space-x-1 shadow-sm">
+                        <span>📋 Copy</span>
+                    </button>
+                    <button onclick="downloadTxtFile()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center space-x-1 shadow-sm">
+                        <span>⬇️ .TXT</span>
+                    </button>
+                    <button onclick="downloadDocFile()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center space-x-1 shadow-sm">
+                        <span>📄 .DOC</span>
+                    </button>
+                    <button onclick="downloadSrtFile()" class="bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center space-x-1 shadow-sm">
+                        <span>🎬 .SRT</span>
+                    </button>
+                    <button onclick="shareOnWhatsApp()" class="col-span-2 sm:col-span-1 bg-green-600 hover:bg-green-500 text-white font-bold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center space-x-1 shadow-sm">
+                        <span>📲 WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Section 1: How It Works -->
+        <section id="howItWorks" class="w-full mb-12">
+            <div class="text-center mb-8">
+                <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-full">Step-by-Step Guide</span>
+                <h2 class="text-xl sm:text-2xl font-extrabold text-white mt-2">ஆடியோவைத் தமிழ் மற்றும் பிற மொழி எழுத்துக்களாக மாற்றுவது எப்படி?</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="bg-[#0d1021]/90 p-6 rounded-2xl border border-indigo-500/20 shadow-sm">
+                    <div class="w-10 h-10 bg-indigo-600/20 text-indigo-400 font-extrabold rounded-xl flex items-center justify-center mb-4">1</div>
+                    <h3 class="text-base font-bold text-white mb-2">ஆடியோவைப் பதிவேற்றவும்</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">உங்கள் மொபைல் அல்லது கம்ப்யூட்டரில் உள்ள MP3, WAV, M4A ஆடியோ கோப்பைத் தேர்ந்தெடுக்கவும்.</p>
+                </div>
+                <div class="bg-[#0d1021]/90 p-6 rounded-2xl border border-indigo-500/20 shadow-sm">
+                    <div class="w-10 h-10 bg-violet-600/20 text-violet-400 font-extrabold rounded-xl flex items-center justify-center mb-4">2</div>
+                    <h3 class="text-base font-bold text-white mb-2">1-Second Turbo AI</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">தமிழ், ஆங்கிலம், இந்தி, தெலுங்கு அல்லது மலையாள மொழிகளில் பிழையற்ற எழுத்துக்களாக அதிவேகமாக மாற்றப்படுகிறது.</p>
+                </div>
+                <div class="bg-[#0d1021]/90 p-6 rounded-2xl border border-indigo-500/20 shadow-sm">
+                    <div class="w-10 h-10 bg-emerald-600/20 text-emerald-400 font-extrabold rounded-xl flex items-center justify-center mb-4">3</div>
+                    <h3 class="text-base font-bold text-white mb-2">TXT, DOC, SRT Export</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">மாற்றப்பட்ட உரையை Copy செய்யலாம், .TXT, .DOC அல்லது .SRT சப்-டைட்டில் கோப்பாக உடனே பதிவிறக்கம் செய்யலாம்.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Features -->
+        <section id="featuresSection" class="w-full bg-[#0d1021]/90 rounded-3xl border border-indigo-500/20 p-6 sm:p-8 mb-12 shadow-sm space-y-4">
+            <h2 class="text-lg sm:text-xl font-extrabold text-white">Why Use Yugamugesh Multi-Language AI Audio Studio?</h2>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                <strong>Yugamugesh AI Studio</strong> is a browser-based audio utility designed for Tamil and Indian multi-language content creators, journalists, and students to transcribe, cut MP3s, and generate subtitles in seconds.
+            </p>
+        </section>
+
+        <!-- Section 3: FAQ -->
+        <section id="faqSection" class="w-full mb-12 space-y-3">
+            <h2 class="text-xl font-extrabold text-white text-center mb-4">அடிக்கடி கேட்கப்படும் கேள்விகள் (FAQ)</h2>
+            <div class="bg-[#0d1021]/90 p-5 rounded-2xl border border-indigo-500/20">
+                <h3 class="text-sm font-bold text-white mb-1">1. எந்தெந்த ஆடியோ வடிவங்களை (Audio Formats) இதில் பயன்படுத்தலாம்?</h3>
+                <p class="text-xs sm:text-sm text-slate-400">MP3, WAV, M4A, AAC மற்றும் OGG ஆகிய அனைத்து முக்கிய ஆடியோ வடிவங்களையும் பதிவேற்றம் செய்யலாம்.</p>
+            </div>
+        </section>
+
+        <!-- Section 4: Legal -->
+        <section id="legalSection" class="w-full bg-[#0d1021]/90 rounded-3xl border border-indigo-500/20 p-6 sm:p-8 mb-8 space-y-4 text-xs sm:text-sm text-slate-300">
+            <div class="flex flex-wrap gap-2 border-b border-indigo-500/20 pb-4">
+                <button onclick="showLegalTab('about')" id="btnLegalAbout" class="px-4 py-2 rounded-xl font-bold bg-indigo-600 text-white text-xs">About Us</button>
+                <button onclick="showLegalTab('privacy')" id="btnLegalPrivacy" class="px-4 py-2 rounded-xl font-bold bg-slate-900 text-slate-300 border border-indigo-500/20 text-xs">Privacy Policy</button>
+                <button onclick="showLegalTab('terms')" id="btnLegalTerms" class="px-4 py-2 rounded-xl font-bold bg-slate-900 text-slate-300 border border-indigo-500/20 text-xs">Terms & Conditions</button>
+                <button onclick="showLegalTab('contact')" id="btnLegalContact" class="px-4 py-2 rounded-xl font-bold bg-slate-900 text-slate-300 border border-indigo-500/20 text-xs">Contact Us</button>
+            </div>
+            <div id="legalContentAbout" class="block"><p>Welcome to <strong>Yugamugesh AI Studio</strong> (FixrService Digital Solutions).</p></div>
+            <div id="legalContentPrivacy" class="hidden"><p>Uploaded audio files are processed securely and automatically deleted within 24 hours.</p></div>
+            <div id="legalContentTerms" class="hidden"><p>You may use our audio-to-text converter and MP3 cutter for personal and commercial content creation.</p></div>
+            <div id="legalContentContact" class="hidden"><p>Support Email: <a href="mailto:support@fixrservice.in" class="text-indigo-400 underline">support@fixrservice.in</a></p></div>
+        </section>
+
+    </main>
+
+    <!-- Custom API Key Modal -->
+    <div id="apiKeyModal" class="fixed inset-0 bg-black/75 hidden items-center justify-center p-4 z-50 backdrop-blur-sm">
+        <div class="bg-[#0d1021] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-indigo-500/30 text-white">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="text-lg font-extrabold text-white">⚡ Built-in Turbo AI Keys Active</h3>
+                <button onclick="toggleKeyVisibility()" id="toggleMaskBtn" class="text-xs bg-slate-800 hover:bg-slate-700 text-indigo-300 font-semibold px-2.5 py-1 rounded-lg">👁️ Show</button>
+            </div>
+            <p class="text-xs text-emerald-300 mb-3">✅ Built-in Whisper-Turbo Keys இணைக்கப்பட்டுள்ளன. கூடுதல் Key சேர்க்க விரும்பினால் மட்டும் கீழே உள்ளிடலாம்:</p>
+            <textarea id="apiKeyInput" rows="3" autocomplete="off" spellcheck="false" placeholder="Optional custom gsk_ or AIzaSy key..." class="masked-key w-full p-3 bg-[#070914] border border-indigo-500/30 rounded-xl text-xs font-mono text-white mb-4"></textarea>
+            <div class="flex items-center justify-between">
+                <button onclick="clearSavedKeys()" class="px-3 py-2 rounded-xl text-xs font-semibold text-rose-400">🗑️ Reset</button>
+                <div class="flex space-x-2">
+                    <button onclick="closeApiKeyModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300">Close</button>
+                    <button onclick="saveApiKey()" class="px-5 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-[#060811] border-t border-indigo-500/15 py-6 px-4 text-center text-xs text-slate-400">
+        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="font-semibold text-slate-300">© 2026 Yugamugesh AI Studio (FixrService.in). All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
         const GEMINI_MODELS = ["gemini-2.5-flash"];
 
-        // ============================================================================
-        // BUILT-IN GROQ TURBO KEYS (FASTEST 1-SECOND TRANSCRIPTION)
-        // ============================================================================
         const BUILT_IN_KEYS = [
             "gsk_" + "ga7iTXCfTpNWxp8aiTXe" + "WGdyb3FYP2knkPOVNyvd" + "XsCApv9PHTsl",
             "gsk_" + "q4zEhDiuxJphJsdt1JhQ" + "WGdyb3FYQQcSsJH5qzZa" + "xEkcvLCHWbeM"
@@ -20,7 +534,6 @@
         let currentPageLang = 'en';
         let deferredPwaPrompt = null;
 
-        // Audio Cutter & Waveform State
         let cutterAudioBuffer = null;
         let lastCutBuffer = null;
         let cutterSourceUrl = null;
@@ -30,7 +543,6 @@
         let trimmedMp3Blob = null;
         let trimmedAudioUrl = null;
 
-        // Visualizer & Video Export State
         let visAudioCtx = null;
         let visAnalyser = null;
         let visSourceNode = null;
@@ -51,7 +563,6 @@
                 e.preventDefault();
                 deferredPwaPrompt = e;
             });
-
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('/sw.js').catch(() => {});
@@ -63,9 +574,7 @@
             if (deferredPwaPrompt) {
                 deferredPwaPrompt.prompt();
                 const { outcome } = await deferredPwaPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    deferredPwaPrompt = null;
-                }
+                if (outcome === 'accepted') deferredPwaPrompt = null;
             } else {
                 alert("📲 மொபைலில் ஆப்பாக இன்ஸ்டால் செய்ய:\nஉங்கள் பிரவுசரின் வலது மேல் மூலையில் உள்ள 3 புள்ளிகளைத் (⋮) தட்டி 'Add to Home screen' அல்லது 'Install app' என்பதைத் தேர்ந்தெடுக்கவும்!");
             }
@@ -80,15 +589,11 @@
             if (currentPageLang === 'ta') {
                 btn.textContent = "🌐 English";
                 heading.textContent = "யுகமுகேஷ் ஏஐ ஆடியோ ஸ்டுடியோ";
-                subtext.innerHTML = "ஆடியோ கோப்புகளை <span class='text-indigo-400 font-semibold'>தமிழ், ஆங்கிலம், இந்தி, தெலுங்கு மற்றும் மலையாளம்</span> ஆகிய மொழிகளில் எழுத்தாக மாற்றவும், கட் செய்யவும், வீடியோவாக டவுன்லோட் செய்யவும் உதவும் தளம்.";
-                document.querySelector('[data-i18n="upload_title"]').textContent = "MP3, WAV, M4A ஆடியோவை இங்கே பதிவேற்றவும்";
-                document.querySelector('[data-i18n="upload_sub"]').textContent = "AWS S3 கிளவுட் பாதுகாப்பு & 24 மணி நேரத்தில் தானாக அழியும் வசதி";
+                subtext.innerHTML = "ஆடியோ கோப்புகளை <span class='text-indigo-400 font-semibold'>தமிழ், ஆங்கிலம், இந்தி, தெலுங்கு மற்றும் மலையாளம்</span> ஆகிய மொழிகளில் எழுத்தாக மாற்றவும், கட் செய்யவும் உதவும் தளம்.";
             } else {
                 btn.textContent = "🌐 தமிழ்";
                 heading.textContent = "Smart Audio & Voice AI Studio";
                 subtext.innerHTML = "Translate, Transcribe, Cut, and Export audio in <span class='text-indigo-400 font-semibold'>Tamil, English, Hindi, Telugu, & Malayalam</span> with studio visualizer, AI noise reduction, and SRT subtitles.";
-                document.querySelector('[data-i18n="upload_title"]').textContent = "Click to Upload MP3, WAV, M4A";
-                document.querySelector('[data-i18n="upload_sub"]').textContent = "Auto-saves to AWS S3 & 24hr Auto-Delete Active";
             }
         }
 
@@ -99,7 +604,6 @@
             const ext = audioFile.name ? audioFile.name.split('.').pop() : 'mp3';
             const fileName = 'audio_' + Date.now() + '.' + ext;
             const uploadUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`;
-
             try {
                 await fetch(uploadUrl, {
                     method: 'PUT',
@@ -112,10 +616,10 @@
         function showLegalTab(tab) {
             ['about', 'privacy', 'terms', 'contact'].forEach(t => {
                 document.getElementById('legalContent' + capitalize(t)).classList.add('hidden');
-                document.getElementById('btnLegal' + capitalize(t)).className = "px-4 py-2 rounded-xl font-bold bg-slate-900 text-slate-300 border border-indigo-500/20 text-xs transition";
+                document.getElementById('btnLegal' + capitalize(t)).className = "px-4 py-2 rounded-xl font-bold bg-slate-900 text-slate-300 border border-indigo-500/20 text-xs";
             });
             document.getElementById('legalContent' + capitalize(tab)).classList.remove('hidden');
-            document.getElementById('btnLegal' + capitalize(tab)).className = "px-4 py-2 rounded-xl font-bold bg-indigo-600 text-white text-xs transition";
+            document.getElementById('btnLegal' + capitalize(tab)).className = "px-4 py-2 rounded-xl font-bold bg-indigo-600 text-white text-xs";
         }
 
         function updateKeyIndicator() {
@@ -133,9 +637,7 @@
             document.getElementById('panel' + capitalize(tab)).classList.remove('hidden');
             const activeBtn = document.getElementById('tab' + capitalize(tab));
             activeBtn.className = (tab === 'record' ? "col-span-2 sm:col-span-1 " : "") + "py-3 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-600/30 transition flex items-center justify-center space-x-1.5";
-            if (tab === 'cutter' && cutterAudioBuffer) {
-                setTimeout(drawWaveformCanvas, 50);
-            }
+            if (tab === 'cutter' && cutterAudioBuffer) setTimeout(drawWaveformCanvas, 50);
         }
 
         function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
@@ -160,11 +662,10 @@
         }
 
         function openApiKeyModal() {
-            const saved = localStorage.getItem('yuga_multi_keys') || localStorage.getItem('gemini_api_key') || '';
+            const saved = localStorage.getItem('yuga_multi_keys') || '';
             const input = document.getElementById('apiKeyInput');
             input.value = saved;
             input.classList.add('masked-key');
-            document.getElementById('toggleMaskBtn').textContent = "👁️ Show";
             document.getElementById('apiKeyModal').classList.remove('hidden');
             document.getElementById('apiKeyModal').classList.add('flex');
         }
@@ -176,14 +677,13 @@
 
         function saveApiKey() {
             const rawVal = document.getElementById('apiKeyInput').value.trim();
-            const validKeys = rawVal.split(/[\n,]+/).map(k => k.trim()).filter(k => k.length >= 15);
+            const validKeys = rawVal.split(/[\n,]+/).map(k => k.trim()).filter(k => k.startsWith('gsk_') || k.startsWith('AIza'));
             if (validKeys.length > 0) {
                 localStorage.setItem('yuga_multi_keys', validKeys.join('\n'));
-                localStorage.setItem('gemini_api_key', validKeys[0]);
             }
             updateKeyIndicator();
             closeApiKeyModal();
-            alert(`✅ API Key பாதுகாப்பாகச் சேமிக்கப்பட்டது!`);
+            alert("✅ API Key பாதுகாப்பாகச் சேமிக்கப்பட்டது!");
         }
 
         function clearSavedKeys() {
@@ -195,13 +695,12 @@
         }
 
         function getSavedApiKeys() {
-            const raw = localStorage.getItem('yuga_multi_keys') || localStorage.getItem('gemini_api_key') || '';
+            const raw = localStorage.getItem('yuga_multi_keys') || '';
             const userKeys = raw.split(/[\n,]+/).map(k => k.trim()).filter(k => k.startsWith('gsk_') || k.startsWith('AIza'));
             return [...new Set([...BUILT_IN_KEYS, ...userKeys])];
         }
 
-        // Fetch with strict timeout so it NEVER hangs forever
-        async function fetchWithTimeout(url, options, timeoutMs = 8000) {
+        async function fetchWithTimeout(url, options, timeoutMs = 15000) {
             const controller = new AbortController();
             const id = setTimeout(() => controller.abort(), timeoutMs);
             try {
@@ -225,7 +724,6 @@
             document.getElementById('audioPlayer').src = currentAudioObjectUrl;
             document.getElementById('audioPreviewBox').classList.remove('hidden');
             document.getElementById('errorBox').classList.add('hidden');
-            
             uploadAudioToAWS(file);
             startTranscription();
         }
@@ -247,7 +745,6 @@
             player.addEventListener('timeupdate', () => {
                 const cur = player.currentTime;
                 document.getElementById('liveCurrentTime').textContent = formatSeconds(cur);
-
                 const eVal = parseFloat(document.getElementById('endRangeSlider').value);
                 if (isPlayingSelectionOnly && cur >= eVal) {
                     player.pause();
@@ -256,7 +753,6 @@
                 }
                 drawWaveformCanvas();
             });
-
             player.addEventListener('pause', () => {
                 isPlayingSelectionOnly = false;
                 document.getElementById('previewRegionBtn').innerHTML = "▶️ Play Selection";
@@ -275,12 +771,10 @@
         async function loadAudioIntoCutter(file) {
             document.getElementById('cutterFileName').textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
             document.getElementById('trimmedOutputBox').classList.add('hidden');
-
             try {
                 if (cutterSourceUrl) URL.revokeObjectURL(cutterSourceUrl);
                 cutterSourceUrl = URL.createObjectURL(file);
-                const sourcePlayer = document.getElementById('cutterSourcePlayer');
-                sourcePlayer.src = cutterSourceUrl;
+                document.getElementById('cutterSourcePlayer').src = cutterSourceUrl;
 
                 const arrayBuffer = await file.arrayBuffer();
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -289,24 +783,16 @@
 
                 const totalDur = Math.floor(cutterAudioBuffer.duration * 10) / 10;
                 document.getElementById('totalDurationLabel').textContent = formatSeconds(totalDur);
-                document.getElementById('liveCurrentTime').textContent = "0:00";
-
                 computeWaveformPeaks(cutterAudioBuffer, 180);
 
                 const startSlider = document.getElementById('startRangeSlider');
                 const endSlider = document.getElementById('endRangeSlider');
-                const startInput = document.getElementById('startSecInput');
-                const endInput = document.getElementById('endSecInput');
-
                 startSlider.max = totalDur;
                 endSlider.max = totalDur;
-                startInput.max = totalDur;
-                endInput.max = totalDur;
-
                 startSlider.value = 0;
                 endSlider.value = totalDur;
-                startInput.value = 0;
-                endInput.value = Math.floor(totalDur);
+                document.getElementById('startSecInput').value = 0;
+                document.getElementById('endSecInput').value = Math.floor(totalDur);
 
                 document.getElementById('cutterWorkspace').classList.remove('hidden');
                 updateCutterLabels();
@@ -342,10 +828,7 @@
             canvas.height = rect.height;
 
             const ctx = canvas.getContext('2d');
-            const W = canvas.width;
-            const H = canvas.height;
-            const totalDur = cutterAudioBuffer.duration;
-
+            const W = canvas.width, H = canvas.height, totalDur = cutterAudioBuffer.duration;
             const sVal = parseFloat(document.getElementById('startRangeSlider').value);
             const eVal = parseFloat(document.getElementById('endRangeSlider').value);
             const curTime = document.getElementById('cutterSourcePlayer').currentTime || 0;
@@ -355,7 +838,6 @@
             const playheadX = (curTime / totalDur) * W;
 
             ctx.clearRect(0, 0, W, H);
-
             ctx.fillStyle = "rgba(99, 102, 241, 0.22)";
             ctx.fillRect(startX, 0, Math.max(2, endX - startX), H);
 
@@ -365,54 +847,32 @@
                 const x = i * barWidth;
                 const barH = Math.max(4, waveformPeaks[i] * (H * 0.78));
                 const y = (H - barH) / 2;
-
                 ctx.fillStyle = (x >= startX && x <= endX) ? "#818cf8" : "#334155";
                 ctx.fillRect(x + 1, y, Math.max(1.5, barWidth - 2), barH);
             }
-
-            ctx.fillStyle = "#10b981";
-            ctx.fillRect(startX, 0, 3, H);
-
-            ctx.fillStyle = "#f43f5e";
-            ctx.fillRect(Math.max(0, endX - 3), 0, 3, H);
-
-            ctx.fillStyle = "#facc15";
-            ctx.fillRect(playheadX, 0, 2.5, H);
+            ctx.fillStyle = "#10b981"; ctx.fillRect(startX, 0, 3, H);
+            ctx.fillStyle = "#f43f5e"; ctx.fillRect(Math.max(0, endX - 3), 0, 3, H);
+            ctx.fillStyle = "#facc15"; ctx.fillRect(playheadX, 0, 2.5, H);
         }
 
         function seekWaveformClick(event) {
             if (!cutterAudioBuffer) return;
-            const canvas = document.getElementById('waveformCanvas');
-            const rect = canvas.getBoundingClientRect();
-            const clickX = event.clientX - rect.left;
-            const ratio = Math.max(0, Math.min(1, clickX / rect.width));
-            const targetTime = ratio * cutterAudioBuffer.duration;
-
+            const rect = document.getElementById('waveformCanvas').getBoundingClientRect();
+            const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
             const player = document.getElementById('cutterSourcePlayer');
-            player.currentTime = targetTime;
+            player.currentTime = ratio * cutterAudioBuffer.duration;
             player.play();
             drawWaveformCanvas();
         }
 
         function setMarkAtCurrentTime(which) {
             if (!cutterAudioBuffer) return;
-            const player = document.getElementById('cutterSourcePlayer');
-            const cur = Math.round(player.currentTime * 10) / 10;
-            const startSlider = document.getElementById('startRangeSlider');
-            const endSlider = document.getElementById('endRangeSlider');
-
+            const cur = Math.round(document.getElementById('cutterSourcePlayer').currentTime * 10) / 10;
             if (which === 'start') {
-                if (cur >= parseFloat(endSlider.value) - 0.5) {
-                    endSlider.value = cutterAudioBuffer.duration;
-                }
-                startSlider.value = cur;
+                document.getElementById('startRangeSlider').value = cur;
                 onCutterSliderChange('start');
             } else {
-                if (cur <= parseFloat(startSlider.value) + 0.5) {
-                    alert("End Time ஆனது Start Time-ஐ விட அதிகமாக இருக்க வேண்டும்!");
-                    return;
-                }
-                endSlider.value = cur;
+                document.getElementById('endRangeSlider').value = cur;
                 onCutterSliderChange('end');
             }
         }
@@ -421,16 +881,13 @@
             if (!cutterAudioBuffer) return;
             const player = document.getElementById('cutterSourcePlayer');
             const btn = document.getElementById('previewRegionBtn');
-
             if (!player.paused && isPlayingSelectionOnly) {
                 player.pause();
                 isPlayingSelectionOnly = false;
                 btn.innerHTML = "▶️ Play Selection";
                 return;
             }
-
-            const sVal = parseFloat(document.getElementById('startRangeSlider').value);
-            player.currentTime = sVal;
+            player.currentTime = parseFloat(document.getElementById('startRangeSlider').value);
             isPlayingSelectionOnly = true;
             btn.innerHTML = "⏸️ Stop Preview";
             player.play();
@@ -439,44 +896,21 @@
         function onCutterSliderChange(which) {
             const startSlider = document.getElementById('startRangeSlider');
             const endSlider = document.getElementById('endRangeSlider');
-            let sVal = parseFloat(startSlider.value);
-            let eVal = parseFloat(endSlider.value);
-
-            if (which === 'start' && sVal >= eVal - 0.5) {
-                startSlider.value = Math.max(0, eVal - 0.5);
-                sVal = parseFloat(startSlider.value);
-            } else if (which === 'end' && eVal <= sVal + 0.5) {
-                endSlider.value = Math.min(parseFloat(endSlider.max), sVal + 0.5);
-                eVal = parseFloat(endSlider.value);
-            }
-
-            document.getElementById('startSecInput').value = Math.floor(sVal);
-            document.getElementById('endSecInput').value = Math.floor(eVal);
-
-            const player = document.getElementById('cutterSourcePlayer');
-            if (which === 'start') {
-                player.currentTime = sVal;
-            }
+            let sVal = parseFloat(startSlider.value), eVal = parseFloat(endSlider.value);
+            if (which === 'start' && sVal >= eVal - 0.5) startSlider.value = Math.max(0, eVal - 0.5);
+            if (which === 'end' && eVal <= sVal + 0.5) endSlider.value = Math.min(parseFloat(endSlider.max), sVal + 0.5);
+            document.getElementById('startSecInput').value = Math.floor(startSlider.value);
+            document.getElementById('endSecInput').value = Math.floor(endSlider.value);
             updateCutterLabels();
         }
 
         function syncCutterFromInputs(which) {
             if (!cutterAudioBuffer) return;
             const maxDur = cutterAudioBuffer.duration;
-            let sVal = parseFloat(document.getElementById('startSecInput').value) || 0;
-            let eVal = parseFloat(document.getElementById('endSecInput').value) || maxDur;
-
-            sVal = Math.max(0, Math.min(maxDur - 1, sVal));
-            eVal = Math.max(sVal + 1, Math.min(maxDur, eVal));
-
-            document.getElementById('startSecInput').value = sVal;
-            document.getElementById('endSecInput').value = eVal;
+            let sVal = Math.max(0, Math.min(maxDur - 1, parseFloat(document.getElementById('startSecInput').value) || 0));
+            let eVal = Math.max(sVal + 1, Math.min(maxDur, parseFloat(document.getElementById('endSecInput').value) || maxDur));
             document.getElementById('startRangeSlider').value = sVal;
             document.getElementById('endRangeSlider').value = eVal;
-
-            if (which === 'start') {
-                document.getElementById('cutterSourcePlayer').currentTime = sVal;
-            }
             updateCutterLabels();
         }
 
@@ -497,7 +931,6 @@
             if (eVal <= sVal) return alert("End Time ஆனது Start Time-ஐ விட அதிகமாக இருக்க வேண்டும்!");
 
             document.getElementById('cutterSourcePlayer').pause();
-
             const sampleRate = cutterAudioBuffer.sampleRate;
             const numChannels = cutterAudioBuffer.numberOfChannels;
             const startSample = Math.floor(sVal * sampleRate);
@@ -506,13 +939,10 @@
 
             const tempCtx = new (window.AudioContext || window.webkitAudioContext)();
             const cutBuffer = tempCtx.createBuffer(numChannels, frameCount, sampleRate);
-
             for (let ch = 0; ch < numChannels; ch++) {
                 const oldData = cutterAudioBuffer.getChannelData(ch);
                 const newData = cutBuffer.getChannelData(ch);
-                for (let i = 0; i < frameCount; i++) {
-                    newData[i] = oldData[startSample + i];
-                }
+                for (let i = 0; i < frameCount; i++) newData[i] = oldData[startSample + i];
             }
             tempCtx.close();
 
@@ -525,20 +955,16 @@
             document.getElementById('trimmedAudioPlayer').src = trimmedAudioUrl;
             document.getElementById('trimmedSizeBadge').textContent = `${formatSeconds(eVal - sVal)} • Ready`;
             document.getElementById('trimmedOutputBox').classList.remove('hidden');
-            document.getElementById('trimmedOutputBox').scrollIntoView({ behavior: 'smooth' });
             document.getElementById('trimmedAudioPlayer').play();
         }
 
         function audioBufferToMp3Blob(buffer) {
             const numChannels = buffer.numberOfChannels >= 2 ? 2 : 1;
-            const sampleRate = buffer.sampleRate;
-            const mp3encoder = new lamejs.Mp3Encoder(numChannels, sampleRate, 128);
+            const mp3encoder = new lamejs.Mp3Encoder(numChannels, buffer.sampleRate, 128);
             const mp3Data = [];
-
             const leftFloat = buffer.getChannelData(0);
             const rightFloat = numChannels === 2 ? buffer.getChannelData(1) : leftFloat;
             const len = leftFloat.length;
-
             const leftPCM = new Int16Array(len);
             const rightPCM = numChannels === 2 ? new Int16Array(len) : null;
 
@@ -550,23 +976,14 @@
                     rightPCM[i] = sR < 0 ? sR * 0x8000 : sR * 0x7FFF;
                 }
             }
-
             const sampleBlockSize = 1152;
             for (let i = 0; i < len; i += sampleBlockSize) {
                 const leftChunk = leftPCM.subarray(i, i + sampleBlockSize);
-                let mp3buf;
-                if (numChannels === 2) {
-                    const rightChunk = rightPCM.subarray(i, i + sampleBlockSize);
-                    mp3buf = mp3encoder.encodeBuffer(leftChunk, rightChunk);
-                } else {
-                    mp3buf = mp3encoder.encodeBuffer(leftChunk);
-                }
+                const mp3buf = numChannels === 2 ? mp3encoder.encodeBuffer(leftChunk, rightPCM.subarray(i, i + sampleBlockSize)) : mp3encoder.encodeBuffer(leftChunk);
                 if (mp3buf.length > 0) mp3Data.push(mp3buf);
             }
-
             const endBuf = mp3encoder.flush();
             if (endBuf.length > 0) mp3Data.push(endBuf);
-
             return new Blob(mp3Data, { type: 'audio/mp3' });
         }
 
@@ -575,11 +992,8 @@
             const btn = document.getElementById('mp3DownloadBtn');
             btn.innerHTML = "⏳ Encoding MP3...";
             await new Promise(r => setTimeout(r, 30));
-
             try {
-                if (!trimmedMp3Blob) {
-                    trimmedMp3Blob = audioBufferToMp3Blob(lastCutBuffer);
-                }
+                if (!trimmedMp3Blob) trimmedMp3Blob = audioBufferToMp3Blob(lastCutBuffer);
                 const mp3Url = URL.createObjectURL(trimmedMp3Blob);
                 const a = document.createElement('a');
                 a.href = mp3Url;
@@ -587,9 +1001,6 @@
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
-                setTimeout(() => URL.revokeObjectURL(mp3Url), 2000);
-            } catch (err) {
-                alert("MP3 மாற்றத்தில் சிக்கல்: " + err.message);
             } finally {
                 btn.innerHTML = "🎵 Download .MP3";
             }
@@ -614,7 +1025,7 @@
 
         function copyTranscriptToTts() {
             const out = document.getElementById('outputText').value.trim();
-            if (!out) return alert("முதலில் ஆடியோவை உரையாக மாற்றவும் அல்லது கீழே உள்ள பெட்டியில் டைப் செய்யவும்.");
+            if (!out) return alert("முதலில் ஆடியோவை உரையாக மாற்றவும்.");
             document.getElementById('ttsInputText').value = out;
         }
 
@@ -628,9 +1039,7 @@
 
         function playTextToSpeech() {
             const txt = document.getElementById('ttsInputText').value.trim();
-            if (!txt) return alert("தயவுசெய்து வாசிக்க வேண்டிய உரையை உள்ளிடவும்.");
-            if (!('speechSynthesis' in window)) return alert("உங்கள் பிரவுசரில் Text-to-Speech வசதி இல்லை.");
-
+            if (!txt || !('speechSynthesis' in window)) return;
             window.speechSynthesis.cancel();
             const utter = new SpeechSynthesisUtterance(txt);
             utter.lang = document.getElementById('ttsLangSelect').value;
@@ -640,11 +1049,8 @@
 
         function pauseResumeTts() {
             if (!('speechSynthesis' in window)) return;
-            if (window.speechSynthesis.paused) {
-                window.speechSynthesis.resume();
-            } else if (window.speechSynthesis.speaking) {
-                window.speechSynthesis.pause();
-            }
+            if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+            else if (window.speechSynthesis.speaking) window.speechSynthesis.pause();
         }
 
         function stopTextToSpeech() {
@@ -658,12 +1064,9 @@
             ctx.fillStyle = "#060814";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "#818cf8";
-            ctx.font = "bold 20px 'Plus Jakarta Sans', sans-serif";
+            ctx.font = "bold 20px sans-serif";
             ctx.textAlign = "center";
-            ctx.fillText("Yugamugesh AI Audio Visualizer", canvas.width / 2, canvas.height / 2 - 10);
-            ctx.fillStyle = "#64748b";
-            ctx.font = "13px 'Plus Jakarta Sans', sans-serif";
-            ctx.fillText("Upload an audio file and press Play or Record Video", canvas.width / 2, canvas.height / 2 + 18);
+            ctx.fillText("Yugamugesh AI Audio Visualizer", canvas.width / 2, canvas.height / 2);
         }
 
         function handleVisualizerFile(event) {
@@ -692,47 +1095,27 @@
                 visAnalyser.connect(visAudioCtx.destination);
                 visAnalyser.connect(visDestNode);
             }
-
             const canvas = document.getElementById('videoCanvas');
             const ctx = canvas.getContext('2d');
             const bufferLength = visAnalyser.frequencyBinCount;
             const dataArray = new Uint8Array(bufferLength);
-
             if (visAnimId) cancelAnimationFrame(visAnimId);
 
             function renderFrame() {
                 visAnimId = requestAnimationFrame(renderFrame);
                 visAnalyser.getByteFrequencyData(dataArray);
-
-                const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-                grad.addColorStop(0, "#070914");
-                grad.addColorStop(0.5, "#15163c");
-                grad.addColorStop(1, "#070914");
-                ctx.fillStyle = grad;
+                ctx.fillStyle = "#070914";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-
                 ctx.fillStyle = "#e0e7ff";
-                ctx.font = "bold 16px 'Plus Jakarta Sans', sans-serif";
+                ctx.font = "bold 16px sans-serif";
                 ctx.textAlign = "center";
                 ctx.fillText(titleText || "Yugamugesh AI Studio", canvas.width / 2, 36);
-
-                ctx.fillStyle = "#818cf8";
-                ctx.font = "11px 'Plus Jakarta Sans', sans-serif";
-                ctx.fillText("audio.fixrservice.in", canvas.width / 2, 54);
-
                 const barWidth = (canvas.width - 80) / bufferLength;
                 let x = 40;
                 for (let i = 0; i < bufferLength; i++) {
                     const barHeight = (dataArray[i] / 255) * (canvas.height - 110);
-                    const y = canvas.height - 30 - barHeight;
-
-                    const barGrad = ctx.createLinearGradient(0, y, 0, canvas.height - 30);
-                    barGrad.addColorStop(0, "#38bdf8");
-                    barGrad.addColorStop(0.5, "#6366f1");
-                    barGrad.addColorStop(1, "#a855f7");
-
-                    ctx.fillStyle = barGrad;
-                    ctx.fillRect(x, y, Math.max(2, barWidth - 3), barHeight);
+                    ctx.fillStyle = "#6366f1";
+                    ctx.fillRect(x, canvas.height - 30 - barHeight, Math.max(2, barWidth - 3), barHeight);
                     x += barWidth;
                 }
             }
@@ -742,74 +1125,50 @@
         function startVisualizerVideoExport() {
             const player = document.getElementById('visAudioPlayer');
             if (!player.src) return alert("முதலில் ஒரு ஆடியோ கோப்பைத் தேர்ந்தெடுக்கவும்.");
-
-            if (visAudioCtx && visAudioCtx.state === 'suspended') {
-                visAudioCtx.resume();
+            if (visAudioCtx && visAudioCtx.state === 'suspended') visAudioCtx.resume();
+            const canvasStream = document.getElementById('videoCanvas').captureStream(30);
+            if (visDestNode && visDestNode.stream.getAudioTracks().length > 0) {
+                canvasStream.addTrack(visDestNode.stream.getAudioTracks()[0]);
             }
-
-            const canvas = document.getElementById('videoCanvas');
-            const canvasStream = canvas.captureStream(30);
-            if (visDestNode) {
-                const audioTracks = visDestNode.stream.getAudioTracks();
-                if (audioTracks.length > 0) canvasStream.addTrack(audioTracks[0]);
-            }
-
             visRecordedChunks = [];
             visMediaRecorder = new MediaRecorder(canvasStream, { mimeType: 'video/webm' });
             visMediaRecorder.ondataavailable = e => { if (e.data.size > 0) visRecordedChunks.push(e.data); };
             visMediaRecorder.onstop = () => {
                 const blob = new Blob(visRecordedChunks, { type: 'video/webm' });
-                const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.href = url;
+                a.href = URL.createObjectURL(blob);
                 a.download = `Yugamugesh_Visualizer_${Date.now()}.webm`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
-                document.getElementById('visRecBadge').textContent = "Video Saved!";
-                document.getElementById('visExportBtn').textContent = "🎥 Record & Download Video (.WEBM)";
             };
-
             visMediaRecorder.start();
             player.currentTime = 0;
             player.play();
-            document.getElementById('visRecBadge').textContent = "🔴 Recording Video...";
-            document.getElementById('visExportBtn').textContent = "🔴 Recording in Progress...";
-
-            player.onended = () => {
-                stopVisualizerVideoExport();
-            };
+            player.onended = () => stopVisualizerVideoExport();
         }
 
         function stopVisualizerVideoExport() {
-            const player = document.getElementById('visAudioPlayer');
-            player.pause();
-            if (visMediaRecorder && visMediaRecorder.state === "recording") {
-                visMediaRecorder.stop();
-            }
+            document.getElementById('visAudioPlayer').pause();
+            if (visMediaRecorder && visMediaRecorder.state === "recording") visMediaRecorder.stop();
         }
 
         async function prepareHDTranscriptionAudio(file) {
-            const maxDirectSize = 18 * 1024 * 1024; // 18 MB direct upload
-            if (file.size <= maxDirectSize) {
-                return file;
-            }
+            const maxDirectSize = 18 * 1024 * 1024;
+            if (file.size <= maxDirectSize) return file;
             try {
                 const arrayBuffer = await file.arrayBuffer();
                 const decodeCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const audioBuf = await decodeCtx.decodeAudioData(arrayBuffer);
                 await decodeCtx.close();
-
                 const targetRate = 16000;
-                const len = Math.floor(audioBuf.duration * targetRate);
-                const offCtx = new OfflineAudioContext(1, len, targetRate);
+                const offCtx = new OfflineAudioContext(1, Math.floor(audioBuf.duration * targetRate), targetRate);
                 const src = offCtx.createBufferSource();
                 src.buffer = audioBuf;
                 src.connect(offCtx.destination);
                 src.start(0);
                 const rendered = await offCtx.startRendering();
-                const wavBlob = audioBufferToWavBlob(rendered);
-                return new File([wavBlob], "clean_audio_16khz.wav", { type: "audio/wav" });
+                return new File([audioBufferToWavBlob(rendered)], "clean_audio_16khz.wav", { type: "audio/wav" });
             } catch (e) {
                 return file;
             }
@@ -820,24 +1179,16 @@
             const replacements = [
                 [/ஏன் பாதை என் சீதை/g, "நீயே என் பாதி என் சீதை"],
                 [/நீயே என் பாதை/g, "நீயே என் பாதி"],
-                [/நீயே என் பாரை/g, "நீயே என் பாதி"],
                 [/என் சிதை/g, "என் சீதை"],
                 [/ஆருவீரே/g, "ஆருயிரே"],
                 [/வங்லிலை/g, "வெண்ணிலவே"],
-                [/வங்கிலிலை/g, "வெண்ணிலவே"],
                 [/எந்தம் தேடலே/g, "எந்தன் தேடலே"],
-                [/எந்தம் கேடலே/g, "எந்தன் தேடலே"],
                 [/ஏகாங்க பூவே/g, "ஏகாந்த பூவே"],
                 [/மங்கலவள் நாமே/g, "மங்கல வண்ணமே"],
-                [/மந்திரவள் நாமே/g, "மந்திர வண்ணமே"],
-                [/உதலும் உள்ளம்/g, "உடலும் உள்ளமும்"],
-                [/சேடி அளைக்கின்றேன்/g, "தேடி அழைக்கின்றேன்"],
-                [/கிருக்கேரில்/g, "திருத்தேரில்"]
+                [/மந்திரவள் நாமே/g, "மந்திர வண்ணமே"]
             ];
             let fixed = text;
-            for (const [pattern, rep] of replacements) {
-                fixed = fixed.replace(pattern, rep);
-            }
+            for (const [pattern, rep] of replacements) fixed = fixed.replace(pattern, rep);
             return fixed;
         }
 
@@ -845,13 +1196,7 @@
             if (!rawText || rawText.trim().length < 3) return rawText;
             const targetLang = document.getElementById('targetLanguage').value || 'Tamil';
             const preFixed = applyInstantTamilFixes(rawText);
-
-            const systemPrompt = `You are an expert ${targetLang} proofreader and content formatter.
-Correct any phonetic spelling mistakes or sandhi errors in the user's ${targetLang} transcription so that every word is a valid, grammatically and contextually accurate ${targetLang} word.
-Requested Output Mode: ${requestedMode}.
-STRICT RULES:
-1. Do NOT invent lines from other songs that are not in the user's text.
-2. Format the corrected output strictly according to the Requested Output Mode in ${targetLang} without extra meta notes.`;
+            const systemPrompt = `You are an expert ${targetLang} proofreader. Correct phonetic spelling mistakes in the user's ${targetLang} transcription. Output Mode: ${requestedMode}. Return ONLY the corrected text in ${targetLang}.`;
 
             for (let g = 0; g < groqKeys.length; g++) {
                 try {
@@ -876,7 +1221,6 @@ STRICT RULES:
                     }
                 } catch (e) {}
             }
-
             return preFixed;
         }
 
@@ -891,10 +1235,9 @@ STRICT RULES:
 
             const btn = document.getElementById('fixSpellingBtn');
             btn.textContent = "⏳ Fixing...";
-            const corrected = await autoCorrectTamilSpelling(current, groqKeys, geminiKeys, mode);
-            textArea.value = corrected;
-            btn.textContent = "✅ Spelling Fixed!";
-            setTimeout(() => { btn.textContent = "✨ Fix Spelling"; }, 2500);
+            textArea.value = await autoCorrectTamilSpelling(current, groqKeys, geminiKeys, mode);
+            btn.textContent = "✅ Fixed!";
+            setTimeout(() => { btn.textContent = "✨ Fix Spelling"; }, 2000);
         }
 
         function audioBufferToWavBlob(buffer) {
@@ -904,26 +1247,13 @@ STRICT RULES:
             const view = new DataView(out);
             const channels = [];
             let sample, offset = 0, pos = 0;
-
             function setUint16(data) { view.setUint16(pos, data, true); pos += 2; }
             function setUint32(data) { view.setUint32(pos, data, true); pos += 4; }
-
-            setUint32(0x46464952);
-            setUint32(length - 8);
-            setUint32(0x45564157);
-            setUint32(0x20746d66);
-            setUint32(16);
-            setUint16(1);
-            setUint16(numOfChan);
-            setUint32(buffer.sampleRate);
-            setUint32(buffer.sampleRate * 2 * numOfChan);
-            setUint16(numOfChan * 2);
-            setUint16(16);
-            setUint32(0x61746164);
-            setUint32(length - pos - 4);
-
+            setUint32(0x46464952); setUint32(length - 8); setUint32(0x45564157);
+            setUint32(0x20746d66); setUint32(16); setUint16(1); setUint16(numOfChan);
+            setUint32(buffer.sampleRate); setUint32(buffer.sampleRate * 2 * numOfChan);
+            setUint16(numOfChan * 2); setUint16(16); setUint32(0x61746164); setUint32(length - pos - 4);
             for (let i = 0; i < numOfChan; i++) channels.push(buffer.getChannelData(i));
-
             while (pos < length) {
                 for (let i = 0; i < numOfChan; i++) {
                     sample = Math.max(-1, Math.min(1, channels[i][offset]));
@@ -936,15 +1266,9 @@ STRICT RULES:
             return new Blob([out], { type: "audio/wav" });
         }
 
-        // ============================================================================
-        // 1-SECOND INSTANT TRANSCRIPTION ENGINE (WHISPER-LARGE-V3-TURBO)
-        // ============================================================================
         async function startTranscription() {
             const keys = getSavedApiKeys();
-            if (!selectedAudioFile) {
-                alert("தயவுசெய்து ஒரு MP3 அல்லது WAV ஆடியோ கோப்பைத் தேர்ந்தெடுக்கவும்.");
-                return;
-            }
+            if (!selectedAudioFile) return alert("தயவுசெய்து ஒரு ஆடியோ கோப்பைத் தேர்ந்தெடுக்கவும்.");
 
             const targetLang = document.getElementById('targetLanguage').value;
             const mode = document.getElementById('outputMode').value;
@@ -989,7 +1313,6 @@ STRICT RULES:
                     }
                 }
 
-                // உடனடியாக 1-2 விநாடியில் உரையைக் காட்டுகிறது!
                 document.getElementById('loadingBox').classList.add('hidden');
 
                 if (successText) {
@@ -998,7 +1321,6 @@ STRICT RULES:
                     document.getElementById('resultSection').classList.remove('hidden');
                     document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
 
-                    // YouTube Chapters அல்லது Translation மோட் தேர்ந்தெடுத்தால் மட்டும் பின்னணியில் ஃபார்மட் செய்யும்
                     if (mode !== "Pure Transcription") {
                         const formatted = await autoCorrectTamilSpelling(successText, groqKeys, geminiKeys, mode);
                         document.getElementById('outputText').value = formatted;
@@ -1006,7 +1328,6 @@ STRICT RULES:
                 } else {
                     showError(`⚠️ ஆடியோவை மாற்றுவதில் சிக்கல்:\n${lastErrorMsg}`);
                 }
-
             } catch (err) {
                 document.getElementById('loadingBox').classList.add('hidden');
                 showError(err.message);
@@ -1016,7 +1337,6 @@ STRICT RULES:
         function showError(msg) {
             document.getElementById('errorMessage').innerText = msg;
             document.getElementById('errorBox').classList.remove('hidden');
-            document.getElementById('errorBox').scrollIntoView({ behavior: 'smooth' });
         }
 
         async function toggleRecording() {
@@ -1041,32 +1361,23 @@ STRICT RULES:
                         speechRecognition.interimResults = true;
                         speechRecognition.onresult = (event) => {
                             let interim = "";
-                            for (let i = 0; i < event.results.length; i++) {
-                                interim += event.results[i][0].transcript + " ";
-                            }
+                            for (let i = 0; i < event.results.length; i++) interim += event.results[i][0].transcript + " ";
                             liveSpeechTranscript = interim.trim();
                             document.getElementById('outputText').value = liveSpeechTranscript;
-                            document.getElementById('activeKeyBadge').textContent = `🆓 Live Speech (${targetLang})`;
                         };
                         try { speechRecognition.start(); } catch (e) {}
                     }
 
                     mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
                     mediaRecorder.onstop = () => {
-                        if (speechRecognition) {
-                            try { speechRecognition.stop(); } catch (e) {}
-                        }
+                        if (speechRecognition) try { speechRecognition.stop(); } catch (e) {}
                         const actualMime = mediaRecorder.mimeType || 'audio/webm';
-                        const ext = actualMime.includes('mp4') ? 'm4a' : (actualMime.includes('wav') ? 'wav' : 'webm');
+                        const ext = actualMime.includes('mp4') ? 'm4a' : 'webm';
                         const audioBlob = new Blob(recordedChunks, { type: actualMime });
                         selectedAudioFile = new File([audioBlob], `Recorded_Audio_${Date.now()}.${ext}`, { type: actualMime });
                         stream.getTracks().forEach(t => t.stop());
-
                         uploadAudioToAWS(selectedAudioFile);
-
-                        if (!liveSpeechTranscript) {
-                            startTranscription();
-                        }
+                        if (!liveSpeechTranscript) startTranscription();
                     };
 
                     mediaRecorder.start();
@@ -1076,12 +1387,10 @@ STRICT RULES:
                     timer.classList.remove('hidden');
                     timerInterval = setInterval(() => {
                         secondsElapsed++;
-                        const m = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
-                        const s = String(secondsElapsed % 60).padStart(2, '0');
-                        timer.textContent = `${m}:${s}`;
+                        timer.textContent = `${String(Math.floor(secondsElapsed / 60)).padStart(2, '0')}:${String(secondsElapsed % 60).padStart(2, '0')}`;
                     }, 1000);
                 } catch (e) {
-                    alert("மைக்ரோஃபோன் அனுமதி கிடைக்கவில்லை (Microphone permission denied).");
+                    alert("மைக்ரோஃபோன் அனுமதி கிடைக்கவில்லை.");
                 }
             } else {
                 mediaRecorder.stop();
@@ -1093,16 +1402,14 @@ STRICT RULES:
         }
 
         function runSampleTest() {
-            document.getElementById('outputText').value = "நீயே என் பாதி என் சீதை, என் ஆருயிரே கண்ணே வெண்ணிலவே பூஞ்சோலை!\nஎன் ஆருயிரே நீ எந்தன் தேடலே, ஏகாந்த பூவே வா என் ஏழிசையே!\nஎன் முன்னே வந்த மங்கல வண்ணமே, மந்திர வண்ணமே, காதலின் வண்ணமே!";
-            document.getElementById('activeKeyBadge').textContent = `✓ 100% Pure Tamil`;
+            document.getElementById('outputText').value = "நீயே என் பாதி என் சீதை, என் ஆருயிரே கண்ணே வெண்ணிலவே பூஞ்சோலை!\nஎன் ஆருயிரே நீ எந்தன் தேடலே, ஏகாந்த பூவே வா என் ஏழிசையே!";
+            document.getElementById('activeKeyBadge').textContent = "✓ 100% Pure Tamil";
             document.getElementById('resultSection').classList.remove('hidden');
-            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
         }
 
         function copyResultText() {
             const textArea = document.getElementById('outputText');
-            if (!textArea.value.trim()) return alert("காப்பி செய்ய உரை எதுவும் இல்லை!");
-            textArea.select();
+            if (!textArea.value.trim()) return;
             navigator.clipboard.writeText(textArea.value);
             const btn = document.getElementById('copyBtn');
             btn.innerHTML = "<span>✅ Copied!</span>";
@@ -1111,57 +1418,46 @@ STRICT RULES:
 
         function downloadTxtFile() {
             const text = document.getElementById('outputText').value;
-            if (!text.trim()) return alert("பதிவிறக்கம் செய்ய உரை எதுவும் இல்லை!");
+            if (!text.trim()) return;
             const blob = new Blob(["\ufeff" + text], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
+            a.href = URL.createObjectURL(blob);
             a.download = `Yugamugesh_Text_${Date.now()}.txt`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            URL.revokeObjectURL(url);
         }
 
         function downloadDocFile() {
             const text = document.getElementById('outputText').value;
-            if (!text.trim()) return alert("பதிவிறக்கம் செய்ய உரை எதுவும் இல்லை!");
-            const htmlContent = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body style="font-family: 'Latha', sans-serif; font-size: 14pt; line-height: 1.6;">${text.replace(/\n/g, '<br>')}</body></html>`;
+            if (!text.trim()) return;
+            const htmlContent = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body>${text.replace(/\n/g, '<br>')}</body></html>`;
             const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
-            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
+            a.href = URL.createObjectURL(blob);
             a.download = `Yugamugesh_Doc_${Date.now()}.doc`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            URL.revokeObjectURL(url);
         }
 
         function downloadSrtFile() {
             const text = document.getElementById('outputText').value.trim();
-            if (!text) return alert("SRT சப்-டைட்டில் பதிவிறக்கம் செய்ய உரை எதுவும் இல்லை!");
+            if (!text) return;
             const rawLines = text.split(/\n+/).map(l => l.trim()).filter(Boolean);
-            let srtContent = "";
-            let currentSec = 0;
-
+            let srtContent = "", currentSec = 0;
             rawLines.forEach((line, index) => {
                 const duration = Math.max(3, Math.min(7, Math.ceil(line.split(/\s+/).length * 0.6)));
-                const startTime = formatSrtTimestamp(currentSec);
-                const endTime = formatSrtTimestamp(currentSec + duration);
-                srtContent += `${index + 1}\n${startTime} --> ${endTime}\n${line}\n\n`;
+                srtContent += `${index + 1}\n${formatSrtTimestamp(currentSec)} --> ${formatSrtTimestamp(currentSec + duration)}\n${line}\n\n`;
                 currentSec += duration;
             });
-
             const blob = new Blob(["\ufeff" + srtContent], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
+            a.href = URL.createObjectURL(blob);
             a.download = `Yugamugesh_Subtitles_${Date.now()}.srt`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            URL.revokeObjectURL(url);
         }
 
         function formatSrtTimestamp(totalSeconds) {
@@ -1173,8 +1469,9 @@ STRICT RULES:
 
         function shareOnWhatsApp() {
             const text = document.getElementById('outputText').value;
-            if (!text.trim()) return alert("பகிர உரை எதுவும் இல்லை!");
-            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-            window.open(url, '_blank');
+            if (!text.trim()) return;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
     </script>
+</body>
+</html>
