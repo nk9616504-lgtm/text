@@ -4,9 +4,9 @@
     <meta name="google-adsense-account" content="ca-pub-2364261268133710">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>Yugamugesh - Smart Audio & Voice AI Studio | Multi-Language Transcriber & MP3 Cutter</title>
-    <meta name="description" content="Convert MP3, WAV, AAC, M4A audio files and voice recordings into 100% accurate Tamil, English, Hindi, Telugu, and Malayalam text online. Includes Waveform Cutter, TTS, Visualizer & SRT export.">
-    <meta name="keywords" content="Tamil Audio to Text, Multi-Language Speech to Text, MP3 to Tamil Text Converter, Online Audio Cutter, SRT Subtitle Generator, Audio Visualizer, Yugamugesh AI Studio, FixrService">
+    <title>Yugamugesh - Smart Audio & Voice AI Studio | Multi-Language Transcriber & AI Voice Generator</title>
+    <meta name="description" content="Convert MP3, WAV, AAC, M4A audio files into 100% accurate Tamil, English, Hindi, Telugu, and Malayalam text. Includes ElevenLabs-style AI Voice Generator (TTS) with MP3 download, Waveform Cutter & Visualizer.">
+    <meta name="keywords" content="Tamil Audio to Text, Tamil AI Voice Generator, Text to Speech MP3 Download, MP3 to Tamil Text Converter, Online Audio Cutter, SRT Subtitle Generator, Yugamugesh AI Studio, FixrService">
     <meta name="author" content="Yugamugesh AI Studio">
     <meta name="robots" content="index, follow">
 
@@ -41,6 +41,13 @@
         select option {
             background-color: #0f172a;
             color: #f8fafc;
+        }
+        @keyframes pulse-bar {
+            0%, 100% { transform: scaleY(0.3); }
+            50% { transform: scaleY(1); }
+        }
+        .voice-bar {
+            animation: pulse-bar 0.8s ease-in-out infinite;
         }
     </style>
 </head>
@@ -91,7 +98,7 @@
                 Smart Audio & Voice AI Studio
             </h1>
             <p id="heroSubtext" class="text-slate-400 text-xs sm:text-sm mx-auto leading-relaxed" data-i18n="hero_sub">
-                Translate, Transcribe, Cut, and Export audio in Tamil, English, Hindi, Telugu, & Malayalam with studio visualizer, AI noise reduction, and SRT subtitles.
+                Translate, Transcribe, Generate Realistic AI Voices, Cut MP3, and Export audio in Tamil, English, Hindi, Telugu, & Malayalam.
             </p>
         </div>
 
@@ -107,7 +114,7 @@
                     <span>✂️</span><span data-i18n="tab_cutter">Cutter</span>
                 </button>
                 <button onclick="switchTab('tts')" id="tabTts" class="py-3 rounded-xl text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5">
-                    <span>🗣️</span><span data-i18n="tab_tts">Text-to-Speech</span>
+                    <span>🗣️</span><span data-i18n="tab_tts">AI Voice</span>
                 </button>
                 <button onclick="switchTab('visualizer')" id="tabVisualizer" class="py-3 rounded-xl text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5">
                     <span>🎥</span><span data-i18n="tab_visualizer">Visualizer</span>
@@ -294,50 +301,118 @@
             </div>
 
             <!-- =================================================================== -->
-            <!-- TAB 3: TEXT-TO-SPEECH (TTS) -->
+            <!-- TAB 3: ELEVENLABS-STYLE AI VOICE STUDIO (NEURAL TTS + MP3 DOWNLOAD) -->
             <!-- =================================================================== -->
             <div id="panelTts" class="hidden space-y-4">
-                <div class="bg-indigo-950/40 border border-indigo-500/25 rounded-2xl p-4">
-                    <div class="flex items-center justify-between mb-1">
-                        <h3 class="text-sm font-extrabold text-indigo-300" data-i18n="tts_heading">🗣️ Multi-Language Text-to-Speech (TTS)</h3>
+                <!-- Header Banner -->
+                <div class="bg-gradient-to-r from-indigo-950/70 via-violet-950/50 to-indigo-950/70 border border-indigo-500/30 rounded-2xl p-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2.5 py-0.5 bg-gradient-to-r from-indigo-500 to-violet-500 text-white text-[10px] font-extrabold uppercase tracking-wider rounded-full">ElevenLabs Style</span>
+                            <h3 class="text-sm font-extrabold text-white" data-i18n="tts_heading">🗣️ AI Neural Voiceover Studio</h3>
+                        </div>
                         <button onclick="copyTranscriptToTts()" class="text-[11px] bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-200 px-2.5 py-1 rounded-lg font-bold border border-indigo-500/30 transition" data-i18n="btn_use_transcript">
                             📥 Use Transcribed Text
                         </button>
                     </div>
                     <p class="text-xs text-slate-300 leading-relaxed" data-i18n="tts_desc">
-                        Listen to natural voiceover in Tamil, English, Hindi, Telugu, or Malayalam immediately.
+                        Generate realistic Male & Female studio voiceovers in Tamil, English, Hindi, Telugu & Malayalam with emotion control and direct .MP3 download.
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#070914] p-3.5 rounded-2xl border border-indigo-500/20">
+                <!-- AI Voice Artist & Style Selection -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#070914] p-4 rounded-2xl border border-indigo-500/20">
                     <div>
-                        <label class="block text-[11px] font-bold text-indigo-300 mb-1" data-i18n="tts_voice_lang">Voice Language</label>
-                        <select id="ttsLangSelect" class="w-full bg-slate-900 text-white text-xs font-bold px-3 py-2.5 rounded-xl border border-indigo-500/30">
-                            <option value="ta-IN">🇮🇳 Tamil (ta-IN)</option>
-                            <option value="en-IN">🇮🇳 English (en-IN)</option>
-                            <option value="hi-IN">🇮🇳 Hindi (hi-IN)</option>
-                            <option value="te-IN">🇮🇳 Telugu (te-IN)</option>
-                            <option value="ml-IN">🇮🇳 Malayalam (ml-IN)</option>
+                        <label class="block text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-1.5" data-i18n="tts_voice_artist">
+                            🎙️ AI VOICE ARTIST (குரல் தேர்வு)
+                        </label>
+                        <select id="ttsVoiceArtist" onchange="onVoiceArtistChange()" class="w-full bg-[#0d1224] text-white text-xs font-bold px-3 py-3 rounded-xl border border-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="ta-IN|female|1.08|pNInz6obpgDQGcFmaJgB">🇮🇳 Iniya / Pallavi (Tamil Female - Studio HD)</option>
+                            <option value="ta-IN|male|0.86|ErXwobaYiN019PkySvjV">🇮🇳 Valluvar / Kavin (Tamil Male - Deep Narrative)</option>
+                            <option value="ta-IN|female|1.18|EXAVITQu4vr4xnSDxMaL">🇮🇳 Meera (Tamil Female - Expressive Reels)</option>
+                            <option value="en-IN|female|1.05|21m00Tcm4TlvDq8ikWAM">🇬🇧 Riya / Rachel (English Female - Promo HD)</option>
+                            <option value="en-IN|male|0.88|pNInz6obpgDQGcFmaJgB">🇬🇧 Aarav / Adam (English Male - Deep Documentary)</option>
+                            <option value="hi-IN|female|1.05|EXAVITQu4vr4xnSDxMaL">🇮🇳 Swara (Hindi Female - Studio Neural)</option>
+                            <option value="hi-IN|male|0.88|ErXwobaYiN019PkySvjV">🇮🇳 Kabir (Hindi Male - Deep Storyteller)</option>
+                            <option value="te-IN|female|1.04|21m00Tcm4TlvDq8ikWAM">🇮🇳 Shruti (Telugu Female - Studio HD)</option>
+                            <option value="ml-IN|female|1.04|21m00Tcm4TlvDq8ikWAM">🇮🇳 Sobhana (Malayalam Female - Studio HD)</option>
                         </select>
                     </div>
+
                     <div>
-                        <label class="block text-[11px] font-bold text-indigo-300 mb-1"><span data-i18n="tts_speed_lbl">Speech Speed:</span> <span id="ttsRateLabel">1.0x</span></label>
-                        <input type="range" id="ttsRateSlider" min="0.5" max="1.8" step="0.1" value="1.0" oninput="document.getElementById('ttsRateLabel').textContent=this.value+'x'" class="w-full accent-indigo-500 h-2 bg-slate-800 rounded-lg mt-2 cursor-pointer">
+                        <label class="block text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-1.5" data-i18n="tts_emotion_lbl">
+                            🎭 VOICE STYLE & EMOTION
+                        </label>
+                        <select id="ttsEmotionPreset" onchange="applyVoiceEmotionPreset()" class="w-full bg-[#0d1224] text-white text-xs font-bold px-3 py-3 rounded-xl border border-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="natural" data-i18n="emo_natural">🎙️ Natural Studio (Default)</option>
+                            <option value="reels" data-i18n="emo_reels">🎬 YouTube Shorts & Reels (Energetic)</option>
+                            <option value="story" data-i18n="emo_story">📖 Audiobook & Storytelling (Calm & Deep)</option>
+                            <option value="news" data-i18n="emo_news">📰 News Anchor (Fast & Crisp)</option>
+                        </select>
                     </div>
                 </div>
 
-                <textarea id="ttsInputText" rows="5" class="w-full p-4 bg-[#070914] border border-indigo-500/30 rounded-2xl text-white text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Type or paste text here to speak...">வணக்கம்! யுகமுகேஷ் ஏஐ ஆடியோ ஸ்டுடியோவிற்கு உங்களை அன்புடன் வரவேற்கிறோம்.</textarea>
+                <!-- Fine-Tuning Sliders: Speed & Pitch/Tone -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#070914] p-3.5 rounded-2xl border border-indigo-500/20">
+                    <div>
+                        <div class="flex justify-between text-[11px] font-bold text-indigo-300 mb-1">
+                            <span data-i18n="tts_speed_lbl">⚡ Speech Speed (வேகம்):</span>
+                            <span id="ttsRateLabel" class="text-emerald-400 font-mono">1.0x</span>
+                        </div>
+                        <input type="range" id="ttsRateSlider" min="0.6" max="1.6" step="0.05" value="1.0" oninput="document.getElementById('ttsRateLabel').textContent=this.value+'x'" class="w-full accent-indigo-500 h-2 bg-slate-800 rounded-lg cursor-pointer">
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-[11px] font-bold text-indigo-300 mb-1">
+                            <span data-i18n="tts_pitch_lbl">🎚️ Voice Pitch / Tone (குரல் தொனி):</span>
+                            <span id="ttsPitchLabel" class="text-violet-400 font-mono">1.08</span>
+                        </div>
+                        <input type="range" id="ttsPitchSlider" min="0.65" max="1.4" step="0.02" value="1.08" oninput="document.getElementById('ttsPitchLabel').textContent=this.value" class="w-full accent-violet-500 h-2 bg-slate-800 rounded-lg cursor-pointer">
+                    </div>
+                </div>
 
-                <div class="grid grid-cols-3 gap-2.5">
-                    <button onclick="playTextToSpeech()" class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 text-white font-bold text-xs sm:text-sm py-3.5 rounded-xl shadow-lg transition" data-i18n="btn_speak_now">
-                        ▶️ Speak Now
+                <!-- Script Input Box with Character Counter -->
+                <div class="relative">
+                    <textarea id="ttsInputText" rows="5" oninput="updateTtsCharCount()" class="w-full p-4 bg-[#070914] border border-indigo-500/30 rounded-2xl text-white text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="இங்கே தமிழ் அல்லது பிற மொழி உரையை டைப் செய்யவும்...">வணக்கம்! யுகமுகேஷ் ஏஐ ஆடியோ ஸ்டுடியோவிற்கு உங்களை அன்புடன் வரவேற்கிறோம். இதில் உங்கள் எழுத்துக்களை இயற்கையான குரலில் மாற்றி எம்.பி.3 வடிவில் பதிவிறக்கம் செய்யலாம்.</textarea>
+                    <div class="flex items-center justify-between px-2 pt-1 text-[11px] text-slate-400">
+                        <span id="ttsCharCount">174 characters</span>
+                        <button onclick="document.getElementById('ttsInputText').value='';updateTtsCharCount();" class="text-rose-400 hover:underline font-semibold" data-i18n="btn_clear_text">Clear Text</button>
+                    </div>
+                </div>
+
+                <!-- Live Speaking Wave Indicator -->
+                <div id="ttsSpeakingWave" class="hidden bg-indigo-950/50 border border-indigo-500/30 rounded-2xl p-3 flex items-center justify-center space-x-3">
+                    <div class="flex items-end space-x-1 h-5">
+                        <div class="w-1 bg-indigo-400 h-4 rounded voice-bar"></div>
+                        <div class="w-1 bg-violet-400 h-5 rounded voice-bar" style="animation-delay:0.15s"></div>
+                        <div class="w-1 bg-emerald-400 h-3 rounded voice-bar" style="animation-delay:0.3s"></div>
+                        <div class="w-1 bg-indigo-400 h-5 rounded voice-bar" style="animation-delay:0.45s"></div>
+                    </div>
+                    <span id="ttsStatusLabel" class="text-xs font-bold text-indigo-200">🎙️ AI Studio Voice Speaking...</span>
+                </div>
+
+                <!-- Main Controls: Speak, Pause, Stop & Generate MP3 -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                    <button onclick="playTextToSpeech()" class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 text-white font-bold text-xs py-3.5 px-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-1" data-i18n="btn_speak_now">
+                        ▶️ Speak AI Voice
                     </button>
-                    <button onclick="pauseResumeTts()" class="bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-500/30 font-bold text-xs sm:text-sm py-3.5 rounded-xl transition" data-i18n="btn_pause_resume">
+                    <button onclick="generateAndDownloadTtsMp3()" id="ttsMp3Btn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3.5 px-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-1" data-i18n="btn_tts_mp3">
+                        ⬇️ Download .MP3
+                    </button>
+                    <button onclick="pauseResumeTts()" class="bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-500/30 font-bold text-xs py-3.5 px-3 rounded-xl transition" data-i18n="btn_pause_resume">
                         ⏯️ Pause / Resume
                     </button>
-                    <button onclick="stopTextToSpeech()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs sm:text-sm py-3.5 rounded-xl transition" data-i18n="btn_stop_tts">
+                    <button onclick="stopTextToSpeech()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs py-3.5 px-3 rounded-xl transition" data-i18n="btn_stop_tts">
                         ⏹️ Stop
                     </button>
+                </div>
+
+                <!-- Generated MP3 Voiceover Preview Player -->
+                <div id="ttsAudioOutputBox" class="hidden bg-[#070914] p-4 rounded-2xl border border-emerald-500/30 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-extrabold text-emerald-400" data-i18n="tts_audio_ready">✅ Studio Voiceover Audio Ready</span>
+                        <span id="ttsEngineBadge" class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full font-bold">Neural HD</span>
+                    </div>
+                    <audio id="ttsGeneratedPlayer" controls referrerpolicy="no-referrer" class="w-full h-10"></audio>
                 </div>
             </div>
 
@@ -479,9 +554,9 @@
                 </div>
                 <div class="bg-[#0d1021]/90 p-6 rounded-2xl border border-indigo-500/20 shadow-sm">
                     <div class="w-10 h-10 bg-emerald-600/20 text-emerald-400 font-extrabold rounded-xl flex items-center justify-center mb-4">3</div>
-                    <h3 class="text-base font-bold text-white mb-2" data-i18n="step3_title">Export TXT, DOC, SRT & Video</h3>
+                    <h3 class="text-base font-bold text-white mb-2" data-i18n="step3_title">Export TXT, DOC, SRT & Voice MP3</h3>
                     <p class="text-xs sm:text-sm text-slate-400 leading-relaxed" data-i18n="step3_desc">
-                        Copy the converted text, or download it immediately as .TXT, MS Word (.DOC), or .SRT subtitle file for video editing.
+                        Copy the converted text, download .TXT, .DOC, .SRT subtitles, or convert text into realistic AI voiceover MP3.
                     </p>
                 </div>
             </div>
@@ -516,9 +591,9 @@
                     </p>
                 </div>
                 <div class="p-4 bg-[#070914] rounded-2xl border border-indigo-500/15">
-                    <h3 class="text-sm font-bold text-indigo-300 mb-1" data-i18n="feat4_title">🗣️ Natural Text-to-Speech (TTS)</h3>
+                    <h3 class="text-sm font-bold text-indigo-300 mb-1" data-i18n="feat4_title">🗣️ ElevenLabs-Style AI Voiceover & MP3</h3>
                     <p class="text-xs text-slate-400 leading-relaxed" data-i18n="feat4_desc">
-                        Read out transcribed or typed text in natural Indian voices with adjustable playback speed and 24-hour auto-deleting cloud security.
+                        Generate natural Male and Female Indian voiceovers with pitch, speed, and emotion controls, and download directly as .MP3.
                     </p>
                 </div>
             </div>
@@ -528,7 +603,7 @@
         <section id="faqSection" class="w-full mb-12">
             <div class="text-center mb-6">
                 <h2 class="text-xl sm:text-2xl font-extrabold text-white" data-i18n="faq_title">Frequently Asked Questions (FAQ)</h2>
-                <p class="text-xs sm:text-sm text-slate-400 mt-1" data-i18n="faq_sub">Common questions about Multi-Language Audio Transcription and MP3 Cutting.</p>
+                <p class="text-xs sm:text-sm text-slate-400 mt-1" data-i18n="faq_sub">Common questions about Multi-Language Audio Transcription and AI Voiceover.</p>
             </div>
 
             <div class="space-y-3">
@@ -539,9 +614,9 @@
                     </p>
                 </div>
                 <div class="bg-[#0d1021]/90 p-5 rounded-2xl border border-indigo-500/20">
-                    <h3 class="text-sm font-bold text-white mb-1" data-i18n="faq2_q">2. Can I cut a specific part of a long song or interview and convert only that part to text?</h3>
+                    <h3 class="text-sm font-bold text-white mb-1" data-i18n="faq2_q">2. Can I download the AI Text-to-Speech voice as an MP3 file?</h3>
                     <p class="text-xs sm:text-sm text-slate-400 leading-relaxed" data-i18n="faq2_a">
-                        Yes! Open the '✂️ Cutter' tab, select your Start and End time on the waveform, click 'Cut Audio Now', and then press 'Convert to Text'.
+                        Yes! In the '🗣️ AI Voice' tab, select your desired Male or Female voice artist, type your text, and click '⬇️ Download .MP3' to save the voiceover audio.
                     </p>
                 </div>
             </div>
@@ -573,7 +648,7 @@
             <div id="legalContentTerms" class="space-y-3 hidden">
                 <h3 class="text-base font-extrabold text-white" data-i18n="leg_terms_title">Terms and Conditions</h3>
                 <p data-i18n="leg_terms_desc">
-                    You may use our audio-to-text converter, visualizer, and MP3 cutter for personal, educational, and commercial content creation. Users are responsible for the copyright of uploaded files.
+                    You may use our audio-to-text converter, AI voice generator, visualizer, and MP3 cutter for personal, educational, and commercial content creation. Users are responsible for the copyright of uploaded files.
                 </p>
             </div>
 
@@ -589,7 +664,7 @@
 
     </main>
 
-    <!-- Custom API Key Modal -->
+    <!-- Custom API Key Modal (Supports Groq, Gemini & ElevenLabs Keys) -->
     <div id="apiKeyModal" class="fixed inset-0 bg-black/75 hidden items-center justify-center p-4 z-50 backdrop-blur-sm">
         <div class="bg-[#0d1021] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-indigo-500/30 text-white">
             <div class="flex items-center justify-between mb-2">
@@ -599,10 +674,10 @@
                 </button>
             </div>
             <p class="text-xs text-emerald-300 mb-3 leading-relaxed" data-i18n="modal_desc">
-                ✅ Built-in AI Keys are already connected and active. Users can use the app directly without entering any key! You may optionally add a custom Groq (gsk_) or Gemini (AIzaSy) key below:
+                ✅ Built-in AI Keys are already connected. Optionally, you can add a custom Groq (gsk_), Gemini (AIzaSy), or ElevenLabs (sk_) key below:
             </p>
             
-            <textarea id="apiKeyInput" rows="3" autocomplete="off" spellcheck="false" placeholder="Optional custom gsk_ or AIzaSy key..." class="masked-key w-full p-3 bg-[#070914] border border-indigo-500/30 rounded-xl text-xs font-mono text-white mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+            <textarea id="apiKeyInput" rows="3" autocomplete="off" spellcheck="false" placeholder="Optional: gsk_... or AIzaSy... or ElevenLabs sk_..." class="masked-key w-full p-3 bg-[#070914] border border-indigo-500/30 rounded-xl text-xs font-mono text-white mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
             
             <div class="flex items-center justify-between">
                 <button onclick="clearSavedKeys()" class="px-3 py-2 rounded-xl text-xs font-semibold text-rose-400 hover:bg-rose-950/40 transition" data-i18n="btn_reset_key">
@@ -656,10 +731,10 @@
                 btn_app: "App",
                 hero_badge: "NEXT-GEN MULTI-LANGUAGE AUDIO SUITE",
                 hero_title: "Smart Audio & Voice AI Studio",
-                hero_sub: "Translate, Transcribe, Cut, and Export audio in Tamil, English, Hindi, Telugu, & Malayalam with studio visualizer, AI noise reduction, and SRT subtitles.",
+                hero_sub: "Translate, Transcribe, Generate Realistic AI Voices, Cut MP3, and Export audio in Tamil, English, Hindi, Telugu, & Malayalam.",
                 tab_transcribe: "Transcribe",
                 tab_cutter: "Cutter",
-                tab_tts: "Text-to-Speech",
+                tab_tts: "AI Voice",
                 tab_visualizer: "Visualizer",
                 tab_record: "Record",
                 lbl_select_lang: "SELECT AUDIO LANGUAGE",
@@ -702,14 +777,23 @@
                 btn_dl_mp3: "🎵 Download .MP3",
                 btn_dl_wav: "⬇️ Download .WAV",
                 btn_tr_cut: "📝 Convert to Text",
-                tts_heading: "🗣️ Multi-Language Text-to-Speech (TTS)",
+                tts_heading: "🗣️ AI Neural Voiceover Studio",
                 btn_use_transcript: "📥 Use Transcribed Text",
-                tts_desc: "Listen to natural voiceover in Tamil, English, Hindi, Telugu, or Malayalam immediately.",
-                tts_voice_lang: "Voice Language",
-                tts_speed_lbl: "Speech Speed:",
-                btn_speak_now: "▶️ Speak Now",
+                tts_desc: "Generate realistic Male & Female studio voiceovers in Tamil, English, Hindi, Telugu & Malayalam with emotion control and direct .MP3 download.",
+                tts_voice_artist: "🎙️ AI VOICE ARTIST",
+                tts_emotion_lbl: "🎭 VOICE STYLE & EMOTION",
+                emo_natural: "🎙️ Natural Studio (Default)",
+                emo_reels: "🎬 YouTube Shorts & Reels (Energetic)",
+                emo_story: "📖 Audiobook & Storytelling (Calm & Deep)",
+                emo_news: "📰 News Anchor (Fast & Crisp)",
+                tts_speed_lbl: "⚡ Speech Speed:",
+                tts_pitch_lbl: "🎚️ Voice Pitch / Tone:",
+                btn_clear_text: "Clear Text",
+                btn_speak_now: "▶️ Speak AI Voice",
+                btn_tts_mp3: "⬇️ Download .MP3",
                 btn_pause_resume: "⏯️ Pause / Resume",
                 btn_stop_tts: "⏹️ Stop",
+                tts_audio_ready: "✅ Studio Voiceover Audio Ready",
                 vis_heading: "🎥 Studio Audio Visualizer & Video Export",
                 vis_desc: "Record animated waveform video from your audio for YouTube, Instagram Reels, and WhatsApp Status.",
                 vis_upload_title: "🎵 Tap to Select Audio for Visualizer",
@@ -732,8 +816,8 @@
                 step1_desc: "Select any MP3, WAV, AAC (WhatsApp Audio), or M4A file from your phone or PC, or use the Record tab to speak live.",
                 step2_title: "AI Transcription & Grammar Fix",
                 step2_desc: "Background noise is filtered out and our AI converts speech into error-free Tamil, English, Hindi, Telugu, or Malayalam text.",
-                step3_title: "Export TXT, DOC, SRT & Video",
-                step3_desc: "Copy the converted text, or download it immediately as .TXT, MS Word (.DOC), or .SRT subtitle file for video editing.",
+                step3_title: "Export TXT, DOC, SRT & Voice MP3",
+                step3_desc: "Copy the converted text, download .TXT, .DOC, .SRT subtitles, or convert text into realistic AI voiceover MP3.",
                 feat_main_title: "Why Use Yugamugesh Multi-Language AI Audio Studio?",
                 feat_main_p1: "Yugamugesh AI Studio is a comprehensive browser-based audio utility built for content creators, journalists, students, researchers, and media professionals. Converting spoken audio lectures, WhatsApp voice notes, interviews, podcasts, and song lyrics into written script manually takes hours. Our speech-to-text platform automates this entire workflow within seconds while maintaining high grammatical accuracy.",
                 feat1_title: "🎯 Multi-Language & AI Spell-Check",
@@ -742,1224 +826,11 @@
                 feat2_desc: "Inspect the live audio waveform, select the exact portion you need, and export trimmed audio in .MP3 or .WAV format.",
                 feat3_title: "🎬 YouTube Chapters, SRT & Visualizer",
                 feat3_desc: "Generate YouTube timestamp chapters, .SRT subtitle files, and animated waveform videos for social media in one click.",
-                feat4_title: "🗣️ Natural Text-to-Speech (TTS)",
-                feat4_desc: "Read out transcribed or typed text in natural Indian voices with adjustable playback speed and 24-hour auto-deleting cloud security.",
+                feat4_title: "🗣️ ElevenLabs-Style AI Voiceover & MP3",
+                feat4_desc: "Generate natural Male and Female Indian voiceovers with pitch, speed, and emotion controls, and download directly as .MP3.",
                 faq_title: "Frequently Asked Questions (FAQ)",
-                faq_sub: "Common questions about Multi-Language Audio Transcription and MP3 Cutting.",
+                faq_sub: "Common questions about Multi-Language Audio Transcription and AI Voiceover.",
                 faq1_q: "1. What audio formats are supported?",
                 faq1_a: "You can upload MP3, WAV, M4A, AAC (WhatsApp voice notes), FLAC, OGG, and WEBM files. You can also record directly using your microphone.",
-                faq2_q: "2. Can I cut a specific part of a long song or interview and convert only that part to text?",
-                faq2_a: "Yes! Open the '✂️ Cutter' tab, select your Start and End time on the waveform, click 'Cut Audio Now', and then press 'Convert to Text'.",
-                leg_tab_about: "About Us",
-                leg_tab_privacy: "Privacy Policy",
-                leg_tab_terms: "Terms & Conditions",
-                leg_tab_contact: "Contact Us",
-                leg_about_title: "About Yugamugesh AI Studio",
-                leg_about_desc: "Welcome to Yugamugesh AI Studio (operated under FixrService Digital Solutions), an innovative web utility platform dedicated to simplifying Tamil and multi-language digital content creation.",
-                leg_priv_title: "Privacy Policy",
-                leg_priv_desc: "Uploaded audio files are processed securely for transcription and automatically deleted within 24 hours via AWS S3 Lifecycle rules. Google AdSense may use cookies to serve relevant advertisements.",
-                leg_terms_title: "Terms and Conditions",
-                leg_terms_desc: "You may use our audio-to-text converter, visualizer, and MP3 cutter for personal, educational, and commercial content creation. Users are responsible for the copyright of uploaded files.",
-                leg_contact_title: "Contact Us",
-                leg_lbl_platform: "Platform:",
-                leg_lbl_loc: "Location:",
-                leg_lbl_email: "Email:",
-                modal_title: "⚡ Built-in Turbo AI Keys Active",
-                modal_desc: "✅ Built-in AI Keys are already connected and active. Users can use the app directly without entering any key! You may optionally add a custom Groq (gsk_) or Gemini (AIzaSy) key below:",
-                btn_reset_key: "🗑️ Reset Custom",
-                btn_close: "Close",
-                btn_save: "Save",
-                footer_copy: "© 2026 Yugamugesh AI Studio (FixrService.in). All rights reserved.",
-                out_placeholder: "Converted text will appear here...",
-                tts_placeholder: "Type or paste text here to speak..."
-            },
-            ta: {
-                brand_sub: "ஏஐ ஆடியோ ஸ்டுடியோ",
-                nav_studio: "ஆடியோ ஸ்டுடியோ",
-                nav_how: "பயன்படுத்தும் முறை",
-                nav_features: "சிறப்பம்சங்கள்",
-                nav_faq: "கேள்விகள் (FAQ)",
-                nav_legal: "விதிமுறைகள்",
-                btn_app: "ஆப்",
-                hero_badge: "அதிநவீன பன்மொழி ஆடியோ தளம்",
-                hero_title: "யுகமுகேஷ் ஏஐ ஆடியோ & வாய்ஸ் ஸ்டுடியோ",
-                hero_sub: "தமிழ், ஆங்கிலம், இந்தி, தெலுங்கு மற்றும் மலையாள ஆடியோக்களைப் பிழையற்ற எழுத்துக்களாக மாற்றவும், MP3 கட் செய்யவும், வீடியோ மற்றும் சப்-டைட்டில் உருவாக்கவும் உதவும் தளம்.",
-                tab_transcribe: "எழுத்தாக மாற்ற",
-                tab_cutter: "ஆடியோ கட்டர்",
-                tab_tts: "குரலில் வாசிக்க",
-                tab_visualizer: "வீடியோ மேக்கர்",
-                tab_record: "வாய்ஸ் ரெக்கார்ட்",
-                lbl_select_lang: "ஆடியோ மொழியைத் தேர்ந்தெடுக்கவும்",
-                opt_lang_ta: "🇮🇳 தமிழ் (Tamil)",
-                opt_lang_en: "🇬🇧 ஆங்கிலம் (English)",
-                opt_lang_hi: "🇮🇳 இந்தி (Hindi)",
-                opt_lang_te: "🇮🇳 தெலுங்கு (Telugu)",
-                opt_lang_ml: "🇮🇳 மலையாளம் (Malayalam)",
-                lbl_output_mode: "வெளியீட்டு வடிவம் (OUTPUT MODE)",
-                opt_mode_pure: "பிழையற்ற முழு எழுத்து வடிவம்",
-                opt_mode_summary: "முழு உரை + முக்கியக் குறிப்புகள்",
-                opt_mode_yt: "🎬 யூடியூப் Chapters & ரீல்ஸ் கேப்ஷன்",
-                opt_mode_speaker: "👥 நேர்காணல் உரையாடல் வடிவம்",
-                opt_mode_tr_ta: "தமிழில் மொழிபெயர்க்க (Tamil Translation)",
-                opt_mode_tr_en: "ஆங்கிலத்தில் மொழிபெயர்க்க (English)",
-                opt_mode_roman: "தமிங்கிலீஷ் வடிவம் (Tanglish)",
-                lbl_noise_reduce: "🔇 பின்னணி இரைச்சல் நீக்கம் & தானியங்கி எழுத்துப் பிழை திருத்தம்",
-                btn_sample: "✨ மாதிரி உரை & டவுன்லோட் பார்க்க",
-                upload_title: "MP3, WAV, AAC, M4A ஆடியோவைப் பதிவேற்ற இங்கே தட்டவும்",
-                upload_sub: "வாட்ஸ்அப் ஆடியோ (.AAC) சப்போர்ட் • 24 மணி நேரத்தில் தானாக அழியும்",
-                btn_convert_now: "⚡ எழுத்தாக மாற்று",
-                btn_open_cutter: "✂️ ஆடியோவை கட் செய்ய",
-                btn_open_vis: "🎥 வீடியோ விஷுவலைசர்",
-                cutter_heading: "✂️ ஸ்டுடியோ ஆடியோ கட்டர் (MP3 & WAV)",
-                cutter_badge: "நேரடி அலைவரிசை",
-                cutter_desc: "கீழே உள்ள ஆடியோவை பிளே செய்து, வேண்டிய தொடக்க மற்றும் முடிவு நேரத்தைத் தேர்ந்தெடுத்து .MP3 அல்லது .WAV வடிவில் டவுன்லோட் செய்யலாம்.",
-                cutter_upload_title: "கட் செய்ய வேண்டிய MP3, AAC அல்லது WAV கோப்பைத் தேர்ந்தெடுக்கவும்",
-                cutter_upload_sub: "ரிங்டோன், பேச்சு அல்லது பாடலின் பகுதியைத் தனியாகப் பிரிக்கலாம்",
-                cutter_wave_hint: "🎧 ஆடியோ அலைவரிசை (விரும்பும் இடத்திற்குச் செல்ல தட்டவும்)",
-                cutter_now_playing: "ஓடும் நேரம்:",
-                btn_set_start: "📍 தொடக்க நேரம் அமை",
-                btn_play_sel: "▶️ தேர்வை மட்டும் இயக்கு",
-                btn_set_end: "🏁 முடிவு நேரம் அமை",
-                cutter_range_lbl: "கட் செய்யும் அளவு:",
-                cutter_len_lbl: "மொத்த நீளம்:",
-                cutter_start_lbl: "🟢 தொடங்கும் நேரம் (Start):",
-                cutter_end_lbl: "🔴 முடியும் நேரம் (End):",
-                btn_cut_now: "✂️ இப்போதே ஆடியோவை கட் செய்",
-                cutter_ready_lbl: "✅ கட் செய்யப்பட்ட ஆடியோ தயார்",
-                btn_dl_mp3: "🎵 .MP3 டவுன்லோட்",
-                btn_dl_wav: "⬇️ .WAV டவுன்லோட்",
-                btn_tr_cut: "📝 எழுத்தாக மாற்று",
-                tts_heading: "🗣️ பன்மொழி எழுத்து-குரல் மாற்றி (Text-to-Speech)",
-                btn_use_transcript: "📥 மாற்றப்பட்ட உரையைப் பயன்படுத்து",
-                tts_desc: "தமிழ், ஆங்கிலம், இந்தி, தெலுங்கு அல்லது மலையாள உரையை இயற்கையான குரலில் உடனடியாகக் கேட்கலாம்.",
-                tts_voice_lang: "வாசிக்கும் மொழி",
-                tts_speed_lbl: "வாசிக்கும் வேகம்:",
-                btn_speak_now: "▶️ வாசிக்கத் தொடங்கு",
-                btn_pause_resume: "⏯️ நிறுத்து / தொடர்",
-                btn_stop_tts: "⏹️ முழுமையாக நிறுத்து",
-                vis_heading: "🎥 ஆடியோ விஷுவலைசர் & வீடியோ டவுன்லோட்",
-                vis_desc: "ஆடியோ அலைவரிசை அசைவூட்டத்துடன் கூடிய வீடியோவாக ரெக்கார்ட் செய்து YouTube, Reels மற்றும் WhatsApp Status-க்காக டவுன்லோட் செய்யலாம்.",
-                vis_upload_title: "🎵 விஷுவலைசர் வீடியோவிற்கு ஆடியோவைத் தேர்ந்தெடுக்கவும்",
-                vis_upload_sub: "MP3, WAV, AAC, M4A சப்போர்ட் செய்யப்படும்",
-                btn_rec_video: "🎥 வீடியோவை ரெக்கார்ட் & டவுன்லோட் செய் (.WEBM)",
-                btn_stop_video: "⏹️ நிறுத்தி வீடியோவைச் சேமி",
-                rec_badge: "🆓 நேரடி பன்மொழி குரல் பதிவு",
-                rec_status_idle: "தேர்ந்தெடுத்த மொழியில் பேச மைக் பட்டனைத் தட்டவும்",
-                loading_main: "ஆடியோ 100% பிழையற்ற எழுத்துக்களாக மாற்றப்படுகிறது...",
-                err_heading: "⚠️ ஆடியோ மாற்றுவதில் தகவல்",
-                btn_retry: "🔄 மீண்டும் முயற்சி செய்",
-                out_heading: "✅ மாற்றப்பட்ட உரை & பதிவிறக்கம் (Downloads)",
-                btn_fix_spelling: "✨ எழுத்துப் பிழை திருத்து",
-                btn_speak_out: "🗣️ குரலில் வாசி",
-                btn_copy: "📋 காப்பி (Copy)",
-                how_badge: "பயன்படுத்தும் வழிமுறை",
-                how_title: "ஆடியோவைத் தமிழ் மற்றும் பிற மொழி எழுத்துக்களாக மாற்றுவது எப்படி?",
-                how_sub: "வெறும் 3 எளிய படிகளில் உங்கள் ஆடியோ அல்லது குரல் பதிவைப் பிழையற்ற உரையாக மாற்றலாம்.",
-                step1_title: "ஆடியோவைப் பதிவேற்றவும்",
-                step1_desc: "உங்கள் மொபைல் அல்லது கம்ப்யூட்டரில் உள்ள MP3, WAV, வாட்ஸ்அப் ஆடியோ (.AAC), M4A கோப்பைத் தேர்ந்தெடுக்கவும் அல்லது மைக்கில் நேரடியாகப் பேசவும்.",
-                step2_title: "ஏஐ மாற்றம் & பிழை திருத்தம்",
-                step2_desc: "பின்னணி இரைச்சல்கள் நீக்கப்பட்டு, தமிழ், ஆங்கிலம், இந்தி, தெலுங்கு அல்லது மலையாள மொழிகளில் பிழையற்ற வாக்கியங்களாக மாற்றப்படுகிறது.",
-                step3_title: "TXT, DOC, SRT பதிவிறக்கம்",
-                step3_desc: "மாற்றப்பட்ட உரையை Copy செய்யலாம், .TXT, MS Word (.DOC) அல்லது வீடியோ எடிட்டிங்கிற்கான .SRT சப்-டைட்டில் கோப்பாக உடனே டவுன்லோட் செய்யலாம்.",
-                feat_main_title: "யுகமுகேஷ் ஏஐ ஆடியோ ஸ்டுடியோவின் சிறப்பம்சங்கள்",
-                feat_main_p1: "தமிழ் கன்டென்ட் கிரியேட்டர்கள், பத்திரிகையாளர்கள், மாணவர்கள் மற்றும் எழுத்தாளர்களுக்குத் தேவையான மிக முக்கியமான கருவி இதுவாகும். மணிக்கணக்கில் டைப் செய்ய வேண்டிய ஆடியோ நேர்காணல்கள், வாட்ஸ்அப் வாய்ஸ் நோட்ஸ், வகுப்புக் குறிப்புகள் மற்றும் பாடல்களைச் சில விநாடிகளில் பிழையற்ற எழுத்துக்களாக மாற்றி நேரத்தை மிச்சப்படுத்துகிறது.",
-                feat1_title: "🎯 பன்மொழி & ஏஐ எழுத்துப் பிழை திருத்தி",
-                feat1_desc: "தமிழ், ஆங்கிலம், இந்தி, தெலுங்கு மற்றும் மலையாளம் ஆகிய 5 மொழிகளிலும் வாக்கியத்தின் பொருள் உணர்ந்து எழுத்துப் பிழைகளைத் திருத்தும் வசதி கொண்டது.",
-                feat2_title: "✂️ நேரடி அலைவரிசை MP3 & WAV கட்டர்",
-                feat2_desc: "ஆடியோ அலைவரிசையைப் பார்த்துக்கொண்டே தேவையான பகுதியை மட்டும் துல்லியமாக கட் செய்து .MP3 அல்லது .WAV வடிவில் டவுன்லோட் செய்யலாம்.",
-                feat3_title: "🎬 யூடியூப் Chapters, SRT & வீடியோ மேக்கர்",
-                feat3_desc: "யூடியூப் மற்றும் இன்ஸ்டாகிராம் ரீல்ஸ் வீடியோக்களுக்குத் தேவையான YouTube Chapters, .SRT சப்-டைட்டில் மற்றும் விஷுவலைசர் வீடியோவை உருவாக்கலாம்.",
-                feat4_title: "🗣️ இயற்கையான குரல் வாசிப்பு (TTS)",
-                feat4_desc: "எழுத்துக்களை மீண்டும் இயற்கையான குரலில் வாசிக்கச் செய்து கேட்கும் வசதி மற்றும் 24 மணி நேரத்தில் தானாக அழியும் பாதுகாப்பான கிளவுட் வசதி.",
-                faq_title: "அடிக்கடி கேட்கப்படும் கேள்விகள் (FAQ)",
-                faq_sub: "ஆடியோ டிரான்ஸ்கிரிப்ஷன் மற்றும் MP3 கட்டர் பற்றிய முக்கியத் தகவல்கள்.",
-                faq1_q: "1. எந்தெந்த ஆடியோ வடிவங்களை (Audio Formats) இதில் பயன்படுத்தலாம்?",
-                faq1_a: "MP3, WAV, M4A, வாட்ஸ்அப் ஆடியோ (.AAC), FLAC, OGG மற்றும் WEBM ஆகிய அனைத்து ஆடியோ வடிவங்களையும் பதிவேற்றம் செய்யலாம்.",
-                faq2_q: "2. நீண்ட ஆடியோவில் ஒரு குறிப்பிட்ட பகுதியை மட்டும் உரையாக மாற்ற முடியுமா?",
-                faq2_a: "நிச்சயமாக! மேலே உள்ள '✂️ ஆடியோ கட்டர்' டேப்பைத் தேர்ந்தெடுத்து, தேவையான பகுதியை கட் செய்துவிட்டு '📝 எழுத்தாக மாற்று' பட்டனைத் தட்டினால் அந்தப் பகுதி மட்டும் உரையாக மாறிவிடும்.",
-                leg_tab_about: "எங்களைப் பற்றி",
-                leg_tab_privacy: "தனியுரிமைக் கொள்கை",
-                leg_tab_terms: "விதிமுறைகள்",
-                leg_tab_contact: "தொடர்புக்கு",
-                leg_about_title: "யுகமுகேஷ் ஏஐ ஸ்டுடியோ பற்றி",
-                leg_about_desc: "யுகமுகேஷ் ஏஐ ஸ்டுடியோ (FixrService Digital Solutions) தமிழ் மற்றும் இந்திய மொழிகளில் டிஜிட்டல் கன்டென்ட் உருவாக்கத்தை எளிமையாக்க உருவாக்கப்பட்ட நவீன இணையத் தளமாகும்.",
-                leg_priv_title: "தனியுரிமைக் கொள்கை (Privacy Policy)",
-                leg_priv_desc: "பதிவேற்றப்படும் ஆடியோ கோப்புகள் பாதுகாப்பாக எழுத்தாக மாற்றப்பட்டு, AWS S3 விதிமுறைப்படி 24 மணி நேரத்திற்குள் தானாகவே அழிக்கப்படுகின்றன.",
-                leg_terms_title: "பயன்பாட்டு விதிமுறைகள் (Terms & Conditions)",
-                leg_terms_desc: "எங்களது ஆடியோ-டெக்ஸ்ட் மாற்றி மற்றும் MP3 கட்டரை தனிப்பட்ட, கல்வி மற்றும் வர்த்தகப் படைப்புகளுக்குப் பயன்படுத்தலாம். பதிவேற்றும் ஆடியோவின் காப்புரிமைக்குப் பயனர்களே பொறுப்பாவார்கள்.",
-                leg_contact_title: "எங்களைத் தொடர்பு கொள்ள",
-                leg_lbl_platform: "தளம்:",
-                leg_lbl_loc: "இடம்:",
-                leg_lbl_email: "மின்னஞ்சல்:",
-                modal_title: "⚡ இன்பில்ட் ஏஐ கீகள் செயல்பாட்டில் உள்ளன",
-                modal_desc: "✅ இன்பில்ட் ஏஐ கீகள் ஏற்கனவே இணைக்கப்பட்டுள்ளன. பயனர்கள் எந்த Key-ம் போடாமலேயே நேரடியாகப் பயன்படுத்தலாம்! கூடுதல் Key சேர்க்க விரும்பினால் மட்டும் கீழே உள்ளிடலாம்:",
-                btn_reset_key: "🗑️ ரீசெட்",
-                btn_close: "மூடுக",
-                btn_save: "சேமி",
-                footer_copy: "© 2026 யுகமுகேஷ் ஏஐ ஸ்டுடியோ (FixrService.in). அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.",
-                out_placeholder: "மாற்றப்பட்ட தமிழ் / பிற மொழி எழுத்துக்கள் இங்கே தோன்றும்...",
-                tts_placeholder: "இங்கே தமிழ் அல்லது பிற மொழி உரையை டைப் செய்யவும்..."
-            }
-        };
-
-        let selectedAudioFile = null;
-        let currentAudioObjectUrl = null;
-        let mediaRecorder = null;
-        let speechRecognition = null;
-        let liveSpeechTranscript = "";
-        let recordedChunks = [];
-        let timerInterval = null;
-        let secondsElapsed = 0;
-        let currentPageLang = 'en';
-        let deferredPwaPrompt = null;
-
-        // Audio Cutter & Waveform State
-        let cutterAudioBuffer = null;
-        let lastCutBuffer = null;
-        let cutterSourceUrl = null;
-        let waveformPeaks = [];
-        let isPlayingSelectionOnly = false;
-        let trimmedWavBlob = null;
-        let trimmedMp3Blob = null;
-        let trimmedAudioUrl = null;
-
-        // Visualizer & Video Export State
-        let visAudioCtx = null;
-        let visAnalyser = null;
-        let visSourceNode = null;
-        let visDestNode = null;
-        let visMediaRecorder = null;
-        let visRecordedChunks = [];
-        let visAnimId = null;
-
-        window.addEventListener('DOMContentLoaded', () => {
-            if (window.location.pathname.startsWith('/.well')) {
-                window.history.replaceState({}, '', '/');
-            }
-            updateKeyIndicator();
-            setupCutterPlayerEvents();
-            drawIdleVisualizerCanvas();
-            initSingleFilePwaSupport();
-            applyPageTranslations();
-        });
-
-        // ============================================================================
-        // FULL PAGE LANGUAGE SWITCHER (100% ENGLISH <-> 100% TAMIL)
-        // ============================================================================
-        function togglePageLanguage() {
-            currentPageLang = currentPageLang === 'en' ? 'ta' : 'en';
-            applyPageTranslations();
-        }
-
-        function applyPageTranslations() {
-            const dict = I18N_DICT[currentPageLang];
-            document.documentElement.lang = currentPageLang;
-            document.getElementById('pageLangBtn').textContent = currentPageLang === 'en' ? "🌐 தமிழ்" : "🌐 English";
-
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (dict[key]) {
-                    el.textContent = dict[key];
-                }
-            });
-
-            document.getElementById('outputText').placeholder = dict.out_placeholder;
-            document.getElementById('ttsInputText').placeholder = dict.tts_placeholder;
-        }
-
-        // ============================================================================
-        // PWA & APK / AAB INSTALLER SUPPORT
-        // ============================================================================
-        function initSingleFilePwaSupport() {
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPwaPrompt = e;
-            });
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('/sw.js').catch(() => {});
-                });
-            }
-        }
-
-        async function installPwaApp() {
-            if (deferredPwaPrompt) {
-                deferredPwaPrompt.prompt();
-                const { outcome } = await deferredPwaPrompt.userChoice;
-                if (outcome === 'accepted') deferredPwaPrompt = null;
-            } else {
-                const msg = currentPageLang === 'ta'
-                    ? "📲 மொபைலில் ஆப்பாக இன்ஸ்டால் செய்ய:\nஉங்கள் பிரவுசரின் வலது மேல் மூலையில் உள்ள 3 புள்ளிகளைத் (⋮) தட்டி 'Add to Home screen' அல்லது 'Install app' என்பதைத் தேர்ந்தெடுக்கவும்!"
-                    : "📲 To install as a Mobile App:\nTap the 3-dots menu (⋮) in your browser and select 'Install app' or 'Add to Home screen'!";
-                alert(msg);
-            }
-        }
-
-        // ============================================================================
-        // AWS S3 DIRECT UPLOAD INTEGRATION (eu-north-1)
-        // ============================================================================
-        async function uploadAudioToAWS(audioFile) {
-            if (!audioFile) return;
-            const bucketName = 'fixrservice-audio-file';
-            const region = 'eu-north-1';
-            const ext = audioFile.name ? audioFile.name.split('.').pop() : 'mp3';
-            const fileName = 'audio_' + Date.now() + '.' + ext;
-            const uploadUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`;
-            try {
-                await fetch(uploadUrl, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': audioFile.type || 'audio/mp3' },
-                    body: audioFile
-                });
-            } catch (error) {}
-        }
-
-        function showLegalTab(tab) {
-            ['about', 'privacy', 'terms', 'contact'].forEach(t => {
-                document.getElementById('legalContent' + capitalize(t)).classList.add('hidden');
-                document.getElementById('btnLegal' + capitalize(t)).className = "px-4 py-2 rounded-xl font-bold bg-slate-900 text-slate-300 border border-indigo-500/20 text-xs transition";
-            });
-            document.getElementById('legalContent' + capitalize(tab)).classList.remove('hidden');
-            document.getElementById('btnLegal' + capitalize(tab)).className = "px-4 py-2 rounded-xl font-bold bg-indigo-600 text-white text-xs transition";
-        }
-
-        function updateKeyIndicator() {
-            const keys = getSavedApiKeys();
-            const dot = document.getElementById('keyCountDot');
-            dot.className = keys.length > 0 ? "w-2 h-2 rounded-full bg-emerald-400" : "w-2 h-2 rounded-full bg-amber-400";
-        }
-
-        function switchTab(tab) {
-            ['upload', 'cutter', 'tts', 'visualizer', 'record'].forEach(t => {
-                document.getElementById('panel' + capitalize(t)).classList.add('hidden');
-                const btn = document.getElementById('tab' + capitalize(t));
-                btn.className = (t === 'record' ? "col-span-2 sm:col-span-1 " : "") + "py-3 rounded-xl text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5";
-            });
-            document.getElementById('panel' + capitalize(tab)).classList.remove('hidden');
-            const activeBtn = document.getElementById('tab' + capitalize(tab));
-            activeBtn.className = (tab === 'record' ? "col-span-2 sm:col-span-1 " : "") + "py-3 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-600/30 transition flex items-center justify-center space-x-1.5";
-            if (tab === 'cutter' && cutterAudioBuffer) setTimeout(drawWaveformCanvas, 50);
-        }
-
-        function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-
-        function formatSeconds(sec) {
-            const total = Math.max(0, Math.floor(sec));
-            const m = Math.floor(total / 60);
-            const s = String(total % 60).padStart(2, '0');
-            return `${m}:${s}`;
-        }
-
-        function toggleKeyVisibility() {
-            const input = document.getElementById('apiKeyInput');
-            const btn = document.getElementById('toggleMaskBtn');
-            if (input.classList.contains('masked-key')) {
-                input.classList.remove('masked-key');
-                btn.textContent = "🙈 Hide";
-            } else {
-                input.classList.add('masked-key');
-                btn.textContent = "👁️ Show";
-            }
-        }
-
-        function openApiKeyModal() {
-            const saved = localStorage.getItem('yuga_multi_keys') || '';
-            const input = document.getElementById('apiKeyInput');
-            input.value = saved;
-            input.classList.add('masked-key');
-            document.getElementById('apiKeyModal').classList.remove('hidden');
-            document.getElementById('apiKeyModal').classList.add('flex');
-        }
-
-        function closeApiKeyModal() {
-            document.getElementById('apiKeyModal').classList.add('hidden');
-            document.getElementById('apiKeyModal').classList.remove('flex');
-        }
-
-        function saveApiKey() {
-            const rawVal = document.getElementById('apiKeyInput').value.trim();
-            const validKeys = rawVal.split(/[\n,]+/).map(k => k.trim()).filter(k => k.startsWith('gsk_') || k.startsWith('AIza'));
-            if (validKeys.length > 0) {
-                localStorage.setItem('yuga_multi_keys', validKeys.join('\n'));
-            }
-            updateKeyIndicator();
-            closeApiKeyModal();
-            alert(currentPageLang === 'ta' ? "✅ API Key பாதுகாப்பாகச் சேமிக்கப்பட்டது!" : "✅ Custom API Key saved!");
-        }
-
-        function clearSavedKeys() {
-            localStorage.removeItem('yuga_multi_keys');
-            localStorage.removeItem('gemini_api_key');
-            document.getElementById('apiKeyInput').value = '';
-            updateKeyIndicator();
-            closeApiKeyModal();
-        }
-
-        function getSavedApiKeys() {
-            const raw = localStorage.getItem('yuga_multi_keys') || '';
-            const userKeys = raw.split(/[\n,]+/).map(k => k.trim()).filter(k => k.startsWith('gsk_') || k.startsWith('AIza'));
-            return [...new Set([...BUILT_IN_KEYS, ...userKeys])];
-        }
-
-        async function fetchWithTimeout(url, options, timeoutMs = 20000) {
-            const controller = new AbortController();
-            const id = setTimeout(() => controller.abort(), timeoutMs);
-            try {
-                const response = await fetch(url, { ...options, signal: controller.signal });
-                clearTimeout(id);
-                return response;
-            } catch (err) {
-                clearTimeout(id);
-                throw err;
-            }
-        }
-
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            selectedAudioFile = file;
-            const sizeMB = file.size / (1024 * 1024);
-            document.getElementById('fileNameDisplay').textContent = `${file.name} (${sizeMB.toFixed(2)} MB)`;
-            if (currentAudioObjectUrl) URL.revokeObjectURL(currentAudioObjectUrl);
-            currentAudioObjectUrl = URL.createObjectURL(file);
-            document.getElementById('audioPlayer').src = currentAudioObjectUrl;
-            document.getElementById('audioPreviewBox').classList.remove('hidden');
-            document.getElementById('errorBox').classList.add('hidden');
-            uploadAudioToAWS(file);
-            startTranscription();
-        }
-
-        function openCurrentInCutter() {
-            if (!selectedAudioFile) return alert(currentPageLang === 'ta' ? "முதலில் ஒரு ஆடியோ கோப்பைத் தேர்ந்தெடுக்கவும்." : "Please select an audio file first.");
-            switchTab('cutter');
-            loadAudioIntoCutter(selectedAudioFile);
-        }
-
-        function openCurrentInVisualizer() {
-            if (!selectedAudioFile) return alert(currentPageLang === 'ta' ? "முதலில் ஒரு ஆடியோ கோப்பைத் தேர்ந்தெடுக்கவும்." : "Please select an audio file first.");
-            switchTab('visualizer');
-            setupVisualizerFile(selectedAudioFile);
-        }
-
-        // ============================================================================
-        // AUDIO CUTTER & WAVEFORM FUNCTIONS
-        // ============================================================================
-        function setupCutterPlayerEvents() {
-            const player = document.getElementById('cutterSourcePlayer');
-            player.addEventListener('timeupdate', () => {
-                const cur = player.currentTime;
-                document.getElementById('liveCurrentTime').textContent = formatSeconds(cur);
-                const eVal = parseFloat(document.getElementById('endRangeSlider').value);
-                if (isPlayingSelectionOnly && cur >= eVal) {
-                    player.pause();
-                    isPlayingSelectionOnly = false;
-                    document.getElementById('previewRegionBtn').textContent = I18N_DICT[currentPageLang].btn_play_sel;
-                }
-                drawWaveformCanvas();
-            });
-            player.addEventListener('pause', () => {
-                isPlayingSelectionOnly = false;
-                document.getElementById('previewRegionBtn').textContent = I18N_DICT[currentPageLang].btn_play_sel;
-                drawWaveformCanvas();
-            });
-        }
-
-        function handleCutterFile(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            selectedAudioFile = file;
-            uploadAudioToAWS(file);
-            loadAudioIntoCutter(file);
-        }
-
-        async function loadAudioIntoCutter(file) {
-            document.getElementById('cutterFileName').textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
-            document.getElementById('trimmedOutputBox').classList.add('hidden');
-            try {
-                if (cutterSourceUrl) URL.revokeObjectURL(cutterSourceUrl);
-                cutterSourceUrl = URL.createObjectURL(file);
-                document.getElementById('cutterSourcePlayer').src = cutterSourceUrl;
-
-                const arrayBuffer = await file.arrayBuffer();
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                cutterAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-                await audioCtx.close();
-
-                const totalDur = Math.floor(cutterAudioBuffer.duration * 10) / 10;
-                document.getElementById('totalDurationLabel').textContent = formatSeconds(totalDur);
-                computeWaveformPeaks(cutterAudioBuffer, 180);
-
-                const startSlider = document.getElementById('startRangeSlider');
-                const endSlider = document.getElementById('endRangeSlider');
-                startSlider.max = totalDur;
-                endSlider.max = totalDur;
-                startSlider.value = 0;
-                endSlider.value = totalDur;
-                document.getElementById('startSecInput').value = 0;
-                document.getElementById('endSecInput').value = Math.floor(totalDur);
-
-                document.getElementById('cutterWorkspace').classList.remove('hidden');
-                updateCutterLabels();
-            } catch (err) {
-                alert("Audio decode error: " + err.message);
-            }
-        }
-
-        function computeWaveformPeaks(buffer, numBars) {
-            const data = buffer.getChannelData(0);
-            const step = Math.floor(data.length / numBars);
-            waveformPeaks = [];
-            let maxPeak = 0.01;
-            for (let i = 0; i < numBars; i++) {
-                let sum = 0;
-                const start = i * step;
-                for (let j = 0; j < step; j += 4) {
-                    const val = Math.abs(data[start + j] || 0);
-                    if (val > sum) sum = val;
-                }
-                waveformPeaks.push(sum);
-                if (sum > maxPeak) maxPeak = sum;
-            }
-            waveformPeaks = waveformPeaks.map(p => p / maxPeak);
-        }
-
-        function drawWaveformCanvas() {
-            if (!cutterAudioBuffer || waveformPeaks.length === 0) return;
-            const canvas = document.getElementById('waveformCanvas');
-            const rect = canvas.parentElement.getBoundingClientRect();
-            if (rect.width === 0) return;
-            canvas.width = rect.width;
-            canvas.height = rect.height;
-
-            const ctx = canvas.getContext('2d');
-            const W = canvas.width, H = canvas.height, totalDur = cutterAudioBuffer.duration;
-            const sVal = parseFloat(document.getElementById('startRangeSlider').value);
-            const eVal = parseFloat(document.getElementById('endRangeSlider').value);
-            const curTime = document.getElementById('cutterSourcePlayer').currentTime || 0;
-
-            const startX = (sVal / totalDur) * W;
-            const endX = (eVal / totalDur) * W;
-            const playheadX = (curTime / totalDur) * W;
-
-            ctx.clearRect(0, 0, W, H);
-            ctx.fillStyle = "rgba(99, 102, 241, 0.22)";
-            ctx.fillRect(startX, 0, Math.max(2, endX - startX), H);
-
-            const numBars = waveformPeaks.length;
-            const barWidth = W / numBars;
-            for (let i = 0; i < numBars; i++) {
-                const x = i * barWidth;
-                const barH = Math.max(4, waveformPeaks[i] * (H * 0.78));
-                const y = (H - barH) / 2;
-                ctx.fillStyle = (x >= startX && x <= endX) ? "#818cf8" : "#334155";
-                ctx.fillRect(x + 1, y, Math.max(1.5, barWidth - 2), barH);
-            }
-            ctx.fillStyle = "#10b981"; ctx.fillRect(startX, 0, 3, H);
-            ctx.fillStyle = "#f43f5e"; ctx.fillRect(Math.max(0, endX - 3), 0, 3, H);
-            ctx.fillStyle = "#facc15"; ctx.fillRect(playheadX, 0, 2.5, H);
-        }
-
-        function seekWaveformClick(event) {
-            if (!cutterAudioBuffer) return;
-            const rect = document.getElementById('waveformCanvas').getBoundingClientRect();
-            const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-            const player = document.getElementById('cutterSourcePlayer');
-            player.currentTime = ratio * cutterAudioBuffer.duration;
-            player.play();
-            drawWaveformCanvas();
-        }
-
-        function setMarkAtCurrentTime(which) {
-            if (!cutterAudioBuffer) return;
-            const cur = Math.round(document.getElementById('cutterSourcePlayer').currentTime * 10) / 10;
-            if (which === 'start') {
-                document.getElementById('startRangeSlider').value = cur;
-                onCutterSliderChange('start');
-            } else {
-                document.getElementById('endRangeSlider').value = cur;
-                onCutterSliderChange('end');
-            }
-        }
-
-        function playSelectedRegionOnly() {
-            if (!cutterAudioBuffer) return;
-            const player = document.getElementById('cutterSourcePlayer');
-            const btn = document.getElementById('previewRegionBtn');
-            if (!player.paused && isPlayingSelectionOnly) {
-                player.pause();
-                isPlayingSelectionOnly = false;
-                btn.textContent = I18N_DICT[currentPageLang].btn_play_sel;
-                return;
-            }
-            player.currentTime = parseFloat(document.getElementById('startRangeSlider').value);
-            isPlayingSelectionOnly = true;
-            btn.textContent = "⏸️ Stop Preview";
-            player.play();
-        }
-
-        function onCutterSliderChange(which) {
-            const startSlider = document.getElementById('startRangeSlider');
-            const endSlider = document.getElementById('endRangeSlider');
-            let sVal = parseFloat(startSlider.value), eVal = parseFloat(endSlider.value);
-            if (which === 'start' && sVal >= eVal - 0.5) startSlider.value = Math.max(0, eVal - 0.5);
-            if (which === 'end' && eVal <= sVal + 0.5) endSlider.value = Math.min(parseFloat(endSlider.max), sVal + 0.5);
-            document.getElementById('startSecInput').value = Math.floor(startSlider.value);
-            document.getElementById('endSecInput').value = Math.floor(endSlider.value);
-            updateCutterLabels();
-        }
-
-        function syncCutterFromInputs(which) {
-            if (!cutterAudioBuffer) return;
-            const maxDur = cutterAudioBuffer.duration;
-            let sVal = Math.max(0, Math.min(maxDur - 1, parseFloat(document.getElementById('startSecInput').value) || 0));
-            let eVal = Math.max(sVal + 1, Math.min(maxDur, parseFloat(document.getElementById('endSecInput').value) || maxDur));
-            document.getElementById('startRangeSlider').value = sVal;
-            document.getElementById('endRangeSlider').value = eVal;
-            updateCutterLabels();
-        }
-
-        function updateCutterLabels() {
-            const sVal = parseFloat(document.getElementById('startRangeSlider').value);
-            const eVal = parseFloat(document.getElementById('endRangeSlider').value);
-            document.getElementById('startFormatted').textContent = formatSeconds(sVal);
-            document.getElementById('endFormatted').textContent = formatSeconds(eVal);
-            document.getElementById('cutRangeSummary').textContent = `${formatSeconds(sVal)} - ${formatSeconds(eVal)}`;
-            document.getElementById('cutLengthLabel').textContent = formatSeconds(Math.max(0, eVal - sVal));
-            drawWaveformCanvas();
-        }
-
-        function cutAudioNow() {
-            if (!cutterAudioBuffer) return;
-            const sVal = parseFloat(document.getElementById('startRangeSlider').value);
-            const eVal = parseFloat(document.getElementById('endRangeSlider').value);
-            if (eVal <= sVal) return;
-
-            document.getElementById('cutterSourcePlayer').pause();
-            const sampleRate = cutterAudioBuffer.sampleRate;
-            const numChannels = cutterAudioBuffer.numberOfChannels;
-            const startSample = Math.floor(sVal * sampleRate);
-            const endSample = Math.min(cutterAudioBuffer.length, Math.floor(eVal * sampleRate));
-            const frameCount = endSample - startSample;
-
-            const tempCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const cutBuffer = tempCtx.createBuffer(numChannels, frameCount, sampleRate);
-            for (let ch = 0; ch < numChannels; ch++) {
-                const oldData = cutterAudioBuffer.getChannelData(ch);
-                const newData = cutBuffer.getChannelData(ch);
-                for (let i = 0; i < frameCount; i++) newData[i] = oldData[startSample + i];
-            }
-            tempCtx.close();
-
-            lastCutBuffer = cutBuffer;
-            trimmedMp3Blob = null;
-            trimmedWavBlob = audioBufferToWavBlob(cutBuffer);
-            if (trimmedAudioUrl) URL.revokeObjectURL(trimmedAudioUrl);
-            trimmedAudioUrl = URL.createObjectURL(trimmedWavBlob);
-
-            document.getElementById('trimmedAudioPlayer').src = trimmedAudioUrl;
-            document.getElementById('trimmedSizeBadge').textContent = `${formatSeconds(eVal - sVal)} • Ready`;
-            document.getElementById('trimmedOutputBox').classList.remove('hidden');
-            document.getElementById('trimmedAudioPlayer').play();
-        }
-
-        function audioBufferToMp3Blob(buffer) {
-            const numChannels = buffer.numberOfChannels >= 2 ? 2 : 1;
-            const mp3encoder = new lamejs.Mp3Encoder(numChannels, buffer.sampleRate, 128);
-            const mp3Data = [];
-            const leftFloat = buffer.getChannelData(0);
-            const rightFloat = numChannels === 2 ? buffer.getChannelData(1) : leftFloat;
-            const len = leftFloat.length;
-            const leftPCM = new Int16Array(len);
-            const rightPCM = numChannels === 2 ? new Int16Array(len) : null;
-
-            for (let i = 0; i < len; i++) {
-                const sL = Math.max(-1, Math.min(1, leftFloat[i]));
-                leftPCM[i] = sL < 0 ? sL * 0x8000 : sL * 0x7FFF;
-                if (numChannels === 2) {
-                    const sR = Math.max(-1, Math.min(1, rightFloat[i]));
-                    rightPCM[i] = sR < 0 ? sR * 0x8000 : sR * 0x7FFF;
-                }
-            }
-            const sampleBlockSize = 1152;
-            for (let i = 0; i < len; i += sampleBlockSize) {
-                const leftChunk = leftPCM.subarray(i, i + sampleBlockSize);
-                const mp3buf = numChannels === 2 ? mp3encoder.encodeBuffer(leftChunk, rightPCM.subarray(i, i + sampleBlockSize)) : mp3encoder.encodeBuffer(leftChunk);
-                if (mp3buf.length > 0) mp3Data.push(mp3buf);
-            }
-            const endBuf = mp3encoder.flush();
-            if (endBuf.length > 0) mp3Data.push(endBuf);
-            return new Blob(mp3Data, { type: 'audio/mp3' });
-        }
-
-        async function downloadTrimmedMp3() {
-            if (!lastCutBuffer) return;
-            const btn = document.getElementById('mp3DownloadBtn');
-            btn.textContent = "⏳ Encoding MP3...";
-            await new Promise(r => setTimeout(r, 30));
-            try {
-                if (!trimmedMp3Blob) trimmedMp3Blob = audioBufferToMp3Blob(lastCutBuffer);
-                const mp3Url = URL.createObjectURL(trimmedMp3Blob);
-                const a = document.createElement('a');
-                a.href = mp3Url;
-                a.download = `Yugamugesh_Cut_Audio_${Date.now()}.mp3`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            } finally {
-                btn.textContent = I18N_DICT[currentPageLang].btn_dl_mp3;
-            }
-        }
-
-        function downloadTrimmedAudio() {
-            if (!trimmedWavBlob) return;
-            const a = document.createElement('a');
-            a.href = trimmedAudioUrl;
-            a.download = `Yugamugesh_Cut_Audio_${Date.now()}.wav`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
-        function transcribeTrimmedAudio() {
-            if (!trimmedWavBlob) return;
-            selectedAudioFile = new File([trimmedWavBlob], `Cut_Audio_${Date.now()}.wav`, { type: 'audio/wav' });
-            uploadAudioToAWS(selectedAudioFile);
-            startTranscription();
-        }
-
-        // ============================================================================
-        // TTS & VISUALIZER FUNCTIONS
-        // ============================================================================
-        function copyTranscriptToTts() {
-            const out = document.getElementById('outputText').value.trim();
-            if (!out) return;
-            document.getElementById('ttsInputText').value = out;
-        }
-
-        function speakCurrentOutput() {
-            const out = document.getElementById('outputText').value.trim();
-            if (!out) return;
-            document.getElementById('ttsInputText').value = out;
-            switchTab('tts');
-            playTextToSpeech();
-        }
-
-        function playTextToSpeech() {
-            const txt = document.getElementById('ttsInputText').value.trim();
-            if (!txt || !('speechSynthesis' in window)) return;
-            window.speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(txt);
-            utter.lang = document.getElementById('ttsLangSelect').value;
-            utter.rate = parseFloat(document.getElementById('ttsRateSlider').value) || 1.0;
-            window.speechSynthesis.speak(utter);
-        }
-
-        function pauseResumeTts() {
-            if (!('speechSynthesis' in window)) return;
-            if (window.speechSynthesis.paused) window.speechSynthesis.resume();
-            else if (window.speechSynthesis.speaking) window.speechSynthesis.pause();
-        }
-
-        function stopTextToSpeech() {
-            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-        }
-
-        function drawIdleVisualizerCanvas() {
-            const canvas = document.getElementById('videoCanvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = "#060814";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#818cf8";
-            ctx.font = "bold 20px sans-serif";
-            ctx.textAlign = "center";
-            ctx.fillText("Yugamugesh AI Audio Visualizer", canvas.width / 2, canvas.height / 2);
-        }
-
-        function handleVisualizerFile(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            selectedAudioFile = file;
-            uploadAudioToAWS(file);
-            setupVisualizerFile(file);
-        }
-
-        function setupVisualizerFile(file) {
-            document.getElementById('visFileName').textContent = `🎵 ${file.name}`;
-            const player = document.getElementById('visAudioPlayer');
-            player.src = URL.createObjectURL(file);
-            initVisualizerEngine(player, file.name);
-        }
-
-        function initVisualizerEngine(playerElement, titleText) {
-            if (!visAudioCtx) {
-                visAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                visAnalyser = visAudioCtx.createAnalyser();
-                visAnalyser.fftSize = 128;
-                visDestNode = visAudioCtx.createMediaStreamDestination();
-                visSourceNode = visAudioCtx.createMediaElementSource(playerElement);
-                visSourceNode.connect(visAnalyser);
-                visAnalyser.connect(visAudioCtx.destination);
-                visAnalyser.connect(visDestNode);
-            }
-            const canvas = document.getElementById('videoCanvas');
-            const ctx = canvas.getContext('2d');
-            const bufferLength = visAnalyser.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
-            if (visAnimId) cancelAnimationFrame(visAnimId);
-
-            function renderFrame() {
-                visAnimId = requestAnimationFrame(renderFrame);
-                visAnalyser.getByteFrequencyData(dataArray);
-                ctx.fillStyle = "#070914";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = "#e0e7ff";
-                ctx.font = "bold 16px sans-serif";
-                ctx.textAlign = "center";
-                ctx.fillText(titleText || "Yugamugesh AI Studio", canvas.width / 2, 36);
-                const barWidth = (canvas.width - 80) / bufferLength;
-                let x = 40;
-                for (let i = 0; i < bufferLength; i++) {
-                    const barHeight = (dataArray[i] / 255) * (canvas.height - 110);
-                    ctx.fillStyle = "#6366f1";
-                    ctx.fillRect(x, canvas.height - 30 - barHeight, Math.max(2, barWidth - 3), barHeight);
-                    x += barWidth;
-                }
-            }
-            renderFrame();
-        }
-
-        function startVisualizerVideoExport() {
-            const player = document.getElementById('visAudioPlayer');
-            if (!player.src) return;
-            if (visAudioCtx && visAudioCtx.state === 'suspended') visAudioCtx.resume();
-            const canvasStream = document.getElementById('videoCanvas').captureStream(30);
-            if (visDestNode && visDestNode.stream.getAudioTracks().length > 0) {
-                canvasStream.addTrack(visDestNode.stream.getAudioTracks()[0]);
-            }
-            visRecordedChunks = [];
-            visMediaRecorder = new MediaRecorder(canvasStream, { mimeType: 'video/webm' });
-            visMediaRecorder.ondataavailable = e => { if (e.data.size > 0) visRecordedChunks.push(e.data); };
-            visMediaRecorder.onstop = () => {
-                const blob = new Blob(visRecordedChunks, { type: 'video/webm' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = `Yugamugesh_Visualizer_${Date.now()}.webm`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            };
-            visMediaRecorder.start();
-            player.currentTime = 0;
-            player.play();
-            player.onended = () => stopVisualizerVideoExport();
-        }
-
-        function stopVisualizerVideoExport() {
-            document.getElementById('visAudioPlayer').pause();
-            if (visMediaRecorder && visMediaRecorder.state === "recording") visMediaRecorder.stop();
-        }
-
-        // ============================================================================
-        // UNIVERSAL AUDIO PREPARER (FIXES .AAC & LARGE FILES AUTOMATICALLY)
-        // ============================================================================
-        async function prepareHDTranscriptionAudio(file) {
-            const ext = (file.name.split('.').pop() || '').toLowerCase();
-            const groqSupportedExts = ['mp3', 'wav', 'm4a', 'mp4', 'ogg', 'webm', 'flac', 'mpeg', 'mpga', 'opus'];
-            const maxDirectSize = 16 * 1024 * 1024; // 16 MB
-
-            if (groqSupportedExts.includes(ext) && file.size <= maxDirectSize) {
-                return file;
-            }
-
-            try {
-                const useNoiseReduction = document.getElementById('noiseReduceToggle')?.checked;
-                const arrayBuffer = await file.arrayBuffer();
-                const decodeCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const audioBuf = await decodeCtx.decodeAudioData(arrayBuffer);
-                await decodeCtx.close();
-
-                const targetRate = audioBuf.duration > 360 ? 11025 : 16000;
-                const offCtx = new OfflineAudioContext(1, Math.floor(audioBuf.duration * targetRate), targetRate);
-                const src = offCtx.createBufferSource();
-                src.buffer = audioBuf;
-
-                if (useNoiseReduction) {
-                    const highpass = offCtx.createBiquadFilter();
-                    highpass.type = "highpass";
-                    highpass.frequency.value = 85;
-                    src.connect(highpass);
-                    highpass.connect(offCtx.destination);
-                } else {
-                    src.connect(offCtx.destination);
-                }
-
-                src.start(0);
-                const rendered = await offCtx.startRendering();
-                return new File([audioBufferToWavBlob(rendered)], "converted_audio.wav", { type: "audio/wav" });
-            } catch (e) {
-                const safeName = file.name.replace(/\.[^/.]+$/, "") + ".m4a";
-                return new File([file], safeName, { type: "audio/mp4" });
-            }
-        }
-
-        // ============================================================================
-        // CLEAN TAMIL & MULTI-LANGUAGE PROOFREADER (ZERO PROMPT LEAKAGE)
-        // ============================================================================
-        function applyInstantTamilFixes(text) {
-            if (!text) return "";
-            let fixed = text
-                // Strip any residual prompt/instruction hallucinations if present
-                .replace(/இது தெளிவான தமிழ் உரையாடல்[.,\s]*/g, "")
-                .replace(/செய்தி மற்றும் பாடல் வரிகள்[.,\s]*/g, "")
-                .replace(/பிழையற்ற சரியான தமிழ் சொற்களில் மட்டும் எழுதவும்[.,\s]*/g, "")
-                .replace(/<\/?transcript>/gi, "")
-                .replace(/\.[a-zA-Z]+/g, " ")
-                .replace(/\s+/g, " ")
-                .trim();
-
-            const replacements = [
-                [/வோடி வந்தேன்/g, "ஓடி வந்தேன்"],
-                [/வோடி வந்தாய்/g, "ஓடி வந்தாய்"],
-                [/கிருக்கேரில்/g, "திருத்தேரில்"],
-                [/ஏன் பாதை என் சீதை/g, "நீயே என் பாதி என் சீதை"],
-                [/நீயே என் பாதை/g, "நீயே என் பாதி"],
-                [/என் சிதை/g, "என் சீதை"],
-                [/ஆருவீரே/g, "ஆருயிரே"],
-                [/வங்லிலை/g, "வெண்ணிலவே"],
-                [/எந்தம் தேடலே/g, "எந்தன் தேடலே"],
-                [/ஏகாங்க பூவே/g, "ஏகாந்த பூவே"],
-                [/மங்கலவள் நாமே/g, "மங்கல வண்ணமே"],
-                [/மந்திரவள் நாமே/g, "மந்திர வண்ணமே"]
-            ];
-            for (const [pattern, rep] of replacements) fixed = fixed.replace(pattern, rep);
-            return fixed;
-        }
-
-        async function autoCorrectTamilSpelling(rawText, groqKeys, geminiKeys, requestedMode = "Pure Transcription") {
-            if (!rawText || rawText.trim().length < 2) return rawText;
-            const targetLang = document.getElementById('targetLanguage').value || 'Tamil';
-            const preFixed = applyInstantTamilFixes(rawText);
-
-            const systemPrompt = `You are a native ${targetLang} language editor.
-The user will provide an audio transcription inside <transcript> tags.
-Your task:
-1. Fix phonetic spelling errors, spoken colloquial typos (e.g., change "வோடி வந்தேன்" to "ஓடி வந்தேன்"), and broken word boundaries into natural, accurate ${targetLang}.
-2. Remove any accidental gibberish words.
-3. Requested Output Format: ${requestedMode}.
-4. STRICT RULE: Output ONLY the corrected ${targetLang} text. Never include instructions, meta-comments, or XML tags in your output.`;
-
-            const groqModels = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"];
-            for (let g = 0; g < groqKeys.length; g++) {
-                for (let m = 0; m < groqModels.length; m++) {
-                    try {
-                        const res = await fetchWithTimeout("https://api.groq.com/openai/v1/chat/completions", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Authorization": `Bearer ${groqKeys[g]}`
-                            },
-                            body: JSON.stringify({
-                                model: groqModels[m],
-                                messages: [
-                                    { role: "system", content: systemPrompt },
-                                    { role: "user", content: `<transcript>${preFixed}</transcript>` }
-                                ],
-                                temperature: 0.1
-                            })
-                        }, 8000);
-                        const data = await res.json();
-                        if (res.ok && data.choices?.[0]?.message?.content) {
-                            return applyInstantTamilFixes(data.choices[0].message.content.trim());
-                        }
-                    } catch (e) {}
-                }
-            }
-
-            for (let i = 0; i < geminiKeys.length; i++) {
-                try {
-                    const res = await fetchWithTimeout(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'x-goog-api-key': geminiKeys[i]
-                        },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: `${systemPrompt}\n\n<transcript>${preFixed}</transcript>` }] }]
-                        })
-                    }, 8000);
-                    const data = await res.json();
-                    if (res.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
-                        return applyInstantTamilFixes(data.candidates[0].content.parts[0].text.trim());
-                    }
-                } catch (e) {}
-            }
-
-            return preFixed;
-        }
-
-        async function proofreadExistingText() {
-            const textArea = document.getElementById('outputText');
-            const current = textArea.value.trim();
-            if (!current) return;
-            const keys = getSavedApiKeys();
-            const groqKeys = keys.filter(k => k.startsWith('gsk_'));
-            const geminiKeys = keys.filter(k => k.startsWith('AIza'));
-            const mode = document.getElementById('outputMode').value;
-
-            const btn = document.getElementById('fixSpellingBtn');
-            btn.textContent = "⏳ Fixing...";
-            textArea.value = await autoCorrectTamilSpelling(current, groqKeys, geminiKeys, mode);
-            btn.textContent = "✅ Fixed!";
-            setTimeout(() => { btn.textContent = I18N_DICT[currentPageLang].btn_fix_spelling; }, 2000);
-        }
-
-        function audioBufferToWavBlob(buffer) {
-            const numOfChan = buffer.numberOfChannels;
-            const length = buffer.length * numOfChan * 2 + 44;
-            const out = new ArrayBuffer(length);
-            const view = new DataView(out);
-            const channels = [];
-            let sample, offset = 0, pos = 0;
-            function setUint16(data) { view.setUint16(pos, data, true); pos += 2; }
-            function setUint32(data) { view.setUint32(pos, data, true); pos += 4; }
-            setUint32(0x46464952); setUint32(length - 8); setUint32(0x45564157);
-            setUint32(0x20746d66); setUint32(16); setUint16(1); setUint16(numOfChan);
-            setUint32(buffer.sampleRate); setUint32(buffer.sampleRate * 2 * numOfChan);
-            setUint16(numOfChan * 2); setUint16(16); setUint32(0x61746164); setUint32(length - pos - 4);
-            for (let i = 0; i < numOfChan; i++) channels.push(buffer.getChannelData(i));
-            while (pos < length) {
-                for (let i = 0; i < numOfChan; i++) {
-                    sample = Math.max(-1, Math.min(1, channels[i][offset]));
-                    sample = (sample < 0 ? sample * 0x8000 : sample * 0x7FFF) | 0;
-                    view.setInt16(pos, sample, true);
-                    pos += 2;
-                }
-                offset++;
-            }
-            return new Blob([out], { type: "audio/wav" });
-        }
-
-        // ============================================================================
-        // HIGH-ACCURACY TRANSCRIPTION ENGINE (NO PROMPT HALLUCINATIONS)
-        // ============================================================================
-        async function startTranscription() {
-            const keys = getSavedApiKeys();
-            if (!selectedAudioFile) return alert(currentPageLang === 'ta' ? "தயவுசெய்து ஒரு ஆடியோ கோப்பைத் தேர்ந்தெடுக்கவும்." : "Please select an audio file first.");
-
-            const targetLang = document.getElementById('targetLanguage').value;
-            const mode = document.getElementById('outputMode').value;
-            const whisperIsoMap = { 'Tamil': 'ta', 'English': 'en', 'Hindi': 'hi', 'Telugu': 'te', 'Malayalam': 'ml' };
-            const whisperLang = whisperIsoMap[targetLang] || 'ta';
-
-            document.getElementById('errorBox').classList.add('hidden');
-            document.getElementById('loadingBox').classList.remove('hidden');
-            document.getElementById('keyStatusText').textContent = currentPageLang === 'ta'
-                ? `⚡ ஆடியோ தயாராகிறது & ${targetLang} எழுத்துக்களாக மாற்றப்படுகிறது...`
-                : `⚡ Processing audio & transcribing in ${targetLang}...`;
-
-            try {
-                const hdFile = await prepareHDTranscriptionAudio(selectedAudioFile);
-                let rawTranscript = null;
-                let lastErrorMsg = "";
-                const groqKeys = keys.filter(k => k.startsWith('gsk_'));
-                const geminiKeys = keys.filter(k => k.startsWith('AIza'));
-
-                // Step 1: Whisper-Large-v3 WITHOUT any instructional prompt so it never hallucinates prompt words
-                for (let g = 0; g < groqKeys.length; g++) {
-                    try {
-                        const formData = new FormData();
-                        formData.append("file", hdFile);
-                        formData.append("model", "whisper-large-v3");
-                        formData.append("language", whisperLang);
-                        formData.append("temperature", "0");
-                        formData.append("response_format", "json");
-
-                        const res = await fetchWithTimeout("https://api.groq.com/openai/v1/audio/transcriptions", {
-                            method: "POST",
-                            headers: { "Authorization": `Bearer ${groqKeys[g]}` },
-                            body: formData
-                        }, 25000);
-
-                        const data = await res.json();
-                        if (res.ok && data.text) {
-                            rawTranscript = applyInstantTamilFixes(data.text.trim());
-                            break;
-                        } else {
-                            lastErrorMsg = data.error?.message || `HTTP ${res.status}`;
-                        }
-                    } catch (e) {
-                        lastErrorMsg = e.message;
-                    }
-                }
-
-                if (rawTranscript) {
-                    document.getElementById('outputText').value = rawTranscript;
-                    document.getElementById('resultSection').classList.remove('hidden');
-
-                    document.getElementById('keyStatusText').textContent = currentPageLang === 'ta'
-                        ? `✨ எழுத்துப் பிழைகள் திருத்தப்படுகின்றன...`
-                        : `✨ Fixing spelling & grammar in ${targetLang}...`;
-
-                    const polishedText = await autoCorrectTamilSpelling(rawTranscript, groqKeys, geminiKeys, mode);
-                    document.getElementById('loadingBox').classList.add('hidden');
-                    document.getElementById('outputText').value = polishedText;
-                    document.getElementById('activeKeyBadge').textContent = `✓ 100% Clean ${targetLang}`;
-                    document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
-                } else {
-                    document.getElementById('loadingBox').classList.add('hidden');
-                    showError(`⚠️ ${lastErrorMsg}`);
-                }
-            } catch (err) {
-                document.getElementById('loadingBox').classList.add('hidden');
-                showError(err.message);
-            }
-        }
-
-        function showError(msg) {
-            document.getElementById('errorMessage').innerText = msg;
-            document.getElementById('errorBox').classList.remove('hidden');
-        }
-
-        async function toggleRecording() {
-            const btn = document.getElementById('recordBtn');
-            const status = document.getElementById('recordStatus');
-            const timer = document.getElementById('recordTimer');
-            const targetLang = document.getElementById('targetLanguage').value;
-            const recLocaleMap = { 'Tamil': 'ta-IN', 'English': 'en-IN', 'Hindi': 'hi-IN', 'Telugu': 'te-IN', 'Malayalam': 'ml-IN' };
-
-            if (!mediaRecorder || mediaRecorder.state === "inactive") {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    mediaRecorder = new MediaRecorder(stream);
-                    recordedChunks = [];
-                    liveSpeechTranscript = "";
-
-                    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-                    if (SpeechRec) {
-                        speechRecognition = new SpeechRec();
-                        speechRecognition.lang = recLocaleMap[targetLang] || 'ta-IN';
-                        speechRecognition.continuous = true;
-                        speechRecognition.interimResults = true;
-                        speechRecognition.onresult = (event) => {
-                            let interim = "";
-                            for (let i = 0; i < event.results.length; i++) interim += event.results[i][0].transcript + " ";
-                            liveSpeechTranscript = interim.trim();
-                            document.getElementById('outputText').value = liveSpeechTranscript;
-                        };
-                        try { speechRecognition.start(); } catch (e) {}
-                    }
-
-                    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
-                    mediaRecorder.onstop = () => {
-                        if (speechRecognition) try { speechRecognition.stop(); } catch (e) {}
-                        const actualMime = mediaRecorder.mimeType || 'audio/webm';
-                        const ext = actualMime.includes('mp4') ? 'm4a' : 'webm';
-                        const audioBlob = new Blob(recordedChunks, { type: actualMime });
-                        selectedAudioFile = new File([audioBlob], `Recorded_Audio_${Date.now()}.${ext}`, { type: actualMime });
-                        stream.getTracks().forEach(t => t.stop());
-                        uploadAudioToAWS(selectedAudioFile);
-                        if (!liveSpeechTranscript) {
-                            startTranscription();
-                        } else {
-                            proofreadExistingText();
-                        }
-                    };
-
-                    mediaRecorder.start();
-                    btn.classList.replace('bg-red-600', 'bg-slate-800');
-                    status.textContent = currentPageLang === 'ta'
-                        ? `🔴 ${targetLang} மொழியில் பேசவும்... (நிறுத்த மீண்டும் தட்டவும்)`
-                        : `🔴 Speak in ${targetLang}... (Tap again to stop)`;
-                    secondsElapsed = 0;
-                    timer.classList.remove('hidden');
-                    timerInterval = setInterval(() => {
-                        secondsElapsed++;
-                        timer.textContent = `${String(Math.floor(secondsElapsed / 60)).padStart(2, '0')}:${String(secondsElapsed % 60).padStart(2, '0')}`;
-                    }, 1000);
-                } catch (e) {
-                    alert("Microphone permission denied.");
-                }
-            } else {
-                mediaRecorder.stop();
-                clearInterval(timerInterval);
-                btn.classList.replace('bg-slate-800', 'bg-red-600');
-                status.textContent = I18N_DICT[currentPageLang].rec_status_idle;
-                timer.classList.add('hidden');
-            }
-        }
-
-        function runSampleTest() {
-            document.getElementById('outputText').value = "நீயே என் பாதி என் சீதை, என் ஆருயிரே கண்ணே வெண்ணிலவே பூஞ்சோலை!\nஎன் ஆருயிரே நீ எந்தன் தேடலே, ஏகாந்த பூவே வா என் ஏழிசையே!";
-            document.getElementById('activeKeyBadge').textContent = "✓ 100% Pure Tamil";
-            document.getElementById('resultSection').classList.remove('hidden');
-        }
-
-        function copyResultText() {
-            const textArea = document.getElementById('outputText');
-            if (!textArea.value.trim()) return;
-            navigator.clipboard.writeText(textArea.value);
-            const btn = document.getElementById('copyBtn');
-            btn.textContent = "✅ Copied!";
-            setTimeout(() => { btn.textContent = I18N_DICT[currentPageLang].btn_copy; }, 2000);
-        }
-
-        function downloadTxtFile() {
-            const text = document.getElementById('outputText').value;
-            if (!text.trim()) return;
-            const blob = new Blob(["\ufeff" + text], { type: 'text/plain;charset=utf-8' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `Yugamugesh_Text_${Date.now()}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
-        function downloadDocFile() {
-            const text = document.getElementById('outputText').value;
-            if (!text.trim()) return;
-            const htmlContent = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body>${text.replace(/\n/g, '<br>')}</body></html>`;
-            const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `Yugamugesh_Doc_${Date.now()}.doc`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
-        function downloadSrtFile() {
-            const text = document.getElementById('outputText').value.trim();
-            if (!text) return;
-            const rawLines = text.split(/\n+/).map(l => l.trim()).filter(Boolean);
-            let srtContent = "", currentSec = 0;
-            rawLines.forEach((line, index) => {
-                const duration = Math.max(3, Math.min(7, Math.ceil(line.split(/\s+/).length * 0.6)));
-                srtContent += `${index + 1}\n${formatSrtTimestamp(currentSec)} --> ${formatSrtTimestamp(currentSec + duration)}\n${line}\n\n`;
-                currentSec += duration;
-            });
-            const blob = new Blob(["\ufeff" + srtContent], { type: 'text/plain;charset=utf-8' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `Yugamugesh_Subtitles_${Date.now()}.srt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
-        function formatSrtTimestamp(totalSeconds) {
-            const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
-            const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
-            const secs = String(Math.floor(totalSeconds % 60)).padStart(2, '0');
-            return `${hrs}:${mins}:${secs},000`;
-        }
-
-        function shareOnWhatsApp() {
-            const text = document.getElementById('outputText').value;
-            if (!text.trim()) return;
-            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-        }
-    </script>
-</body>
-</html>
+                faq2_q: "2. Can I download the AI Text-to-Speech voice as an MP3 file?",
+                faq2_a: "Yes! In the '🗣️ AI Voice' tab, select
