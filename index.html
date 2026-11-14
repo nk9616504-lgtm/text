@@ -125,11 +125,11 @@
                             SELECT AUDIO LANGUAGE
                         </label>
                         <select id="targetLanguage" class="w-full bg-[#0d1224] text-white font-bold text-xs sm:text-sm px-3.5 py-3 rounded-xl border border-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option value="Tamil" data-i18n="opt_lang_ta">🇮🇳 Tamil</option>
+                            <option value="Tamil" data-i18n="opt_lang_ta">🇮🇳 Tamil (தமிழ்)</option>
                             <option value="English" data-i18n="opt_lang_en">🇬🇧 English</option>
-                            <option value="Hindi" data-i18n="opt_lang_hi">🇮🇳 Hindi</option>
-                            <option value="Telugu" data-i18n="opt_lang_te">🇮🇳 Telugu</option>
-                            <option value="Malayalam" data-i18n="opt_lang_ml">🇮🇳 Malayalam</option>
+                            <option value="Hindi" data-i18n="opt_lang_hi">🇮🇳 Hindi (हिन्दी)</option>
+                            <option value="Telugu" data-i18n="opt_lang_te">🇮🇳 Telugu (తెలుగు)</option>
+                            <option value="Malayalam" data-i18n="opt_lang_ml">🇮🇳 Malayalam (മലയാളം)</option>
                         </select>
                     </div>
                     <div>
@@ -326,7 +326,7 @@
                     </div>
                 </div>
 
-                <textarea id="ttsInputText" rows="5" class="w-full p-4 bg-[#070914] border border-indigo-500/30 rounded-2xl text-white text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Type or paste text here to speak...">Welcome to Yugamugesh AI Audio Studio.</textarea>
+                <textarea id="ttsInputText" rows="5" class="w-full p-4 bg-[#070914] border border-indigo-500/30 rounded-2xl text-white text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Type or paste text here to speak...">வணக்கம்! யுகமுகேஷ் ஏஐ ஆடியோ ஸ்டுடியோவிற்கு உங்களை அன்புடன் வரவேற்கிறோம்.</textarea>
 
                 <div class="grid grid-cols-3 gap-2.5">
                     <button onclick="playTextToSpeech()" class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 text-white font-bold text-xs sm:text-sm py-3.5 rounded-xl shadow-lg transition" data-i18n="btn_speak_now">
@@ -457,7 +457,7 @@
         <!-- Section 1: How It Works -->
         <section id="howItWorks" class="w-full mb-12">
             <div class="text-center mb-8">
-                <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-full" data-i18n="how_badge">Step-by-Step Guide</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-full" data-i18n="how_badge">STEP-BY-STEP GUIDE</span>
                 <h2 class="text-xl sm:text-2xl font-extrabold text-white mt-2" data-i18n="how_title">How to Convert Audio into Text & Subtitles?</h2>
                 <p class="text-xs sm:text-sm text-slate-400 mt-1" data-i18n="how_sub">Convert your audio or voice recording into clean text in 3 simple steps.</p>
             </div>
@@ -580,9 +580,9 @@
             <div id="legalContentContact" class="space-y-3 hidden">
                 <h3 class="text-base font-extrabold text-white" data-i18n="leg_contact_title">Contact Us</h3>
                 <div class="bg-[#070914] p-4 rounded-2xl border border-indigo-500/20 space-y-1.5">
-                    <p><strong>Platform:</strong> Yugamugesh AI Studio / FixrService Digital</p>
-                    <p><strong>Location:</strong> Tamil Nadu, India</p>
-                    <p><strong>Email:</strong> <a href="mailto:support@fixrservice.in" class="text-indigo-400 font-semibold underline">support@fixrservice.in</a></p>
+                    <p><strong data-i18n="leg_lbl_platform">Platform:</strong> Yugamugesh AI Studio / FixrService Digital</p>
+                    <p><strong data-i18n="leg_lbl_loc">Location:</strong> Tamil Nadu, India</p>
+                    <p><strong data-i18n="leg_lbl_email">Email:</strong> <a href="mailto:support@fixrservice.in" class="text-indigo-400 font-semibold underline">support@fixrservice.in</a></p>
                 </div>
             </div>
         </section>
@@ -663,11 +663,11 @@
                 tab_visualizer: "Visualizer",
                 tab_record: "Record",
                 lbl_select_lang: "SELECT AUDIO LANGUAGE",
-                opt_lang_ta: "🇮🇳 Tamil",
+                opt_lang_ta: "🇮🇳 Tamil (தமிழ்)",
                 opt_lang_en: "🇬🇧 English",
-                opt_lang_hi: "🇮🇳 Hindi",
-                opt_lang_te: "🇮🇳 Telugu",
-                opt_lang_ml: "🇮🇳 Malayalam",
+                opt_lang_hi: "🇮🇳 Hindi (हिन्दी)",
+                opt_lang_te: "🇮🇳 Telugu (తెలుగు)",
+                opt_lang_ml: "🇮🇳 Malayalam (മലയാളം)",
                 lbl_output_mode: "OUTPUT MODE",
                 opt_mode_pure: "Pure Accurate Transcription",
                 opt_mode_summary: "Transcription + Bullet Summary",
@@ -725,7 +725,7 @@
                 btn_fix_spelling: "✨ Fix Spelling",
                 btn_speak_out: "🗣️ Speak Output",
                 btn_copy: "📋 Copy",
-                how_badge: "Step-by-Step Guide",
+                how_badge: "STEP-BY-STEP GUIDE",
                 how_title: "How to Convert Audio into Text & Subtitles?",
                 how_sub: "Convert your audio or voice recording into clean text in 3 simple steps.",
                 step1_title: "Upload or Record Audio",
@@ -761,6 +761,9 @@
                 leg_terms_title: "Terms and Conditions",
                 leg_terms_desc: "You may use our audio-to-text converter, visualizer, and MP3 cutter for personal, educational, and commercial content creation. Users are responsible for the copyright of uploaded files.",
                 leg_contact_title: "Contact Us",
+                leg_lbl_platform: "Platform:",
+                leg_lbl_loc: "Location:",
+                leg_lbl_email: "Email:",
                 modal_title: "⚡ Built-in Turbo AI Keys Active",
                 modal_desc: "✅ Built-in AI Keys are already connected and active. Users can use the app directly without entering any key! You may optionally add a custom Groq (gsk_) or Gemini (AIzaSy) key below:",
                 btn_reset_key: "🗑️ Reset Custom",
@@ -885,6 +888,9 @@
                 leg_terms_title: "பயன்பாட்டு விதிமுறைகள் (Terms & Conditions)",
                 leg_terms_desc: "எங்களது ஆடியோ-டெக்ஸ்ட் மாற்றி மற்றும் MP3 கட்டரை தனிப்பட்ட, கல்வி மற்றும் வர்த்தகப் படைப்புகளுக்குப் பயன்படுத்தலாம். பதிவேற்றும் ஆடியோவின் காப்புரிமைக்குப் பயனர்களே பொறுப்பாவார்கள்.",
                 leg_contact_title: "எங்களைத் தொடர்பு கொள்ள",
+                leg_lbl_platform: "தளம்:",
+                leg_lbl_loc: "இடம்:",
+                leg_lbl_email: "மின்னஞ்சல்:",
                 modal_title: "⚡ இன்பில்ட் ஏஐ கீகள் செயல்பாட்டில் உள்ளன",
                 modal_desc: "✅ இன்பில்ட் ஏஐ கீகள் ஏற்கனவே இணைக்கப்பட்டுள்ளன. பயனர்கள் எந்த Key-ம் போடாமலேயே நேரடியாகப் பயன்படுத்தலாம்! கூடுதல் Key சேர்க்க விரும்பினால் மட்டும் கீழே உள்ளிடலாம்:",
                 btn_reset_key: "🗑️ ரீசெட்",
@@ -927,7 +933,7 @@
         let visAnimId = null;
 
         window.addEventListener('DOMContentLoaded', () => {
-            if (window.location.pathname === '/.well') {
+            if (window.location.pathname.startsWith('/.well')) {
                 window.history.replaceState({}, '', '/');
             }
             updateKeyIndicator();
@@ -1562,12 +1568,10 @@
             const groqSupportedExts = ['mp3', 'wav', 'm4a', 'mp4', 'ogg', 'webm', 'flac', 'mpeg', 'mpga', 'opus'];
             const maxDirectSize = 16 * 1024 * 1024; // 16 MB
 
-            // If file is already supported (like .mp3, .m4a, .wav) and <= 16MB, send directly for 1-sec upload
             if (groqSupportedExts.includes(ext) && file.size <= maxDirectSize) {
                 return file;
             }
 
-            // If file is .aac (WhatsApp Audio) or > 16MB, convert to clean mono WAV so Groq NEVER rejects it
             try {
                 const useNoiseReduction = document.getElementById('noiseReduceToggle')?.checked;
                 const arrayBuffer = await file.arrayBuffer();
@@ -1575,7 +1579,6 @@
                 const audioBuf = await decodeCtx.decodeAudioData(arrayBuffer);
                 await decodeCtx.close();
 
-                // Dynamically pick sample rate so even a 10-minute song stays under 18MB
                 const targetRate = audioBuf.duration > 360 ? 11025 : 16000;
                 const offCtx = new OfflineAudioContext(1, Math.floor(audioBuf.duration * targetRate), targetRate);
                 const src = offCtx.createBufferSource();
@@ -1595,24 +1598,30 @@
                 const rendered = await offCtx.startRendering();
                 return new File([audioBufferToWavBlob(rendered)], "converted_audio.wav", { type: "audio/wav" });
             } catch (e) {
-                // Fallback if browser cannot decode raw .aac: wrap as .m4a container which Groq accepts
                 const safeName = file.name.replace(/\.[^/.]+$/, "") + ".m4a";
                 return new File([file], safeName, { type: "audio/mp4" });
             }
         }
 
         // ============================================================================
-        // DEEP TAMIL & MULTI-LANGUAGE AI SPELLING & GRAMMAR RECONSTRUCTOR
+        // CLEAN TAMIL & MULTI-LANGUAGE PROOFREADER (ZERO PROMPT LEAKAGE)
         // ============================================================================
         function applyInstantTamilFixes(text) {
             if (!text) return "";
             let fixed = text
-                // Remove stray English words/gibberish mixed inside Tamil sentences
+                // Strip any residual prompt/instruction hallucinations if present
+                .replace(/இது தெளிவான தமிழ் உரையாடல்[.,\s]*/g, "")
+                .replace(/செய்தி மற்றும் பாடல் வரிகள்[.,\s]*/g, "")
+                .replace(/பிழையற்ற சரியான தமிழ் சொற்களில் மட்டும் எழுதவும்[.,\s]*/g, "")
+                .replace(/<\/?transcript>/gi, "")
                 .replace(/\.[a-zA-Z]+/g, " ")
                 .replace(/\s+/g, " ")
                 .trim();
 
             const replacements = [
+                [/வோடி வந்தேன்/g, "ஓடி வந்தேன்"],
+                [/வோடி வந்தாய்/g, "ஓடி வந்தாய்"],
+                [/கிருக்கேரில்/g, "திருத்தேரில்"],
                 [/ஏன் பாதை என் சீதை/g, "நீயே என் பாதி என் சீதை"],
                 [/நீயே என் பாதை/g, "நீயே என் பாதி"],
                 [/என் சிதை/g, "என் சீதை"],
@@ -1632,16 +1641,14 @@
             const targetLang = document.getElementById('targetLanguage').value || 'Tamil';
             const preFixed = applyInstantTamilFixes(rawText);
 
-            const systemPrompt = `You are an expert native ${targetLang} language editor and speech-to-text error corrector.
-The user's input comes from an automated audio transcription in ${targetLang} and may contain phonetic misspellings, broken word boundaries, colloquial slurs, or stray English characters (for example: "பண்ணிட்னா" instead of "பண்ணிட்டீங்கன்னா", "ர்பர்பரமா" instead of "பரபரப்பாக", "யுரல" instead of "URL", or meaningless non-words).
-
-YOUR TASK:
-1. Reconstruct every broken or phonetically garbled word into 100% meaningful, natural, grammatically correct ${targetLang} sentences that make complete sense in context.
-2. Remove any accidental foreign/English gibberish stuck inside ${targetLang} words.
+            const systemPrompt = `You are a native ${targetLang} language editor.
+The user will provide an audio transcription inside <transcript> tags.
+Your task:
+1. Fix phonetic spelling errors, spoken colloquial typos (e.g., change "வோடி வந்தேன்" to "ஓடி வந்தேன்"), and broken word boundaries into natural, accurate ${targetLang}.
+2. Remove any accidental gibberish words.
 3. Requested Output Format: ${requestedMode}.
-4. Output ONLY the final corrected ${targetLang} text without any explanations, intro, or quotes.`;
+4. STRICT RULE: Output ONLY the corrected ${targetLang} text. Never include instructions, meta-comments, or XML tags in your output.`;
 
-            // 1. Try Groq Llama-3.3-70B-Versatile & Llama-3.1-8B-Instant
             const groqModels = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"];
             for (let g = 0; g < groqKeys.length; g++) {
                 for (let m = 0; m < groqModels.length; m++) {
@@ -1656,9 +1663,9 @@ YOUR TASK:
                                 model: groqModels[m],
                                 messages: [
                                     { role: "system", content: systemPrompt },
-                                    { role: "user", content: preFixed }
+                                    { role: "user", content: `<transcript>${preFixed}</transcript>` }
                                 ],
-                                temperature: 0.2
+                                temperature: 0.1
                             })
                         }, 8000);
                         const data = await res.json();
@@ -1669,7 +1676,6 @@ YOUR TASK:
                 }
             }
 
-            // 2. Fallback to Gemini 2.5 Flash if user added a valid AIzaSy key
             for (let i = 0; i < geminiKeys.length; i++) {
                 try {
                     const res = await fetchWithTimeout(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`, {
@@ -1679,7 +1685,7 @@ YOUR TASK:
                             'x-goog-api-key': geminiKeys[i]
                         },
                         body: JSON.stringify({
-                            contents: [{ parts: [{ text: `${systemPrompt}\n\nRaw Text:\n${preFixed}` }] }]
+                            contents: [{ parts: [{ text: `${systemPrompt}\n\n<transcript>${preFixed}</transcript>` }] }]
                         })
                     }, 8000);
                     const data = await res.json();
@@ -1735,7 +1741,7 @@ YOUR TASK:
         }
 
         // ============================================================================
-        // HIGH-ACCURACY + FAST TRANSCRIPTION ENGINE (WHISPER-LARGE-V3 + AUTO-PROOFREAD)
+        // HIGH-ACCURACY TRANSCRIPTION ENGINE (NO PROMPT HALLUCINATIONS)
         // ============================================================================
         async function startTranscription() {
             const keys = getSavedApiKeys();
@@ -1745,14 +1751,6 @@ YOUR TASK:
             const mode = document.getElementById('outputMode').value;
             const whisperIsoMap = { 'Tamil': 'ta', 'English': 'en', 'Hindi': 'hi', 'Telugu': 'te', 'Malayalam': 'ml' };
             const whisperLang = whisperIsoMap[targetLang] || 'ta';
-
-            const whisperPromptMap = {
-                'Tamil': 'இது தெளிவான தமிழ் உரையாடல், செய்தி மற்றும் பாடல் வரிகள். பிழையற்ற சரியான தமிழ் சொற்களில் மட்டும் எழுதவும்.',
-                'English': 'Clear, accurate English speech transcription with proper punctuation.',
-                'Hindi': 'यह स्पष्ट हिंदी संवाद और गीत है। सही हिंदी शब्दों में लिखें।',
-                'Telugu': 'ఇది స్పష్టమైన తెలుగు സംभाషణ. సరైన తెలుగు పదాలలో రాయండి.',
-                'Malayalam': 'ഇത് വ്യക്തമായ മലയാളം സംഭാഷണമാണ്.'
-            };
 
             document.getElementById('errorBox').classList.add('hidden');
             document.getElementById('loadingBox').classList.remove('hidden');
@@ -1767,14 +1765,13 @@ YOUR TASK:
                 const groqKeys = keys.filter(k => k.startsWith('gsk_'));
                 const geminiKeys = keys.filter(k => k.startsWith('AIza'));
 
-                // Step 1: High-Accuracy Whisper-Large-v3 with Native Language Context Prompt
+                // Step 1: Whisper-Large-v3 WITHOUT any instructional prompt so it never hallucinates prompt words
                 for (let g = 0; g < groqKeys.length; g++) {
                     try {
                         const formData = new FormData();
                         formData.append("file", hdFile);
                         formData.append("model", "whisper-large-v3");
                         formData.append("language", whisperLang);
-                        formData.append("prompt", whisperPromptMap[targetLang] || "");
                         formData.append("temperature", "0");
                         formData.append("response_format", "json");
 
@@ -1797,13 +1794,11 @@ YOUR TASK:
                 }
 
                 if (rawTranscript) {
-                    // Show initial transcript immediately so user sees instant progress
                     document.getElementById('outputText').value = rawTranscript;
                     document.getElementById('resultSection').classList.remove('hidden');
 
-                    // Step 2: Mandatory 1-Second AI Spelling & Context Correction so words are 100% clean
                     document.getElementById('keyStatusText').textContent = currentPageLang === 'ta'
-                        ? `✨ எழுத்துப் பிழைகள் திருத்தப்பட்டு வாக்கியங்கள் சீரமைக்கப்படுகின்றன...`
+                        ? `✨ எழுத்துப் பிழைகள் திருத்தப்படுகின்றன...`
                         : `✨ Fixing spelling & grammar in ${targetLang}...`;
 
                     const polishedText = await autoCorrectTamilSpelling(rawTranscript, groqKeys, geminiKeys, mode);
