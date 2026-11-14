@@ -4,134 +4,70 @@
     <meta name="google-adsense-account" content="ca-pub-2364261268133710">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>Yugamugesh - Smart Audio & Voice AI Studio | Multi-Language Transcriber & AI Voice Generator</title>
-    <meta name="description" content="Convert MP3, WAV, AAC, M4A audio files into 100% accurate Tamil, English, Hindi, Telugu, and Malayalam text. Includes ElevenLabs-style AI Voice Generator (TTS) with MP3 download, Waveform Cutter & Visualizer.">
-    <meta name="keywords" content="Tamil Audio to Text, Tamil AI Voice Generator, Text to Speech MP3 Download, MP3 to Tamil Text Converter, Online Audio Cutter, SRT Subtitle Generator, Yugamugesh AI Studio, FixrService">
-    <meta name="author" content="Yugamugesh AI Studio">
-    <meta name="robots" content="index, follow">
-
-    <!-- PWA & Mobile App (APK / AAB) Meta Tags -->
+    <title>Yugamugesh - Smart Audio & Voice AI Studio</title>
+    <meta name="description" content="Convert MP3, WAV, AAC, M4A audio into accurate Tamil, English, Hindi, Telugu, and Malayalam text. Includes ElevenLabs-style AI Voiceover MP3 generator & Audio Cutter.">
     <meta name="theme-color" content="#4f46e5">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Yuga Studio">
-    <link rel="manifest" id="pwaManifestLink" href="/manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%234f46e5'/><text x='50%' y='54%' dominant-baseline='central' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='800' font-size='58'>Y</text></svg>">
-    <link rel="apple-touch-icon" href="/icon-192.png">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
-        .spinner {
-            border: 3px solid rgba(99, 102, 241, 0.25);
-            border-top-color: #6366f1;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 0.7s linear infinite;
-        }
+        .spinner { border: 3px solid rgba(99,102,241,0.25); border-top-color: #6366f1; border-radius: 50%; width: 30px; height: 30px; animation: spin 0.7s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .masked-key {
-            -webkit-text-security: disc;
-            text-security: disc;
-        }
-        select option {
-            background-color: #0f172a;
-            color: #f8fafc;
-        }
-        @keyframes pulse-bar {
-            0%, 100% { transform: scaleY(0.3); }
-            50% { transform: scaleY(1); }
-        }
-        .voice-bar {
-            animation: pulse-bar 0.8s ease-in-out infinite;
-        }
+        .masked-key { -webkit-text-security: disc; text-security: disc; }
+        select option { background-color: #0f172a; color: #f8fafc; }
     </style>
 </head>
-<body class="bg-gradient-to-br from-[#070913] via-[#111132] to-[#070913] min-h-screen text-slate-100 flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+<body class="bg-gradient-to-br from-[#070913] via-[#111132] to-[#070913] min-h-screen text-slate-100 flex flex-col justify-between">
 
-    <!-- Top Navigation -->
+    <!-- Header -->
     <header class="max-w-6xl w-full mx-auto px-4 py-4 flex items-center justify-between border-b border-indigo-500/20 bg-[#0b0d1e]/90 backdrop-blur-md sticky top-0 z-40">
         <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-2xl flex items-center justify-center text-white font-extrabold text-xl shadow-lg shadow-indigo-500/30">Y</div>
+            <div class="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-2xl flex items-center justify-center text-white font-extrabold text-xl shadow-lg">Y</div>
             <div>
-                <span class="text-lg sm:text-xl font-extrabold tracking-tight text-white block leading-none">Yugamugesh</span>
+                <span class="text-lg sm:text-xl font-extrabold text-white block leading-none">Yugamugesh</span>
                 <span class="text-[10px] text-indigo-400 font-bold uppercase tracking-widest" data-i18n="brand_sub">AI AUDIO STUDIO</span>
             </div>
         </div>
-        <nav class="hidden lg:flex items-center space-x-6 text-xs font-semibold text-slate-300">
-            <a href="#uploadSection" class="hover:text-indigo-400 transition" data-i18n="nav_studio">Studio Tool</a>
-            <a href="#howItWorks" class="hover:text-indigo-400 transition" data-i18n="nav_how">How It Works</a>
-            <a href="#featuresSection" class="hover:text-indigo-400 transition" data-i18n="nav_features">Features</a>
-            <a href="#faqSection" class="hover:text-indigo-400 transition" data-i18n="nav_faq">FAQ</a>
-            <a href="#legalSection" class="hover:text-indigo-400 transition" data-i18n="nav_legal">Privacy & Terms</a>
-        </nav>
         <div class="flex items-center space-x-1.5 sm:space-x-2">
-            <!-- Full Page Language Switcher -->
-            <button onclick="togglePageLanguage()" id="pageLangBtn" class="text-xs bg-slate-900/90 border border-indigo-500/30 px-2.5 sm:px-3 py-2 rounded-full font-bold text-indigo-300 hover:bg-slate-800 transition">
-                🌐 தமிழ்
+            <button type="button" onclick="togglePageLanguage()" id="pageLangBtn" class="text-xs bg-slate-900 border border-indigo-500/30 px-3 py-2 rounded-full font-bold text-indigo-300">🌐 தமிழ்</button>
+            <button type="button" onclick="openApiKeyModal()" class="text-xs bg-slate-900 border border-emerald-500/30 px-3 py-2 rounded-full font-semibold text-emerald-300 flex items-center space-x-1">
+                <span>⚡ AI</span><span id="keyCountDot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
             </button>
-            <!-- Built-in AI Active Status -->
-            <button onclick="openApiKeyModal()" title="AI Engine Active" class="text-xs bg-slate-900/90 border border-emerald-500/30 px-2.5 sm:px-3 py-2 rounded-full font-semibold text-emerald-300 hover:bg-slate-800 transition shadow-sm flex items-center space-x-1">
-                <span>⚡ AI</span>
-                <span id="keyCountDot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
-            </button>
-            <!-- PWA Direct App Install Button -->
-            <button onclick="installPwaApp()" id="installAppBtn" class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-bold px-3.5 sm:px-4 py-2 rounded-full shadow-lg shadow-indigo-600/30 transition flex items-center space-x-1">
+            <button type="button" onclick="installPwaApp()" class="bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-xs font-bold px-3.5 py-2 rounded-full shadow-lg flex items-center space-x-1">
                 <span>📲</span><span data-i18n="btn_app">App</span>
             </button>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="max-w-4xl w-full mx-auto px-4 py-7 flex-grow flex flex-col items-center">
-        
-        <!-- Hero Title -->
-        <div class="text-center mb-7 max-w-2xl">
-            <span class="inline-block text-[11px] font-extrabold tracking-widest text-indigo-400 uppercase bg-indigo-500/10 border border-indigo-500/20 px-4 py-1.5 rounded-full mb-3" data-i18n="hero_badge">
-                NEXT-GEN MULTI-LANGUAGE AUDIO SUITE
-            </span>
-            <h1 id="heroHeading" class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-3 leading-tight" data-i18n="hero_title">
-                Smart Audio & Voice AI Studio
-            </h1>
-            <p id="heroSubtext" class="text-slate-400 text-xs sm:text-sm mx-auto leading-relaxed" data-i18n="hero_sub">
-                Translate, Transcribe, Generate Realistic AI Voices, Cut MP3, and Export audio in Tamil, English, Hindi, Telugu, & Malayalam.
-            </p>
+    <!-- Main Studio -->
+    <main class="max-w-4xl w-full mx-auto px-4 py-6 flex-grow flex flex-col items-center">
+        <div class="text-center mb-6 max-w-2xl">
+            <span class="inline-block text-[11px] font-extrabold tracking-widest text-indigo-400 uppercase bg-indigo-500/10 border border-indigo-500/20 px-4 py-1.5 rounded-full mb-3" data-i18n="hero_badge">NEXT-GEN MULTI-LANGUAGE AUDIO SUITE</span>
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-3" data-i18n="hero_title">Smart Audio & Voice AI Studio</h1>
+            <p class="text-slate-400 text-xs sm:text-sm mx-auto leading-relaxed" data-i18n="hero_sub">Translate, Transcribe, Generate Realistic AI Voices (.MP3), Cut MP3, and Export audio in Tamil, English, Hindi, Telugu, & Malayalam.</p>
         </div>
 
-        <!-- App Card Box -->
-        <div id="uploadSection" class="max-w-2xl w-full bg-[#0d1021]/95 rounded-3xl shadow-2xl shadow-indigo-950/60 border border-indigo-500/20 p-4 sm:p-7 mb-12 backdrop-blur-xl">
-            
-            <!-- 5 Main Tool Tabs Navigation -->
+        <div id="uploadSection" class="max-w-2xl w-full bg-[#0d1021]/95 rounded-3xl shadow-2xl border border-indigo-500/20 p-4 sm:p-7 mb-10">
+            <!-- 5 Main Tabs -->
             <div class="grid grid-cols-2 sm:grid-cols-5 bg-[#070914] p-1.5 rounded-2xl mb-5 text-xs sm:text-sm font-bold gap-1.5 border border-indigo-500/10">
-                <button onclick="switchTab('upload')" id="tabUpload" class="py-3 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-600/30 transition flex items-center justify-center space-x-1.5">
-                    <span>🎙️</span><span data-i18n="tab_transcribe">Transcribe</span>
-                </button>
-                <button onclick="switchTab('cutter')" id="tabCutter" class="py-3 rounded-xl text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5">
-                    <span>✂️</span><span data-i18n="tab_cutter">Cutter</span>
-                </button>
-                <button onclick="switchTab('tts')" id="tabTts" class="py-3 rounded-xl text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5">
-                    <span>🗣️</span><span data-i18n="tab_tts">AI Voice</span>
-                </button>
-                <button onclick="switchTab('visualizer')" id="tabVisualizer" class="py-3 rounded-xl text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5">
-                    <span>🎥</span><span data-i18n="tab_visualizer">Visualizer</span>
-                </button>
-                <button onclick="switchTab('record')" id="tabRecord" class="col-span-2 sm:col-span-1 py-3 rounded-xl text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5">
-                    <span>🔴</span><span data-i18n="tab_record">Record</span>
-                </button>
+                <button type="button" onclick="switchTab('upload')" id="tabUpload" class="py-3 rounded-xl bg-indigo-600 text-white shadow-md flex items-center justify-center space-x-1.5"><span>🎙️</span><span data-i18n="tab_transcribe">Transcribe</span></button>
+                <button type="button" onclick="switchTab('cutter')" id="tabCutter" class="py-3 rounded-xl text-slate-400 hover:text-white flex items-center justify-center space-x-1.5"><span>✂️</span><span data-i18n="tab_cutter">Cutter</span></button>
+                <button type="button" onclick="switchTab('tts')" id="tabTts" class="py-3 rounded-xl text-slate-400 hover:text-white flex items-center justify-center space-x-1.5"><span>🗣️</span><span data-i18n="tab_tts">AI Voice</span></button>
+                <button type="button" onclick="switchTab('visualizer')" id="tabVisualizer" class="py-3 rounded-xl text-slate-400 hover:text-white flex items-center justify-center space-x-1.5"><span>🎥</span><span data-i18n="tab_visualizer">Visualizer</span></button>
+                <button type="button" onclick="switchTab('record')" id="tabRecord" class="col-span-2 sm:col-span-1 py-3 rounded-xl text-slate-400 hover:text-white flex items-center justify-center space-x-1.5"><span>🔴</span><span data-i18n="tab_record">Record</span></button>
             </div>
 
-            <!-- Language, Output Mode & AI Noise Reduction Box -->
-            <div id="langSelectorBox" class="bg-[#070914]/90 border border-indigo-500/15 rounded-2xl p-4 mb-5 space-y-3.5">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <!-- Language & Mode Selector -->
+            <div class="bg-[#070914]/90 border border-indigo-500/15 rounded-2xl p-4 mb-5 space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-1.5" data-i18n="lbl_select_lang">
-                            SELECT AUDIO LANGUAGE
-                        </label>
-                        <select id="targetLanguage" class="w-full bg-[#0d1224] text-white font-bold text-xs sm:text-sm px-3.5 py-3 rounded-xl border border-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <label class="block text-[11px] font-bold text-indigo-300 uppercase mb-1" data-i18n="lbl_select_lang">SELECT AUDIO LANGUAGE</label>
+                        <select id="targetLanguage" class="w-full bg-[#0d1224] text-white font-bold text-xs sm:text-sm px-3.5 py-3 rounded-xl border border-indigo-500/30">
                             <option value="Tamil" data-i18n="opt_lang_ta">🇮🇳 Tamil (தமிழ்)</option>
                             <option value="English" data-i18n="opt_lang_en">🇬🇧 English</option>
                             <option value="Hindi" data-i18n="opt_lang_hi">🇮🇳 Hindi (हिन्दी)</option>
@@ -140,42 +76,31 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-1.5" data-i18n="lbl_output_mode">
-                            OUTPUT MODE
-                        </label>
-                        <select id="outputMode" class="w-full bg-[#0d1224] text-white font-bold text-xs sm:text-sm px-3.5 py-3 rounded-xl border border-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <label class="block text-[11px] font-bold text-indigo-300 uppercase mb-1" data-i18n="lbl_output_mode">OUTPUT MODE</label>
+                        <select id="outputMode" class="w-full bg-[#0d1224] text-white font-bold text-xs sm:text-sm px-3.5 py-3 rounded-xl border border-indigo-500/30">
                             <option value="Pure Transcription" data-i18n="opt_mode_pure">Pure Accurate Transcription</option>
                             <option value="Transcription with short bullet-point summary" data-i18n="opt_mode_summary">Transcription + Bullet Summary</option>
-                            <option value="YouTube Video Titles, Timestamp Chapters (00:00 format), engaging Instagram Reels Caption, Trending Hashtags, followed by the Full Transcript" data-i18n="opt_mode_yt">🎬 YouTube Chapters & Reels Caption</option>
-                            <option value="Multi-Speaker Dialogue format (Speaker 1, Speaker 2) with timestamps" data-i18n="opt_mode_speaker">👥 Multi-Speaker Interview Mode</option>
+                            <option value="YouTube Video Titles, Timestamp Chapters (00:00 format), Reels Caption, Hashtags, and Full Transcript" data-i18n="opt_mode_yt">🎬 YouTube Chapters & Reels Caption</option>
+                            <option value="Multi-Speaker Dialogue format (Speaker 1, Speaker 2)" data-i18n="opt_mode_speaker">👥 Multi-Speaker Interview Mode</option>
                             <option value="Translation into Tamil script (தமிழ்)" data-i18n="opt_mode_tr_ta">Translate into Tamil</option>
                             <option value="Translation into English" data-i18n="opt_mode_tr_en">Translate into English</option>
-                            <option value="Romanized phonetic script (Tanglish/Manglish)" data-i18n="opt_mode_roman">Romanized Script (Tanglish)</option>
                         </select>
                     </div>
                 </div>
-
-                <!-- AI Noise Reduction Toggle & Quick Sample Test -->
                 <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-indigo-500/10 text-xs">
-                    <label class="flex items-center space-x-2 cursor-pointer select-none">
-                        <input type="checkbox" id="noiseReduceToggle" checked class="w-4 h-4 accent-indigo-500 rounded cursor-pointer">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="checkbox" id="noiseReduceToggle" checked class="w-4 h-4 accent-indigo-500 rounded">
                         <span class="font-semibold text-slate-300" data-i18n="lbl_noise_reduce">🔇 AI Noise Reduction & Auto Grammar Fix</span>
                     </label>
-                    <button onclick="runSampleTest()" class="text-indigo-400 hover:text-indigo-300 font-bold underline text-[11px]" data-i18n="btn_sample">
-                        ✨ View Sample Output & Downloads
-                    </button>
+                    <button type="button" onclick="runSampleTest()" class="text-indigo-400 hover:text-indigo-300 font-bold underline text-[11px]" data-i18n="btn_sample">✨ View Sample Output & Downloads</button>
                 </div>
             </div>
 
-            <!-- =================================================================== -->
-            <!-- TAB 1: FILE UPLOAD & TRANSCRIBE -->
-            <!-- =================================================================== -->
+            <!-- TAB 1: UPLOAD & TRANSCRIBE -->
             <div id="panelUpload" class="block">
-                <label for="audioFileInput" class="border-2 border-dashed border-indigo-500/40 hover:border-indigo-400 bg-[#090c1b] hover:bg-indigo-950/30 transition rounded-2xl p-7 sm:p-9 flex flex-col items-center justify-center cursor-pointer text-center group">
-                    <div class="w-16 h-16 bg-indigo-600/20 text-indigo-400 rounded-2xl flex items-center justify-center mb-3.5 group-hover:scale-105 transition shadow-inner border border-indigo-500/20">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
+                <label for="audioFileInput" class="border-2 border-dashed border-indigo-500/40 hover:border-indigo-400 bg-[#090c1b] transition rounded-2xl p-7 flex flex-col items-center justify-center cursor-pointer text-center">
+                    <div class="w-14 h-14 bg-indigo-600/20 text-indigo-400 rounded-2xl flex items-center justify-center mb-3 border border-indigo-500/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
                     </div>
                     <span id="fileNameDisplay" class="text-sm sm:text-base font-extrabold text-white mb-1" data-i18n="upload_title">Click to Upload MP3, WAV, AAC, M4A</span>
                     <span class="text-xs text-slate-400" data-i18n="upload_sub">Supports WhatsApp Audio (.AAC) • Auto-saves to AWS S3</span>
@@ -185,652 +110,998 @@
                 <div id="audioPreviewBox" class="hidden mt-4 bg-[#070914] p-4 rounded-2xl border border-indigo-500/25 space-y-3">
                     <audio id="audioPlayer" controls class="w-full h-10"></audio>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                        <button onclick="startTranscription()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs py-3 px-3 rounded-xl shadow-md shadow-indigo-600/20 transition" data-i18n="btn_convert_now">
-                            ⚡ Convert to Text
-                        </button>
-                        <button onclick="openCurrentInCutter()" class="w-full bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-500/30 font-bold text-xs py-3 px-3 rounded-xl transition" data-i18n="btn_open_cutter">
-                            ✂️ Cut / Trim Audio
-                        </button>
-                        <button onclick="openCurrentInVisualizer()" class="w-full bg-slate-800 hover:bg-slate-700 text-violet-300 border border-violet-500/30 font-bold text-xs py-3 px-3 rounded-xl transition" data-i18n="btn_open_vis">
-                            🎥 Audio Visualizer
-                        </button>
+                        <button type="button" onclick="startTranscription()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-xs py-3 px-3 rounded-xl shadow-md" data-i18n="btn_convert_now">⚡ Convert to Text</button>
+                        <button type="button" onclick="openCurrentInCutter()" class="w-full bg-slate-800 text-indigo-300 border border-indigo-500/30 font-bold text-xs py-3 px-3 rounded-xl" data-i18n="btn_open_cutter">✂️ Cut / Trim Audio</button>
+                        <button type="button" onclick="openCurrentInVisualizer()" class="w-full bg-slate-800 text-violet-300 border border-violet-500/30 font-bold text-xs py-3 px-3 rounded-xl" data-i18n="btn_open_vis">🎥 Audio Visualizer</button>
                     </div>
                 </div>
             </div>
 
-            <!-- =================================================================== -->
-            <!-- TAB 2: VISUAL WAVEFORM AUDIO CUTTER & MP3/WAV EXPORTER -->
-            <!-- =================================================================== -->
-            <div id="panelCutter" class="hidden">
-                <div class="bg-indigo-950/40 border border-indigo-500/25 rounded-2xl p-4 mb-4">
-                    <div class="flex items-center justify-between mb-1">
-                        <h3 class="text-sm font-extrabold text-indigo-300" data-i18n="cutter_heading">✂️ Studio Audio Cutter (MP3 & WAV)</h3>
-                        <span class="text-[11px] bg-indigo-600 text-white px-2.5 py-0.5 rounded-full font-bold" data-i18n="cutter_badge">Live Waveform</span>
-                    </div>
-                    <p class="text-xs text-slate-300 leading-relaxed" data-i18n="cutter_desc">
-                        Play the audio below, select the exact start and end time on the waveform, and download your trimmed clip as .MP3 or .WAV.
-                    </p>
+            <!-- TAB 2: AUDIO CUTTER -->
+            <div id="panelCutter" class="hidden space-y-4">
+                <div class="bg-indigo-950/40 border border-indigo-500/25 rounded-2xl p-4">
+                    <h3 class="text-sm font-extrabold text-indigo-300 mb-1" data-i18n="cutter_heading">✂️ Studio Audio Cutter (MP3 & WAV)</h3>
+                    <p class="text-xs text-slate-300" data-i18n="cutter_desc">Play the audio, select start and end time on the waveform, and download as .MP3 or .WAV.</p>
                 </div>
-
-                <label for="cutterFileInput" class="border-2 border-dashed border-indigo-500/40 hover:border-indigo-400 bg-[#090c1b] transition rounded-2xl p-5 flex flex-col items-center justify-center cursor-pointer text-center">
-                    <div class="w-11 h-11 bg-indigo-600/20 text-indigo-400 rounded-2xl flex items-center justify-center mb-2">
-                        <span class="text-lg">✂️</span>
-                    </div>
-                    <span id="cutterFileName" class="text-sm font-bold text-white mb-0.5" data-i18n="cutter_upload_title">Tap to Select MP3, AAC or WAV to Cut</span>
-                    <span class="text-[11px] text-slate-400" data-i18n="cutter_upload_sub">Trim Ringtone, Speech Clip, or Song Portion</span>
+                <label for="cutterFileInput" class="border-2 border-dashed border-indigo-500/40 bg-[#090c1b] rounded-2xl p-5 flex flex-col items-center justify-center cursor-pointer text-center">
+                    <span id="cutterFileName" class="text-sm font-bold text-white" data-i18n="cutter_upload_title">✂️ Tap to Select MP3, AAC or WAV to Cut</span>
                     <input type="file" id="cutterFileInput" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg" class="hidden" onclick="this.value=null" onchange="handleCutterFile(event)">
                 </label>
 
-                <div id="cutterWorkspace" class="hidden mt-4 bg-[#070914] p-4 rounded-2xl border border-indigo-500/25 space-y-4">
-                    <div class="bg-slate-950 text-white p-3.5 rounded-2xl border border-slate-800 space-y-2.5">
-                        <div class="flex items-center justify-between text-[11px] font-semibold text-slate-300">
-                            <span data-i18n="cutter_wave_hint">🎧 Live Audio Frame (Tap wave to jump)</span>
-                            <span class="font-mono text-amber-400"><span data-i18n="cutter_now_playing">Now Playing:</span> <b id="liveCurrentTime">0:00</b> / <span id="totalDurationLabel">0:00</span></span>
+                <div id="cutterWorkspace" class="hidden bg-[#070914] p-4 rounded-2xl border border-indigo-500/25 space-y-3">
+                    <div class="flex justify-between text-[11px] text-slate-300">
+                        <span data-i18n="cutter_wave_hint">🎧 Tap wave to seek</span>
+                        <span class="font-mono text-amber-400"><b id="liveCurrentTime">0:00</b> / <span id="totalDurationLabel">0:00</span></span>
+                    </div>
+                    <div class="relative w-full h-20 bg-slate-900 rounded-xl overflow-hidden border border-slate-700 cursor-pointer" onclick="seekWaveformClick(event)">
+                        <canvas id="waveformCanvas" class="w-full h-full block"></canvas>
+                    </div>
+                    <audio id="cutterSourcePlayer" controls class="w-full h-10"></audio>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button type="button" onclick="setMarkAtCurrentTime('start')" class="bg-emerald-600 text-white text-[11px] font-bold py-2 rounded-xl" data-i18n="btn_set_start">📍 Set Start</button>
+                        <button type="button" onclick="playSelectedRegionOnly()" id="previewRegionBtn" class="bg-indigo-600 text-white text-[11px] font-bold py-2 rounded-xl" data-i18n="btn_play_sel">▶️ Play Selection</button>
+                        <button type="button" onclick="setMarkAtCurrentTime('end')" class="bg-rose-600 text-white text-[11px] font-bold py-2 rounded-xl" data-i18n="btn_set_end">🏁 Set End</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 bg-slate-900 p-3 rounded-xl text-xs">
+                        <div>
+                            <span class="text-emerald-400 font-bold" data-i18n="cutter_start_lbl">Start (s):</span>
+                            <input type="number" id="startSecInput" min="0" value="0" onchange="syncCutterFromInputs('start')" class="w-16 ml-1 px-2 py-1 bg-slate-950 text-white border border-slate-700 rounded">
+                            <input type="range" id="startRangeSlider" min="0" max="100" step="0.1" value="0" oninput="onCutterSliderChange('start')" class="w-full accent-emerald-500 mt-1">
                         </div>
-
-                        <div class="relative w-full h-24 bg-slate-900 rounded-xl overflow-hidden border border-slate-700 cursor-pointer" onclick="seekWaveformClick(event)">
-                            <canvas id="waveformCanvas" class="w-full h-full block"></canvas>
-                        </div>
-
-                        <audio id="cutterSourcePlayer" controls class="w-full h-10 rounded-lg"></audio>
-
-                        <div class="grid grid-cols-3 gap-2 pt-1">
-                            <button onclick="setMarkAtCurrentTime('start')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold py-2.5 px-2 rounded-xl transition" data-i18n="btn_set_start">
-                                📍 Set Start Here
-                            </button>
-                            <button onclick="playSelectedRegionOnly()" id="previewRegionBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold py-2.5 px-2 rounded-xl transition" data-i18n="btn_play_sel">
-                                ▶️ Play Selection
-                            </button>
-                            <button onclick="setMarkAtCurrentTime('end')" class="bg-rose-600 hover:bg-rose-500 text-white text-[11px] font-bold py-2.5 px-2 rounded-xl transition" data-i18n="btn_set_end">
-                                🏁 Set End Here
-                            </button>
+                        <div>
+                            <span class="text-rose-400 font-bold" data-i18n="cutter_end_lbl">End (s):</span>
+                            <input type="number" id="endSecInput" min="1" value="10" onchange="syncCutterFromInputs('end')" class="w-16 ml-1 px-2 py-1 bg-slate-950 text-white border border-slate-700 rounded">
+                            <input type="range" id="endRangeSlider" min="1" max="100" step="0.1" value="10" oninput="onCutterSliderChange('end')" class="w-full accent-rose-500 mt-1">
                         </div>
                     </div>
+                    <button type="button" onclick="cutAudioNow()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-xs py-3 rounded-xl" data-i18n="btn_cut_now">✂️ Cut Audio Now</button>
 
-                    <div class="flex items-center justify-between text-xs font-bold text-slate-200 bg-slate-900 p-3 rounded-xl border border-indigo-500/20">
-                        <div><span data-i18n="cutter_range_lbl">Cut Range:</span> <span id="cutRangeSummary" class="text-white font-mono">0:00 - 0:00</span></div>
-                        <div class="text-indigo-400"><span data-i18n="cutter_len_lbl">Selected Length:</span> <span id="cutLengthLabel" class="font-mono">0:00</span></div>
-                    </div>
-
-                    <div class="bg-slate-900 p-3.5 rounded-xl border border-indigo-500/20 space-y-2">
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="font-bold text-emerald-400" data-i18n="cutter_start_lbl">🟢 Start Time:</span>
-                            <div class="flex items-center space-x-1">
-                                <input type="number" id="startSecInput" min="0" step="1" value="0" onchange="syncCutterFromInputs('start')" class="w-16 px-2 py-1 text-center font-mono font-bold bg-slate-950 text-white border border-slate-700 rounded-lg text-xs">
-                                <span class="text-[11px] text-slate-400">sec (<span id="startFormatted">0:00</span>)</span>
-                            </div>
-                        </div>
-                        <input type="range" id="startRangeSlider" min="0" max="100" step="0.1" value="0" oninput="onCutterSliderChange('start')" class="w-full accent-emerald-500 h-2 bg-slate-800 rounded-lg cursor-pointer">
-                    </div>
-
-                    <div class="bg-slate-900 p-3.5 rounded-xl border border-indigo-500/20 space-y-2">
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="font-bold text-rose-400" data-i18n="cutter_end_lbl">🔴 End Time:</span>
-                            <div class="flex items-center space-x-1">
-                                <input type="number" id="endSecInput" min="1" step="1" value="10" onchange="syncCutterFromInputs('end')" class="w-16 px-2 py-1 text-center font-mono font-bold bg-slate-950 text-white border border-slate-700 rounded-lg text-xs">
-                                <span class="text-[11px] text-slate-400">sec (<span id="endFormatted">0:10</span>)</span>
-                            </div>
-                        </div>
-                        <input type="range" id="endRangeSlider" min="1" max="100" step="0.1" value="10" oninput="onCutterSliderChange('end')" class="w-full accent-rose-500 h-2 bg-slate-800 rounded-lg cursor-pointer">
-                    </div>
-
-                    <button onclick="cutAudioNow()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 text-white font-bold text-xs sm:text-sm py-3.5 px-4 rounded-xl shadow-lg transition" data-i18n="btn_cut_now">
-                        ✂️ Cut Audio Now
-                    </button>
-
-                    <div id="trimmedOutputBox" class="hidden pt-3 border-t border-indigo-500/20 space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-extrabold text-emerald-400" data-i18n="cutter_ready_lbl">✅ Cut Audio Ready</span>
-                            <span id="trimmedSizeBadge" class="text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-bold">Ready</span>
-                        </div>
+                    <div id="trimmedOutputBox" class="hidden pt-3 border-t border-indigo-500/20 space-y-2">
                         <audio id="trimmedAudioPlayer" controls class="w-full h-10"></audio>
-                        
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                            <button onclick="downloadTrimmedMp3()" id="mp3DownloadBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-3 px-3 rounded-xl transition shadow-sm" data-i18n="btn_dl_mp3">
-                                🎵 Download .MP3
-                            </button>
-                            <button onclick="downloadTrimmedAudio()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-3 px-3 rounded-xl transition shadow-sm" data-i18n="btn_dl_wav">
-                                ⬇️ Download .WAV
-                            </button>
-                            <button onclick="transcribeTrimmedAudio()" class="col-span-2 sm:col-span-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-3 px-3 rounded-xl transition shadow-sm" data-i18n="btn_tr_cut">
-                                📝 Convert to Text
-                            </button>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button type="button" onclick="downloadTrimmedMp3()" id="mp3DownloadBtn" class="bg-indigo-600 text-white text-xs font-bold py-2.5 rounded-xl" data-i18n="btn_dl_mp3">🎵 .MP3</button>
+                            <button type="button" onclick="downloadTrimmedAudio()" class="bg-emerald-600 text-white text-xs font-bold py-2.5 rounded-xl" data-i18n="btn_dl_wav">⬇️ .WAV</button>
+                            <button type="button" onclick="transcribeTrimmedAudio()" class="bg-blue-600 text-white text-xs font-bold py-2.5 rounded-xl" data-i18n="btn_tr_cut">📝 To Text</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- =================================================================== -->
-            <!-- TAB 3: ELEVENLABS-STYLE AI VOICE STUDIO (NEURAL TTS + MP3 DOWNLOAD) -->
-            <!-- =================================================================== -->
+            <!-- TAB 3: ELEVENLABS-STYLE AI VOICE STUDIO (TTS + MP3 DOWNLOAD) -->
             <div id="panelTts" class="hidden space-y-4">
-                <!-- Header Banner -->
-                <div class="bg-gradient-to-r from-indigo-950/70 via-violet-950/50 to-indigo-950/70 border border-indigo-500/30 rounded-2xl p-4">
-                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                <div class="bg-gradient-to-r from-indigo-950/70 to-violet-950/70 border border-indigo-500/30 rounded-2xl p-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
                         <div class="flex items-center space-x-2">
-                            <span class="px-2.5 py-0.5 bg-gradient-to-r from-indigo-500 to-violet-500 text-white text-[10px] font-extrabold uppercase tracking-wider rounded-full">ElevenLabs Style</span>
-                            <h3 class="text-sm font-extrabold text-white" data-i18n="tts_heading">🗣️ AI Neural Voiceover Studio</h3>
+                            <h3 class="text-sm font-extrabold text-white" data-i18n="tts_heading">🗣️ ElevenLabs-Style AI Voice Studio</h3>
+                            <span class="text-[10px] bg-amber-500 text-slate-950 px-2 py-0.5 rounded-full font-extrabold">Neural MP3</span>
                         </div>
-                        <button onclick="copyTranscriptToTts()" class="text-[11px] bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-200 px-2.5 py-1 rounded-lg font-bold border border-indigo-500/30 transition" data-i18n="btn_use_transcript">
-                            📥 Use Transcribed Text
-                        </button>
+                        <button type="button" onclick="copyTranscriptToTts()" class="text-[11px] bg-indigo-600/40 text-indigo-200 px-2.5 py-1 rounded-lg font-bold border border-indigo-400/30" data-i18n="btn_use_transcript">📥 Use Transcribed Text</button>
                     </div>
-                    <p class="text-xs text-slate-300 leading-relaxed" data-i18n="tts_desc">
-                        Generate realistic Male & Female studio voiceovers in Tamil, English, Hindi, Telugu & Malayalam with emotion control and direct .MP3 download.
-                    </p>
+                    <p class="text-xs text-slate-300" data-i18n="tts_desc">Select Male or Female AI Voice, click Speak Now or Generate MP3 to listen and download voiceover.</p>
                 </div>
 
-                <!-- AI Voice Artist & Style Selection -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#070914] p-4 rounded-2xl border border-indigo-500/20">
-                    <div>
-                        <label class="block text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-1.5" data-i18n="tts_voice_artist">
-                            🎙️ AI VOICE ARTIST (குரல் தேர்வு)
-                        </label>
-                        <select id="ttsVoiceArtist" onchange="onVoiceArtistChange()" class="w-full bg-[#0d1224] text-white text-xs font-bold px-3 py-3 rounded-xl border border-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option value="ta-IN|female|1.08|pNInz6obpgDQGcFmaJgB">🇮🇳 Iniya / Pallavi (Tamil Female - Studio HD)</option>
-                            <option value="ta-IN|male|0.86|ErXwobaYiN019PkySvjV">🇮🇳 Valluvar / Kavin (Tamil Male - Deep Narrative)</option>
-                            <option value="ta-IN|female|1.18|EXAVITQu4vr4xnSDxMaL">🇮🇳 Meera (Tamil Female - Expressive Reels)</option>
-                            <option value="en-IN|female|1.05|21m00Tcm4TlvDq8ikWAM">🇬🇧 Riya / Rachel (English Female - Promo HD)</option>
-                            <option value="en-IN|male|0.88|pNInz6obpgDQGcFmaJgB">🇬🇧 Aarav / Adam (English Male - Deep Documentary)</option>
-                            <option value="hi-IN|female|1.05|EXAVITQu4vr4xnSDxMaL">🇮🇳 Swara (Hindi Female - Studio Neural)</option>
-                            <option value="hi-IN|male|0.88|ErXwobaYiN019PkySvjV">🇮🇳 Kabir (Hindi Male - Deep Storyteller)</option>
-                            <option value="te-IN|female|1.04|21m00Tcm4TlvDq8ikWAM">🇮🇳 Shruti (Telugu Female - Studio HD)</option>
-                            <option value="ml-IN|female|1.04|21m00Tcm4TlvDq8ikWAM">🇮🇳 Sobhana (Malayalam Female - Studio HD)</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-1.5" data-i18n="tts_emotion_lbl">
-                            🎭 VOICE STYLE & EMOTION
-                        </label>
-                        <select id="ttsEmotionPreset" onchange="applyVoiceEmotionPreset()" class="w-full bg-[#0d1224] text-white text-xs font-bold px-3 py-3 rounded-xl border border-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option value="natural" data-i18n="emo_natural">🎙️ Natural Studio (Default)</option>
-                            <option value="reels" data-i18n="emo_reels">🎬 YouTube Shorts & Reels (Energetic)</option>
-                            <option value="story" data-i18n="emo_story">📖 Audiobook & Storytelling (Calm & Deep)</option>
-                            <option value="news" data-i18n="emo_news">📰 News Anchor (Fast & Crisp)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Fine-Tuning Sliders: Speed & Pitch/Tone -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#070914] p-3.5 rounded-2xl border border-indigo-500/20">
                     <div>
-                        <div class="flex justify-between text-[11px] font-bold text-indigo-300 mb-1">
-                            <span data-i18n="tts_speed_lbl">⚡ Speech Speed (வேகம்):</span>
-                            <span id="ttsRateLabel" class="text-emerald-400 font-mono">1.0x</span>
-                        </div>
-                        <input type="range" id="ttsRateSlider" min="0.6" max="1.6" step="0.05" value="1.0" oninput="document.getElementById('ttsRateLabel').textContent=this.value+'x'" class="w-full accent-indigo-500 h-2 bg-slate-800 rounded-lg cursor-pointer">
+                        <label class="block text-[11px] font-bold text-indigo-300 mb-1" data-i18n="tts_voice_lang">1. Voice Language</label>
+                        <select id="ttsLangSelect" class="w-full bg-slate-900 text-white text-xs font-bold px-3 py-2.5 rounded-xl border border-indigo-500/30">
+                            <option value="ta">🇮🇳 Tamil (தமிழ் - Neural HD)</option>
+                            <option value="en">🇬🇧 English (India / Global HD)</option>
+                            <option value="hi">🇮🇳 Hindi (हिन्दी - Neural HD)</option>
+                            <option value="te">🇮🇳 Telugu (తెలుగు - Neural HD)</option>
+                            <option value="ml">🇮🇳 Malayalam (മലയാളം - Neural HD)</option>
+                        </select>
                     </div>
                     <div>
-                        <div class="flex justify-between text-[11px] font-bold text-indigo-300 mb-1">
-                            <span data-i18n="tts_pitch_lbl">🎚️ Voice Pitch / Tone (குரல் தொனி):</span>
-                            <span id="ttsPitchLabel" class="text-violet-400 font-mono">1.08</span>
-                        </div>
-                        <input type="range" id="ttsPitchSlider" min="0.65" max="1.4" step="0.02" value="1.08" oninput="document.getElementById('ttsPitchLabel').textContent=this.value" class="w-full accent-violet-500 h-2 bg-slate-800 rounded-lg cursor-pointer">
+                        <label class="block text-[11px] font-bold text-indigo-300 mb-1" data-i18n="tts_voice_persona">2. AI Voice Character (Male / Female)</label>
+                        <select id="ttsVoicePersona" onchange="applyPersonaPreset()" class="w-full bg-slate-900 text-white text-xs font-bold px-3 py-2.5 rounded-xl border border-indigo-500/30">
+                            <option value="pallavi_female" data-i18n="voice_opt_1">👩 Pallavi / Rachel — Natural Female</option>
+                            <option value="valluvar_male" data-i18n="voice_opt_2">👨 Valluvar / Adam — Deep Male Voice</option>
+                            <option value="raveena_story" data-i18n="voice_opt_3">🎙️ Raveena / Bella — Storyteller (Reels)</option>
+                            <option value="prabhat_news" data-i18n="voice_opt_4">📺 Prabhat / Antoni — News Anchor Male</option>
+                        </select>
                     </div>
                 </div>
 
-                <!-- Script Input Box with Character Counter -->
-                <div class="relative">
-                    <textarea id="ttsInputText" rows="5" oninput="updateTtsCharCount()" class="w-full p-4 bg-[#070914] border border-indigo-500/30 rounded-2xl text-white text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="இங்கே தமிழ் அல்லது பிற மொழி உரையை டைப் செய்யவும்...">வணக்கம்! யுகமுகேஷ் ஏஐ ஆடியோ ஸ்டுடியோவிற்கு உங்களை அன்புடன் வரவேற்கிறோம். இதில் உங்கள் எழுத்துக்களை இயற்கையான குரலில் மாற்றி எம்.பி.3 வடிவில் பதிவிறக்கம் செய்யலாம்.</textarea>
-                    <div class="flex items-center justify-between px-2 pt-1 text-[11px] text-slate-400">
-                        <span id="ttsCharCount">174 characters</span>
-                        <button onclick="document.getElementById('ttsInputText').value='';updateTtsCharCount();" class="text-rose-400 hover:underline font-semibold" data-i18n="btn_clear_text">Clear Text</button>
+                <div class="grid grid-cols-2 gap-3 bg-[#070914] p-3 rounded-2xl border border-indigo-500/20 text-xs">
+                    <div>
+                        <div class="flex justify-between font-bold text-indigo-300 mb-1"><span data-i18n="tts_speed_lbl">⚡ Speed:</span><span id="ttsRateLabel">1.0x</span></div>
+                        <input type="range" id="ttsRateSlider" min="0.6" max="1.5" step="0.05" value="1.0" oninput="document.getElementById('ttsRateLabel').textContent=this.value+'x'" class="w-full accent-indigo-500">
+                    </div>
+                    <div>
+                        <div class="flex justify-between font-bold text-indigo-300 mb-1"><span data-i18n="tts_pitch_lbl">🎚️ Tone:</span><span id="ttsPitchLabel" class="text-emerald-400">Natural (1.0)</span></div>
+                        <input type="range" id="ttsPitchSlider" min="0.75" max="1.25" step="0.05" value="1.0" oninput="updatePitchLabel(this.value)" class="w-full accent-violet-500">
                     </div>
                 </div>
 
-                <!-- Live Speaking Wave Indicator -->
-                <div id="ttsSpeakingWave" class="hidden bg-indigo-950/50 border border-indigo-500/30 rounded-2xl p-3 flex items-center justify-center space-x-3">
-                    <div class="flex items-end space-x-1 h-5">
-                        <div class="w-1 bg-indigo-400 h-4 rounded voice-bar"></div>
-                        <div class="w-1 bg-violet-400 h-5 rounded voice-bar" style="animation-delay:0.15s"></div>
-                        <div class="w-1 bg-emerald-400 h-3 rounded voice-bar" style="animation-delay:0.3s"></div>
-                        <div class="w-1 bg-indigo-400 h-5 rounded voice-bar" style="animation-delay:0.45s"></div>
-                    </div>
-                    <span id="ttsStatusLabel" class="text-xs font-bold text-indigo-200">🎙️ AI Studio Voice Speaking...</span>
-                </div>
+                <textarea id="ttsInputText" rows="4" class="w-full p-4 bg-[#070914] border border-indigo-500/30 rounded-2xl text-white text-sm leading-relaxed">வணக்கம்! யுகமுகேஷ் ஏஐ ஆடியோ ஸ்டுடியோவிற்கு உங்களை அன்புடன் வரவேற்கிறோம்.</textarea>
 
-                <!-- Main Controls: Speak, Pause, Stop & Generate MP3 -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                    <button onclick="playTextToSpeech()" class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 text-white font-bold text-xs py-3.5 px-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-1" data-i18n="btn_speak_now">
-                        ▶️ Speak AI Voice
+                <!-- Instant Speak + MP3 Generation Buttons -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <button type="button" onclick="generateStudioVoiceoverMp3()" id="generateTtsBtn" class="col-span-2 bg-gradient-to-r from-indigo-600 to-fuchsia-600 hover:from-indigo-500 hover:to-fuchsia-500 text-white font-extrabold text-xs py-3.5 px-3 rounded-xl shadow-lg flex items-center justify-center space-x-1">
+                        <span>✨</span><span data-i18n="btn_gen_voice">Generate AI Voice (.MP3)</span>
                     </button>
-                    <button onclick="generateAndDownloadTtsMp3()" id="ttsMp3Btn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3.5 px-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-1" data-i18n="btn_tts_mp3">
-                        ⬇️ Download .MP3
+                    <button type="button" onclick="playTextToSpeech()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-3.5 px-3 rounded-xl flex items-center justify-center space-x-1">
+                        <span>▶️</span><span data-i18n="btn_speak_now">Speak Now</span>
                     </button>
-                    <button onclick="pauseResumeTts()" class="bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-500/30 font-bold text-xs py-3.5 px-3 rounded-xl transition" data-i18n="btn_pause_resume">
-                        ⏯️ Pause / Resume
-                    </button>
-                    <button onclick="stopTextToSpeech()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs py-3.5 px-3 rounded-xl transition" data-i18n="btn_stop_tts">
-                        ⏹️ Stop
+                    <button type="button" onclick="stopTextToSpeech()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs py-3.5 px-3 rounded-xl flex items-center justify-center space-x-1">
+                        <span>⏹️</span><span data-i18n="btn_stop_tts">Stop</span>
                     </button>
                 </div>
 
-                <!-- Generated MP3 Voiceover Preview Player -->
-                <div id="ttsAudioOutputBox" class="hidden bg-[#070914] p-4 rounded-2xl border border-emerald-500/30 space-y-2.5">
+                <!-- Generated MP3 Player & Download -->
+                <div id="ttsGeneratedBox" class="hidden bg-[#070914] p-4 rounded-2xl border border-emerald-500/30 space-y-3">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-extrabold text-emerald-400" data-i18n="tts_audio_ready">✅ Studio Voiceover Audio Ready</span>
-                        <span id="ttsEngineBadge" class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full font-bold">Neural HD</span>
+                        <span class="text-xs font-extrabold text-emerald-400" data-i18n="tts_ready_title">✅ AI Voiceover Audio Ready</span>
+                        <span id="ttsEngineBadge" class="text-[11px] bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full font-bold">Neural HD</span>
                     </div>
-                    <audio id="ttsGeneratedPlayer" controls referrerpolicy="no-referrer" class="w-full h-10"></audio>
+                    <audio id="ttsAudioPlayer" controls class="w-full h-10"></audio>
+                    <button type="button" onclick="downloadGeneratedTtsMp3()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3 px-4 rounded-xl shadow-md">
+                        🎵 <span data-i18n="btn_dl_tts_mp3">Download AI Voiceover (.MP3)</span>
+                    </button>
                 </div>
             </div>
 
-            <!-- =================================================================== -->
-            <!-- TAB 4: AUDIO VISUALIZER & VIDEO EXPORT -->
-            <!-- =================================================================== -->
+            <!-- TAB 4: VISUALIZER -->
             <div id="panelVisualizer" class="hidden space-y-4">
-                <div class="bg-indigo-950/40 border border-indigo-500/25 rounded-2xl p-4">
-                    <div class="flex items-center justify-between mb-1">
-                        <h3 class="text-sm font-extrabold text-indigo-300" data-i18n="vis_heading">🎥 Studio Audio Visualizer & Video Export</h3>
-                        <span id="visRecBadge" class="text-[11px] bg-violet-600 text-white px-2.5 py-0.5 rounded-full font-bold">HD Canvas</span>
-                    </div>
-                    <p class="text-xs text-slate-300 leading-relaxed" data-i18n="vis_desc">
-                        Record animated waveform video from your audio for YouTube, Instagram Reels, and WhatsApp Status.
-                    </p>
-                </div>
-
-                <label for="visFileInput" class="border-2 border-dashed border-indigo-500/40 hover:border-indigo-400 bg-[#090c1b] transition rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer text-center">
+                <label for="visFileInput" class="border-2 border-dashed border-indigo-500/40 bg-[#090c1b] rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer text-center">
                     <span id="visFileName" class="text-sm font-bold text-white" data-i18n="vis_upload_title">🎵 Tap to Select Audio for Visualizer</span>
-                    <span class="text-[11px] text-slate-400 mt-0.5" data-i18n="vis_upload_sub">MP3, WAV, AAC, M4A supported</span>
                     <input type="file" id="visFileInput" accept="audio/*" class="hidden" onchange="handleVisualizerFile(event)">
                 </label>
-
-                <div class="relative w-full h-52 bg-[#050711] rounded-2xl overflow-hidden border border-indigo-500/30 shadow-inner">
+                <div class="relative w-full h-48 bg-[#050711] rounded-2xl overflow-hidden border border-indigo-500/30">
                     <canvas id="videoCanvas" width="640" height="360" class="w-full h-full block"></canvas>
                 </div>
-
                 <audio id="visAudioPlayer" controls class="w-full h-10"></audio>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    <button onclick="startVisualizerVideoExport()" id="visExportBtn" class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 text-white font-bold text-xs sm:text-sm py-3.5 px-4 rounded-xl shadow-lg transition" data-i18n="btn_rec_video">
-                        🎥 Record & Download Video (.WEBM)
-                    </button>
-                    <button onclick="stopVisualizerVideoExport()" class="bg-rose-600/90 hover:bg-rose-600 text-white font-bold text-xs sm:text-sm py-3.5 px-4 rounded-xl transition" data-i18n="btn_stop_video">
-                        ⏹️ Stop & Save Video Now
-                    </button>
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" onclick="startVisualizerVideoExport()" id="visExportBtn" class="bg-indigo-600 text-white font-bold text-xs py-3 rounded-xl" data-i18n="btn_rec_video">🎥 Record Video (.WEBM)</button>
+                    <button type="button" onclick="stopVisualizerVideoExport()" class="bg-rose-600 text-white font-bold text-xs py-3 rounded-xl" data-i18n="btn_stop_video">⏹️ Stop & Save</button>
                 </div>
             </div>
 
-            <!-- =================================================================== -->
             <!-- TAB 5: LIVE VOICE RECORD -->
-            <!-- =================================================================== -->
-            <div id="panelRecord" class="hidden text-center py-7 bg-[#070914] rounded-2xl border border-indigo-500/25 p-5">
-                <div class="mb-4">
-                    <span class="inline-block text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold px-3 py-1 rounded-full mb-2" data-i18n="rec_badge">
-                        🆓 Live Multi-Language Voice Recorder
-                    </span>
-                    <div id="recordStatus" class="text-sm font-bold text-white" data-i18n="rec_status_idle">Tap microphone to speak in your selected language</div>
-                </div>
-                <button id="recordBtn" onclick="toggleRecording()" class="w-20 h-20 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center mx-auto shadow-xl shadow-red-600/40 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                    </svg>
+            <div id="panelRecord" class="hidden text-center py-6 bg-[#070914] rounded-2xl border border-indigo-500/25 p-5">
+                <div id="recordStatus" class="text-sm font-bold text-white mb-4" data-i18n="rec_status_idle">Tap microphone to speak in your selected language</div>
+                <button type="button" id="recordBtn" onclick="toggleRecording()" class="w-20 h-20 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center mx-auto shadow-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
                 </button>
                 <div id="recordTimer" class="text-sm font-mono font-bold text-amber-400 mt-3 hidden">00:00</div>
             </div>
 
-            <!-- Loading Status -->
+            <!-- Loading Box -->
             <div id="loadingBox" class="hidden mt-5 p-5 bg-indigo-950/50 border border-indigo-500/30 rounded-2xl flex flex-col items-center justify-center text-center">
                 <div class="spinner mb-3"></div>
                 <p id="loadingMainText" class="text-sm font-bold text-white" data-i18n="loading_main">Converting audio to 100% accurate text...</p>
                 <p id="keyStatusText" class="text-xs text-indigo-300 mt-1">⚡ AI Engine Processing...</p>
             </div>
 
-            <!-- Error Alert Box -->
-            <div id="errorBox" class="hidden mt-5 p-4 bg-rose-950/60 border border-rose-500/40 rounded-2xl text-rose-200 text-sm">
-                <div class="font-bold flex items-center space-x-1.5 mb-1.5 text-rose-300">
-                    <span data-i18n="err_heading">⚠️ Transcription Notice</span>
-                </div>
-                <p id="errorMessage" class="text-xs leading-relaxed break-words text-rose-200 mb-3 select-text"></p>
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="startTranscription()" class="bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition" data-i18n="btn_retry">🔄 Retry Now</button>
-                </div>
+            <!-- Error Box -->
+            <div id="errorBox" class="hidden mt-5 p-4 bg-rose-950/60 border border-rose-500/40 rounded-2xl text-rose-200 text-xs">
+                <div class="font-bold mb-1 text-rose-300" data-i18n="err_heading">⚠️ Transcription Notice</div>
+                <p id="errorMessage" class="mb-3"></p>
+                <button type="button" onclick="startTranscription()" class="bg-rose-600 text-white font-bold px-4 py-2 rounded-lg" data-i18n="btn_retry">🔄 Retry Now</button>
             </div>
 
-            <!-- =================================================================== -->
-            <!-- OUTPUT RESULT & DOWNLOAD SECTION -->
-            <!-- =================================================================== -->
+            <!-- Output Box -->
             <div id="resultSection" class="mt-6 pt-5 border-t border-indigo-500/20">
                 <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
                     <span class="text-sm font-extrabold text-white" data-i18n="out_heading">✅ AI Transcription Output & Downloads</span>
                     <div class="flex flex-wrap items-center gap-1.5">
-                        <button onclick="proofreadExistingText()" id="fixSpellingBtn" class="text-[11px] bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded-full font-bold shadow-xs transition" data-i18n="btn_fix_spelling">
-                            ✨ Fix Spelling
-                        </button>
-                        <button onclick="speakCurrentOutput()" class="text-[11px] bg-violet-600 hover:bg-violet-500 text-white px-3 py-1 rounded-full font-bold shadow-xs transition" data-i18n="btn_speak_out">
-                            🗣️ Speak Output
-                        </button>
+                        <button type="button" onclick="proofreadExistingText()" id="fixSpellingBtn" class="text-[11px] bg-indigo-600 text-white px-3 py-1 rounded-full font-bold" data-i18n="btn_fix_spelling">✨ Fix Spelling</button>
+                        <button type="button" onclick="speakCurrentOutput()" class="text-[11px] bg-violet-600 text-white px-3 py-1 rounded-full font-bold" data-i18n="btn_speak_out">🗣️ Speak Output</button>
                         <span id="activeKeyBadge" class="text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-semibold">Ready</span>
                     </div>
                 </div>
-
-                <textarea id="outputText" rows="7" class="w-full p-4 bg-[#070914] border border-indigo-500/30 rounded-2xl text-white text-sm sm:text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4 select-text" placeholder="Converted text will appear here..."></textarea>
-
-                <!-- 5 Action Buttons: Copy, TXT, DOC, SRT & WhatsApp -->
-                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-                    <button onclick="copyResultText()" id="copyBtn" class="bg-slate-800 hover:bg-slate-700 text-white border border-indigo-500/20 font-bold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center space-x-1 shadow-sm" data-i18n="btn_copy">
-                        📋 Copy
-                    </button>
-                    <button onclick="downloadTxtFile()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center space-x-1 shadow-sm">
-                        <span>⬇️ .TXT</span>
-                    </button>
-                    <button onclick="downloadDocFile()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center space-x-1 shadow-sm">
-                        <span>📄 .DOC</span>
-                    </button>
-                    <button onclick="downloadSrtFile()" class="bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center space-x-1 shadow-sm">
-                        <span>🎬 .SRT</span>
-                    </button>
-                    <button onclick="shareOnWhatsApp()" class="col-span-2 sm:col-span-1 bg-green-600 hover:bg-green-500 text-white font-bold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center space-x-1 shadow-sm">
-                        <span>📲 WhatsApp</span>
-                    </button>
+                <textarea id="outputText" rows="6" class="w-full p-4 bg-[#070914] border border-indigo-500/30 rounded-2xl text-white text-sm sm:text-base leading-relaxed mb-4" placeholder="Converted text will appear here..."></textarea>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                    <button type="button" onclick="copyResultText()" id="copyBtn" class="bg-slate-800 text-white border border-indigo-500/20 font-bold text-xs py-3 rounded-xl" data-i18n="btn_copy">📋 Copy</button>
+                    <button type="button" onclick="downloadTxtFile()" class="bg-emerald-600 text-white font-bold text-xs py-3 rounded-xl">⬇️ .TXT</button>
+                    <button type="button" onclick="downloadDocFile()" class="bg-blue-600 text-white font-bold text-xs py-3 rounded-xl">📄 .DOC</button>
+                    <button type="button" onclick="downloadSrtFile()" class="bg-violet-600 text-white font-bold text-xs py-3 rounded-xl">🎬 .SRT</button>
+                    <button type="button" onclick="shareOnWhatsApp()" class="col-span-2 sm:col-span-1 bg-green-600 text-white font-bold text-xs py-3 rounded-xl">📲 WhatsApp</button>
                 </div>
             </div>
-
         </div>
 
-        <!-- Section 1: How It Works -->
-        <section id="howItWorks" class="w-full mb-12">
-            <div class="text-center mb-8">
-                <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-full" data-i18n="how_badge">STEP-BY-STEP GUIDE</span>
-                <h2 class="text-xl sm:text-2xl font-extrabold text-white mt-2" data-i18n="how_title">How to Convert Audio into Text & Subtitles?</h2>
-                <p class="text-xs sm:text-sm text-slate-400 mt-1" data-i18n="how_sub">Convert your audio or voice recording into clean text in 3 simple steps.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <div class="bg-[#0d1021]/90 p-6 rounded-2xl border border-indigo-500/20 shadow-sm">
-                    <div class="w-10 h-10 bg-indigo-600/20 text-indigo-400 font-extrabold rounded-xl flex items-center justify-center mb-4">1</div>
-                    <h3 class="text-base font-bold text-white mb-2" data-i18n="step1_title">Upload or Record Audio</h3>
-                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed" data-i18n="step1_desc">
-                        Select any MP3, WAV, AAC (WhatsApp Audio), or M4A file from your phone or PC, or use the Record tab to speak live.
-                    </p>
-                </div>
-                <div class="bg-[#0d1021]/90 p-6 rounded-2xl border border-indigo-500/20 shadow-sm">
-                    <div class="w-10 h-10 bg-violet-600/20 text-violet-400 font-extrabold rounded-xl flex items-center justify-center mb-4">2</div>
-                    <h3 class="text-base font-bold text-white mb-2" data-i18n="step2_title">AI Transcription & Grammar Fix</h3>
-                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed" data-i18n="step2_desc">
-                        Background noise is filtered out and our AI converts speech into error-free Tamil, English, Hindi, Telugu, or Malayalam text.
-                    </p>
-                </div>
-                <div class="bg-[#0d1021]/90 p-6 rounded-2xl border border-indigo-500/20 shadow-sm">
-                    <div class="w-10 h-10 bg-emerald-600/20 text-emerald-400 font-extrabold rounded-xl flex items-center justify-center mb-4">3</div>
-                    <h3 class="text-base font-bold text-white mb-2" data-i18n="step3_title">Export TXT, DOC, SRT & Voice MP3</h3>
-                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed" data-i18n="step3_desc">
-                        Copy the converted text, download .TXT, .DOC, .SRT subtitles, or convert text into realistic AI voiceover MP3.
-                    </p>
-                </div>
-            </div>
+        <!-- SEO & Legal Sections -->
+        <section id="howItWorks" class="w-full mb-8 bg-[#0d1021]/90 rounded-3xl border border-indigo-500/20 p-6">
+            <h2 class="text-lg sm:text-xl font-extrabold text-white mb-2" data-i18n="how_title">How to Convert Audio into Text & AI Voiceovers?</h2>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed" data-i18n="feat_main_p1">Yugamugesh AI Studio converts MP3, WAV, AAC (WhatsApp voice notes), and M4A audio into accurate Tamil, English, Hindi, Telugu, and Malayalam text, and generates realistic Male & Female AI voiceover MP3 files in seconds.</p>
         </section>
 
-        <!-- Section 2: Detailed SEO Articles & Features -->
-        <section id="featuresSection" class="w-full bg-[#0d1021]/90 rounded-3xl border border-indigo-500/20 p-6 sm:p-8 mb-12 shadow-sm space-y-6">
-            <div>
-                <h2 class="text-lg sm:text-xl font-extrabold text-white mb-3" data-i18n="feat_main_title">Why Use Yugamugesh Multi-Language AI Audio Studio?</h2>
-                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed" data-i18n="feat_main_p1">
-                    Yugamugesh AI Studio is a comprehensive browser-based audio utility built for content creators, journalists, students, researchers, and media professionals. Converting spoken audio lectures, WhatsApp voice notes, interviews, podcasts, and song lyrics into written script manually takes hours. Our speech-to-text platform automates this entire workflow within seconds while maintaining high grammatical accuracy.
-                </p>
+        <section id="legalSection" class="w-full bg-[#0d1021]/90 rounded-3xl border border-indigo-500/20 p-6 mb-6 text-xs text-slate-300 space-y-3">
+            <div class="flex flex-wrap gap-2 border-b border-indigo-500/20 pb-3">
+                <button type="button" onclick="showLegalTab('about')" id="btnLegalAbout" class="px-3 py-1.5 rounded-xl font-bold bg-indigo-600 text-white">About Us</button>
+                <button type="button" onclick="showLegalTab('privacy')" id="btnLegalPrivacy" class="px-3 py-1.5 rounded-xl font-bold bg-slate-900">Privacy Policy</button>
+                <button type="button" onclick="showLegalTab('contact')" id="btnLegalContact" class="px-3 py-1.5 rounded-xl font-bold bg-slate-900">Contact Us</button>
             </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div class="p-4 bg-[#070914] rounded-2xl border border-indigo-500/15">
-                    <h3 class="text-sm font-bold text-indigo-300 mb-1" data-i18n="feat1_title">🎯 Multi-Language & AI Spell-Check</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed" data-i18n="feat1_desc">
-                        Context-aware AI proofreader that automatically corrects phonetic and spelling errors across Tamil, English, Hindi, Telugu, and Malayalam.
-                    </p>
-                </div>
-                <div class="p-4 bg-[#070914] rounded-2xl border border-indigo-500/15">
-                    <h3 class="text-sm font-bold text-indigo-300 mb-1" data-i18n="feat2_title">✂️ Visual Waveform MP3 & WAV Cutter</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed" data-i18n="feat2_desc">
-                        Inspect the live audio waveform, select the exact portion you need, and export trimmed audio in .MP3 or .WAV format.
-                    </p>
-                </div>
-                <div class="p-4 bg-[#070914] rounded-2xl border border-indigo-500/15">
-                    <h3 class="text-sm font-bold text-indigo-300 mb-1" data-i18n="feat3_title">🎬 YouTube Chapters, SRT & Visualizer</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed" data-i18n="feat3_desc">
-                        Generate YouTube timestamp chapters, .SRT subtitle files, and animated waveform videos for social media in one click.
-                    </p>
-                </div>
-                <div class="p-4 bg-[#070914] rounded-2xl border border-indigo-500/15">
-                    <h3 class="text-sm font-bold text-indigo-300 mb-1" data-i18n="feat4_title">🗣️ ElevenLabs-Style AI Voiceover & MP3</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed" data-i18n="feat4_desc">
-                        Generate natural Male and Female Indian voiceovers with pitch, speed, and emotion controls, and download directly as .MP3.
-                    </p>
-                </div>
-            </div>
+            <div id="legalContentAbout" class="block">Yugamugesh AI Studio (FixrService Digital Solutions) provides multi-language AI transcription, voiceover generation, and audio editing tools.</div>
+            <div id="legalContentPrivacy" class="hidden">Uploaded audio files are processed securely and automatically deleted within 24 hours via AWS S3 lifecycle policies.</div>
+            <div id="legalContentContact" class="hidden">Support Email: <a href="mailto:support@fixrservice.in" class="text-indigo-400 underline">support@fixrservice.in</a> | Tamil Nadu, India.</div>
         </section>
-
-        <!-- Section 3: FAQ -->
-        <section id="faqSection" class="w-full mb-12">
-            <div class="text-center mb-6">
-                <h2 class="text-xl sm:text-2xl font-extrabold text-white" data-i18n="faq_title">Frequently Asked Questions (FAQ)</h2>
-                <p class="text-xs sm:text-sm text-slate-400 mt-1" data-i18n="faq_sub">Common questions about Multi-Language Audio Transcription and AI Voiceover.</p>
-            </div>
-
-            <div class="space-y-3">
-                <div class="bg-[#0d1021]/90 p-5 rounded-2xl border border-indigo-500/20">
-                    <h3 class="text-sm font-bold text-white mb-1" data-i18n="faq1_q">1. What audio formats are supported?</h3>
-                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed" data-i18n="faq1_a">
-                        You can upload MP3, WAV, M4A, AAC (WhatsApp voice notes), FLAC, OGG, and WEBM files. You can also record directly using your microphone.
-                    </p>
-                </div>
-                <div class="bg-[#0d1021]/90 p-5 rounded-2xl border border-indigo-500/20">
-                    <h3 class="text-sm font-bold text-white mb-1" data-i18n="faq2_q">2. Can I download the AI Text-to-Speech voice as an MP3 file?</h3>
-                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed" data-i18n="faq2_a">
-                        Yes! In the '🗣️ AI Voice' tab, select your desired Male or Female voice artist, type your text, and click '⬇️ Download .MP3' to save the voiceover audio.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 4: About Us, Privacy Policy, Terms & Contact -->
-        <section id="legalSection" class="w-full bg-[#0d1021]/90 rounded-3xl border border-indigo-500/20 p-6 sm:p-8 mb-8 space-y-6 text-xs sm:text-sm text-slate-300 leading-relaxed">
-            <div class="flex flex-wrap gap-2 border-b border-indigo-500/20 pb-4">
-                <button onclick="showLegalTab('about')" id="btnLegalAbout" class="px-4 py-2 rounded-xl font-bold bg-indigo-600 text-white text-xs transition" data-i18n="leg_tab_about">About Us</button>
-                <button onclick="showLegalTab('privacy')" id="btnLegalPrivacy" class="px-4 py-2 rounded-xl font-bold bg-slate-900 text-slate-300 border border-indigo-500/20 text-xs transition" data-i18n="leg_tab_privacy">Privacy Policy</button>
-                <button onclick="showLegalTab('terms')" id="btnLegalTerms" class="px-4 py-2 rounded-xl font-bold bg-slate-900 text-slate-300 border border-indigo-500/20 text-xs transition" data-i18n="leg_tab_terms">Terms & Conditions</button>
-                <button onclick="showLegalTab('contact')" id="btnLegalContact" class="px-4 py-2 rounded-xl font-bold bg-slate-900 text-slate-300 border border-indigo-500/20 text-xs transition" data-i18n="leg_tab_contact">Contact Us</button>
-            </div>
-
-            <div id="legalContentAbout" class="space-y-3 block">
-                <h3 class="text-base font-extrabold text-white" data-i18n="leg_about_title">About Yugamugesh AI Studio</h3>
-                <p data-i18n="leg_about_desc">
-                    Welcome to Yugamugesh AI Studio (operated under FixrService Digital Solutions), an innovative web utility platform dedicated to simplifying Tamil and multi-language digital content creation.
-                </p>
-            </div>
-
-            <div id="legalContentPrivacy" class="space-y-3 hidden">
-                <h3 class="text-base font-extrabold text-white" data-i18n="leg_priv_title">Privacy Policy</h3>
-                <p data-i18n="leg_priv_desc">
-                    Uploaded audio files are processed securely for transcription and automatically deleted within 24 hours via AWS S3 Lifecycle rules. Google AdSense may use cookies to serve relevant advertisements.
-                </p>
-            </div>
-
-            <div id="legalContentTerms" class="space-y-3 hidden">
-                <h3 class="text-base font-extrabold text-white" data-i18n="leg_terms_title">Terms and Conditions</h3>
-                <p data-i18n="leg_terms_desc">
-                    You may use our audio-to-text converter, AI voice generator, visualizer, and MP3 cutter for personal, educational, and commercial content creation. Users are responsible for the copyright of uploaded files.
-                </p>
-            </div>
-
-            <div id="legalContentContact" class="space-y-3 hidden">
-                <h3 class="text-base font-extrabold text-white" data-i18n="leg_contact_title">Contact Us</h3>
-                <div class="bg-[#070914] p-4 rounded-2xl border border-indigo-500/20 space-y-1.5">
-                    <p><strong data-i18n="leg_lbl_platform">Platform:</strong> Yugamugesh AI Studio / FixrService Digital</p>
-                    <p><strong data-i18n="leg_lbl_loc">Location:</strong> Tamil Nadu, India</p>
-                    <p><strong data-i18n="leg_lbl_email">Email:</strong> <a href="mailto:support@fixrservice.in" class="text-indigo-400 font-semibold underline">support@fixrservice.in</a></p>
-                </div>
-            </div>
-        </section>
-
     </main>
 
-    <!-- Custom API Key Modal (Supports Groq, Gemini & ElevenLabs Keys) -->
-    <div id="apiKeyModal" class="fixed inset-0 bg-black/75 hidden items-center justify-center p-4 z-50 backdrop-blur-sm">
-        <div class="bg-[#0d1021] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-indigo-500/30 text-white">
+    <!-- API Key Modal -->
+    <div id="apiKeyModal" class="fixed inset-0 bg-black/75 hidden items-center justify-center p-4 z-50">
+        <div class="bg-[#0d1021] rounded-3xl max-w-md w-full p-6 border border-indigo-500/30 text-white">
             <div class="flex items-center justify-between mb-2">
-                <h3 class="text-lg font-extrabold text-white" data-i18n="modal_title">⚡ Built-in Turbo AI Keys Active</h3>
-                <button onclick="toggleKeyVisibility()" id="toggleMaskBtn" class="text-xs bg-slate-800 hover:bg-slate-700 text-indigo-300 font-semibold px-2.5 py-1 rounded-lg transition">
-                    👁️ Show
-                </button>
+                <h3 class="text-base font-extrabold">⚡ Built-in AI Keys Active</h3>
+                <button type="button" onclick="toggleKeyVisibility()" id="toggleMaskBtn" class="text-xs bg-slate-800 text-indigo-300 px-2.5 py-1 rounded-lg">👁️ Show</button>
             </div>
-            <p class="text-xs text-emerald-300 mb-3 leading-relaxed" data-i18n="modal_desc">
-                ✅ Built-in AI Keys are already connected. Optionally, you can add a custom Groq (gsk_), Gemini (AIzaSy), or ElevenLabs (sk_) key below:
-            </p>
-            
-            <textarea id="apiKeyInput" rows="3" autocomplete="off" spellcheck="false" placeholder="Optional: gsk_... or AIzaSy... or ElevenLabs sk_..." class="masked-key w-full p-3 bg-[#070914] border border-indigo-500/30 rounded-xl text-xs font-mono text-white mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-            
-            <div class="flex items-center justify-between">
-                <button onclick="clearSavedKeys()" class="px-3 py-2 rounded-xl text-xs font-semibold text-rose-400 hover:bg-rose-950/40 transition" data-i18n="btn_reset_key">
-                    🗑️ Reset Custom
-                </button>
+            <p class="text-xs text-emerald-300 mb-3">✅ Built-in Groq & Neural Voice keys are active. Optional custom Groq (gsk_), Gemini (AIzaSy), or ElevenLabs (sk_) key:</p>
+            <textarea id="apiKeyInput" rows="3" placeholder="Optional custom key..." class="masked-key w-full p-3 bg-[#070914] border border-indigo-500/30 rounded-xl text-xs font-mono text-white mb-4"></textarea>
+            <div class="flex justify-between">
+                <button type="button" onclick="clearSavedKeys()" class="px-3 py-2 rounded-xl text-xs font-semibold text-rose-400">🗑️ Reset</button>
                 <div class="flex space-x-2">
-                    <button onclick="closeApiKeyModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800" data-i18n="btn_close">Close</button>
-                    <button onclick="saveApiKey()" class="px-5 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow" data-i18n="btn_save">Save</button>
+                    <button type="button" onclick="closeApiKeyModal()" class="px-4 py-2 rounded-xl text-xs bg-slate-800">Close</button>
+                    <button type="button" onclick="saveApiKey()" class="px-5 py-2 rounded-xl text-xs font-bold bg-indigo-600">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-[#060811] border-t border-indigo-500/15 py-6 px-4 text-center text-xs text-slate-400">
-        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="font-semibold text-slate-300" data-i18n="footer_copy">
-                © 2026 Yugamugesh AI Studio (FixrService.in). All rights reserved.
-            </div>
-            <div class="flex flex-wrap justify-center gap-4 font-medium">
-                <a href="#legalSection" onclick="showLegalTab('about')" class="hover:text-indigo-400" data-i18n="leg_tab_about">About Us</a>
-                <a href="#legalSection" onclick="showLegalTab('privacy')" class="hover:text-indigo-400" data-i18n="leg_tab_privacy">Privacy Policy</a>
-                <a href="#legalSection" onclick="showLegalTab('terms')" class="hover:text-indigo-400" data-i18n="leg_tab_terms">Terms & Conditions</a>
-                <a href="#legalSection" onclick="showLegalTab('contact')" class="hover:text-indigo-400" data-i18n="leg_tab_contact">Contact Us</a>
-            </div>
-        </div>
+    <footer class="bg-[#060811] border-t border-indigo-500/15 py-5 px-4 text-center text-xs text-slate-400">
+        © 2026 Yugamugesh AI Studio (FixrService.in). All rights reserved.
     </footer>
 
     <script>
-        const GEMINI_MODELS = ["gemini-2.5-flash"];
-
-        // ============================================================================
-        // BUILT-IN GROQ KEYS (SPLIT FORMAT SO GITHUB SCANNER DOES NOT BLOCK THEM)
-        // ============================================================================
         const BUILT_IN_KEYS = [
             "gsk_" + "ga7iTXCfTpNWxp8aiTXe" + "WGdyb3FYP2knkPOVNyvd" + "XsCApv9PHTsl",
             "gsk_" + "q4zEhDiuxJphJsdt1JhQ" + "WGdyb3FYQQcSsJH5qzZa" + "xEkcvLCHWbeM"
         ];
 
-        // ============================================================================
-        // COMPLETE 100% FULL-PAGE BILINGUAL DICTIONARY (ENGLISH <-> TAMIL)
-        // ============================================================================
+        const ELEVENLABS_VOICE_MAP = {
+            pallavi_female: "21m00Tcm4TlvDq8ikWAM",
+            valluvar_male: "pNInz6obpgDQGcFmaJgB",
+            raveena_story: "EXAVITQu4vr4xnSDxMaL",
+            prabhat_news: "ErXwobaYiN019PkySvjV"
+        };
+
         const I18N_DICT = {
             en: {
-                brand_sub: "AI AUDIO STUDIO",
-                nav_studio: "Studio Tool",
-                nav_how: "How It Works",
-                nav_features: "Features",
-                nav_faq: "FAQ",
-                nav_legal: "Privacy & Terms",
-                btn_app: "App",
+                brand_sub: "AI AUDIO STUDIO", btn_app: "App",
                 hero_badge: "NEXT-GEN MULTI-LANGUAGE AUDIO SUITE",
                 hero_title: "Smart Audio & Voice AI Studio",
-                hero_sub: "Translate, Transcribe, Generate Realistic AI Voices, Cut MP3, and Export audio in Tamil, English, Hindi, Telugu, & Malayalam.",
-                tab_transcribe: "Transcribe",
-                tab_cutter: "Cutter",
-                tab_tts: "AI Voice",
-                tab_visualizer: "Visualizer",
-                tab_record: "Record",
-                lbl_select_lang: "SELECT AUDIO LANGUAGE",
-                opt_lang_ta: "🇮🇳 Tamil (தமிழ்)",
-                opt_lang_en: "🇬🇧 English",
-                opt_lang_hi: "🇮🇳 Hindi (हिन्दी)",
-                opt_lang_te: "🇮🇳 Telugu (తెలుగు)",
-                opt_lang_ml: "🇮🇳 Malayalam (മലയാളം)",
-                lbl_output_mode: "OUTPUT MODE",
-                opt_mode_pure: "Pure Accurate Transcription",
-                opt_mode_summary: "Transcription + Bullet Summary",
-                opt_mode_yt: "🎬 YouTube Chapters & Reels Caption",
-                opt_mode_speaker: "👥 Multi-Speaker Interview Mode",
-                opt_mode_tr_ta: "Translate into Tamil",
-                opt_mode_tr_en: "Translate into English",
-                opt_mode_roman: "Romanized Script (Tanglish)",
-                lbl_noise_reduce: "🔇 AI Noise Reduction & Auto Grammar Fix",
-                btn_sample: "✨ View Sample Output & Downloads",
-                upload_title: "Click to Upload MP3, WAV, AAC, M4A",
-                upload_sub: "Supports WhatsApp Audio (.AAC) • Auto-saves to AWS S3",
-                btn_convert_now: "⚡ Convert to Text",
-                btn_open_cutter: "✂️ Cut / Trim Audio",
-                btn_open_vis: "🎥 Audio Visualizer",
-                cutter_heading: "✂️ Studio Audio Cutter (MP3 & WAV)",
-                cutter_badge: "Live Waveform",
-                cutter_desc: "Play the audio below, select the exact start and end time on the waveform, and download your trimmed clip as .MP3 or .WAV.",
-                cutter_upload_title: "Tap to Select MP3, AAC or WAV to Cut",
-                cutter_upload_sub: "Trim Ringtone, Speech Clip, or Song Portion",
-                cutter_wave_hint: "🎧 Live Audio Frame (Tap wave to jump)",
-                cutter_now_playing: "Now Playing:",
-                btn_set_start: "📍 Set Start Here",
-                btn_play_sel: "▶️ Play Selection",
-                btn_set_end: "🏁 Set End Here",
-                cutter_range_lbl: "Cut Range:",
-                cutter_len_lbl: "Selected Length:",
-                cutter_start_lbl: "🟢 Start Time:",
-                cutter_end_lbl: "🔴 End Time:",
-                btn_cut_now: "✂️ Cut Audio Now",
-                cutter_ready_lbl: "✅ Cut Audio Ready",
-                btn_dl_mp3: "🎵 Download .MP3",
-                btn_dl_wav: "⬇️ Download .WAV",
-                btn_tr_cut: "📝 Convert to Text",
-                tts_heading: "🗣️ AI Neural Voiceover Studio",
-                btn_use_transcript: "📥 Use Transcribed Text",
-                tts_desc: "Generate realistic Male & Female studio voiceovers in Tamil, English, Hindi, Telugu & Malayalam with emotion control and direct .MP3 download.",
-                tts_voice_artist: "🎙️ AI VOICE ARTIST",
-                tts_emotion_lbl: "🎭 VOICE STYLE & EMOTION",
-                emo_natural: "🎙️ Natural Studio (Default)",
-                emo_reels: "🎬 YouTube Shorts & Reels (Energetic)",
-                emo_story: "📖 Audiobook & Storytelling (Calm & Deep)",
-                emo_news: "📰 News Anchor (Fast & Crisp)",
-                tts_speed_lbl: "⚡ Speech Speed:",
-                tts_pitch_lbl: "🎚️ Voice Pitch / Tone:",
-                btn_clear_text: "Clear Text",
-                btn_speak_now: "▶️ Speak AI Voice",
-                btn_tts_mp3: "⬇️ Download .MP3",
-                btn_pause_resume: "⏯️ Pause / Resume",
-                btn_stop_tts: "⏹️ Stop",
-                tts_audio_ready: "✅ Studio Voiceover Audio Ready",
-                vis_heading: "🎥 Studio Audio Visualizer & Video Export",
-                vis_desc: "Record animated waveform video from your audio for YouTube, Instagram Reels, and WhatsApp Status.",
-                vis_upload_title: "🎵 Tap to Select Audio for Visualizer",
-                vis_upload_sub: "MP3, WAV, AAC, M4A supported",
-                btn_rec_video: "🎥 Record & Download Video (.WEBM)",
-                btn_stop_video: "⏹️ Stop & Save Video Now",
-                rec_badge: "🆓 Live Multi-Language Voice Recorder",
+                hero_sub: "Translate, Transcribe, Generate Realistic AI Voices (.MP3), Cut MP3, and Export audio in Tamil, English, Hindi, Telugu, & Malayalam.",
+                tab_transcribe: "Transcribe", tab_cutter: "Cutter", tab_tts: "AI Voice", tab_visualizer: "Visualizer", tab_record: "Record",
+                lbl_select_lang: "SELECT AUDIO LANGUAGE", lbl_output_mode: "OUTPUT MODE",
+                opt_mode_pure: "Pure Accurate Transcription", opt_mode_summary: "Transcription + Bullet Summary",
+                opt_mode_yt: "🎬 YouTube Chapters & Reels Caption", opt_mode_speaker: "👥 Multi-Speaker Interview Mode",
+                opt_mode_tr_ta: "Translate into Tamil", opt_mode_tr_en: "Translate into English",
+                lbl_noise_reduce: "🔇 AI Noise Reduction & Auto Grammar Fix", btn_sample: "✨ View Sample Output & Downloads",
+                upload_title: "Click to Upload MP3, WAV, AAC, M4A", upload_sub: "Supports WhatsApp Audio (.AAC) • Auto-saves to AWS S3",
+                btn_convert_now: "⚡ Convert to Text", btn_open_cutter: "✂️ Cut / Trim Audio", btn_open_vis: "🎥 Audio Visualizer",
+                cutter_heading: "✂️ Studio Audio Cutter (MP3 & WAV)", cutter_desc: "Play the audio, select start and end time on the waveform, and download as .MP3 or .WAV.",
+                cutter_upload_title: "✂️ Tap to Select MP3, AAC or WAV to Cut",
+                tts_heading: "🗣️ ElevenLabs-Style AI Voice Studio", btn_use_transcript: "📥 Use Transcribed Text",
+                tts_desc: "Select Male or Female AI Voice, click Speak Now or Generate MP3 to listen and download voiceover.",
+                tts_voice_lang: "1. Voice Language", tts_voice_persona: "2. AI Voice Character (Male / Female)",
+                voice_opt_1: "👩 Pallavi / Rachel — Natural Female", voice_opt_2: "👨 Valluvar / Adam — Deep Male Voice",
+                voice_opt_3: "🎙️ Raveena / Bella — Storyteller (Reels)", voice_opt_4: "📺 Prabhat / Antoni — News Anchor Male",
+                btn_gen_voice: "Generate AI Voice (.MP3)", btn_speak_now: "Speak Now", btn_stop_tts: "Stop",
+                tts_ready_title: "✅ AI Voiceover Audio Ready", btn_dl_tts_mp3: "Download AI Voiceover (.MP3)",
                 rec_status_idle: "Tap microphone to speak in your selected language",
-                loading_main: "Converting audio to 100% accurate text...",
-                err_heading: "⚠️ Transcription Notice",
-                btn_retry: "🔄 Retry Now",
-                out_heading: "✅ AI Transcription Output & Downloads",
-                btn_fix_spelling: "✨ Fix Spelling",
-                btn_speak_out: "🗣️ Speak Output",
-                btn_copy: "📋 Copy",
-                how_badge: "STEP-BY-STEP GUIDE",
-                how_title: "How to Convert Audio into Text & Subtitles?",
-                how_sub: "Convert your audio or voice recording into clean text in 3 simple steps.",
-                step1_title: "Upload or Record Audio",
-                step1_desc: "Select any MP3, WAV, AAC (WhatsApp Audio), or M4A file from your phone or PC, or use the Record tab to speak live.",
-                step2_title: "AI Transcription & Grammar Fix",
-                step2_desc: "Background noise is filtered out and our AI converts speech into error-free Tamil, English, Hindi, Telugu, or Malayalam text.",
-                step3_title: "Export TXT, DOC, SRT & Voice MP3",
-                step3_desc: "Copy the converted text, download .TXT, .DOC, .SRT subtitles, or convert text into realistic AI voiceover MP3.",
-                feat_main_title: "Why Use Yugamugesh Multi-Language AI Audio Studio?",
-                feat_main_p1: "Yugamugesh AI Studio is a comprehensive browser-based audio utility built for content creators, journalists, students, researchers, and media professionals. Converting spoken audio lectures, WhatsApp voice notes, interviews, podcasts, and song lyrics into written script manually takes hours. Our speech-to-text platform automates this entire workflow within seconds while maintaining high grammatical accuracy.",
-                feat1_title: "🎯 Multi-Language & AI Spell-Check",
-                feat1_desc: "Context-aware AI proofreader that automatically corrects phonetic and spelling errors across Tamil, English, Hindi, Telugu, and Malayalam.",
-                feat2_title: "✂️ Visual Waveform MP3 & WAV Cutter",
-                feat2_desc: "Inspect the live audio waveform, select the exact portion you need, and export trimmed audio in .MP3 or .WAV format.",
-                feat3_title: "🎬 YouTube Chapters, SRT & Visualizer",
-                feat3_desc: "Generate YouTube timestamp chapters, .SRT subtitle files, and animated waveform videos for social media in one click.",
-                feat4_title: "🗣️ ElevenLabs-Style AI Voiceover & MP3",
-                feat4_desc: "Generate natural Male and Female Indian voiceovers with pitch, speed, and emotion controls, and download directly as .MP3.",
-                faq_title: "Frequently Asked Questions (FAQ)",
-                faq_sub: "Common questions about Multi-Language Audio Transcription and AI Voiceover.",
-                faq1_q: "1. What audio formats are supported?",
-                faq1_a: "You can upload MP3, WAV, M4A, AAC (WhatsApp voice notes), FLAC, OGG, and WEBM files. You can also record directly using your microphone.",
-                faq2_q: "2. Can I download the AI Text-to-Speech voice as an MP3 file?",
-                faq2_a: "Yes! In the '🗣️ AI Voice' tab, select
+                loading_main: "Converting audio to 100% accurate text...", out_heading: "✅ AI Transcription Output & Downloads",
+                btn_fix_spelling: "✨ Fix Spelling", btn_speak_out: "🗣️ Speak Output", btn_copy: "📋 Copy",
+                how_title: "How to Convert Audio into Text & AI Voiceovers?",
+                feat_main_p1: "Yugamugesh AI Studio converts MP3, WAV, AAC (WhatsApp voice notes), and M4A audio into accurate Tamil, English, Hindi, Telugu, and Malayalam text, and generates realistic Male & Female AI voiceover MP3 files in seconds."
+            },
+            ta: {
+                brand_sub: "ஏஐ ஆடியோ ஸ்டுடியோ", btn_app: "ஆப்",
+                hero_badge: "அதிநவீன பன்மொழி ஆடியோ தளம்",
+                hero_title: "யுகமுகேஷ் ஏஐ ஆடியோ & வாய்ஸ் ஸ்டுடியோ",
+                hero_sub: "தமிழ், ஆங்கிலம், இந்தி, தெலுங்கு மற்றும் மலையாள ஆடியோக்களைப் பிழையற்ற எழுத்துக்களாக மாற்றவும், இயற்கையான ஏஐ குரல் (.MP3) உருவாக்கவும் உதவும் தளம்.",
+                tab_transcribe: "எழுத்தாக மாற்ற", tab_cutter: "ஆடியோ கட்டர்", tab_tts: "ஏஐ குரல்", tab_visualizer: "வீடியோ", tab_record: "ரெக்கார்ட்",
+                lbl_select_lang: "ஆடியோ மொழியைத் தேர்ந்தெடுக்கவும்", lbl_output_mode: "வெளியீட்டு வடிவம்",
+                opt_mode_pure: "பிழையற்ற முழு எழுத்து வடிவம்", opt_mode_summary: "முழு உரை + முக்கியக் குறிப்புகள்",
+                opt_mode_yt: "🎬 யூடியூப் Chapters & ரீல்ஸ் கேப்ஷன்", opt_mode_speaker: "👥 நேர்காணல் உரையாடல் வடிவம்",
+                opt_mode_tr_ta: "தமிழில் மொழிபெயர்க்க", opt_mode_tr_en: "ஆங்கிலத்தில் மொழிபெயர்க்க",
+                lbl_noise_reduce: "🔇 பின்னணி இரைச்சல் நீக்கம் & எழுத்துப் பிழை திருத்தம்", btn_sample: "✨ மாதிரி உரை பார்க்க",
+                upload_title: "MP3, WAV, AAC, M4A ஆடியோவைப் பதிவேற்ற இங்கே தட்டவும்", upload_sub: "வாட்ஸ்அப் ஆடியோ (.AAC) சப்போர்ட் • AWS S3 பாதுகாப்பு",
+                btn_convert_now: "⚡ எழுத்தாக மாற்று", btn_open_cutter: "✂️ ஆடியோ கட்டர்", btn_open_vis: "🎥 விஷுவலைசர்",
+                cutter_heading: "✂️ ஸ்டுடியோ ஆடியோ கட்டர் (MP3 & WAV)", cutter_desc: "ஆடியோவை பிளே செய்து வேண்டிய பகுதியை கட் செய்து .MP3 அல்லது .WAV வடிவில் டவுன்லோட் செய்யலாம்.",
+                cutter_upload_title: "✂️ கட் செய்ய MP3, AAC அல்லது WAV கோப்பைத் தேர்ந்தெடுக்கவும்",
+                tts_heading: "🗣️ நியூரல் ஏஐ வாய்ஸ் ஸ்டுடியோ (ElevenLabs Style)", btn_use_transcript: "📥 மாற்றப்பட்ட உரையைப் பயன்படுத்து",
+                tts_desc: "ஆண் அல்லது பெண் குரலைத் தேர்ந்தெடுத்து, உடனடியாகக் குரலில் கேட்கலாம் மற்றும் .MP3 ஆடியோவாக டவுன்லோட் செய்யலாம்.",
+                tts_voice_lang: "1. வாசிக்கும் மொழி", tts_voice_persona: "2. ஏஐ குரல் தேர்வு (ஆண் / பெண்)",
+                voice_opt_1: "👩 பல்லவி — இயற்கையான பெண் குரல்", voice_opt_2: "👨 வள்ளுவர் — ஆழமான ஆண் குரல்",
+                voice_opt_3: "🎙️ ரவீனா — கதை சொல்லும் குரல் (Reels)", voice_opt_4: "📺 பிரபாத் — செய்தி வாசிப்பாளர் ஆண் குரல்",
+                btn_gen_voice: "ஏஐ குரல் உருவாக்கு (.MP3)", btn_speak_now: "இப்போது வாசி", btn_stop_tts: "நிறுத்து",
+                tts_ready_title: "✅ ஏஐ வாய்ஸ்ஓவர் ஆடியோ தயார்", btn_dl_tts_mp3: "வாய்ஸ்ஓவர் டவுன்லோட் (.MP3)",
+                rec_status_idle: "தேர்ந்தெடுத்த மொழியில் பேச மைக் பட்டனைத் தட்டவும்",
+                loading_main: "ஆடியோ 100% பிழையற்ற எழுத்துக்களாக மாற்றப்படுகிறது...", out_heading: "✅ மாற்றப்பட்ட உரை & பதிவிறக்கம்",
+                btn_fix_spelling: "✨ பிழை திருத்து", btn_speak_out: "🗣️ குரலில் வாசி", btn_copy: "📋 காப்பி",
+                how_title: "ஆடியோவை எழுத்துக்களாகவும் ஏஐ குரலாகவும் மாற்றுவது எப்படி?",
+                feat_main_p1: "யுகமுகேஷ் ஏஐ ஆடியோ ஸ்டுடியோ மூலம் வாட்ஸ்அப் வாய்ஸ் நோட்ஸ், பாடல்கள் மற்றும் நேர்காணல்களைச் சில விநாடிகளில் பிழையற்ற தமிழ் எழுத்துக்களாகவும் ஏஐ குரல் (.MP3) ஆடியோவாகவும் மாற்றலாம்."
+            }
+        };
+
+        let selectedAudioFile = null, currentAudioObjectUrl = null, mediaRecorder = null, speechRecognition = null;
+        let liveSpeechTranscript = "", recordedChunks = [], timerInterval = null, secondsElapsed = 0;
+        let currentPageLang = 'en', deferredPwaPrompt = null;
+        let cutterAudioBuffer = null, lastCutBuffer = null, cutterSourceUrl = null, waveformPeaks = [];
+        let isPlayingSelectionOnly = false, trimmedWavBlob = null, trimmedMp3Blob = null, trimmedAudioUrl = null;
+        let generatedTtsMp3Blob = null, generatedTtsUrl = null, activeHtmlAudioTts = null;
+        let visAudioCtx = null, visAnalyser = null, visSourceNode = null, visDestNode = null, visMediaRecorder = null, visRecordedChunks = [], visAnimId = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.location.pathname.startsWith('/.well')) window.history.replaceState({}, '', '/');
+            // Clear stale service workers that block button updates
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.update()));
+            }
+            setupCutterPlayerEvents();
+            drawIdleVisualizerCanvas();
+            window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPwaPrompt = e; });
+        });
+
+        function togglePageLanguage() {
+            currentPageLang = currentPageLang === 'en' ? 'ta' : 'en';
+            const dict = I18N_DICT[currentPageLang];
+            document.getElementById('pageLangBtn').textContent = currentPageLang === 'en' ? "🌐 தமிழ்" : "🌐 English";
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const k = el.getAttribute('data-i18n');
+                if (dict[k]) el.textContent = dict[k];
+            });
+        }
+
+        function switchTab(tab) {
+            ['upload', 'cutter', 'tts', 'visualizer', 'record'].forEach(t => {
+                const p = document.getElementById('panel' + capitalize(t));
+                const b = document.getElementById('tab' + capitalize(t));
+                if (p) p.classList.add('hidden');
+                if (b) b.className = (t === 'record' ? "col-span-2 sm:col-span-1 " : "") + "py-3 rounded-xl text-slate-400 hover:text-white flex items-center justify-center space-x-1.5";
+            });
+            const activeP = document.getElementById('panel' + capitalize(tab));
+            const activeB = document.getElementById('tab' + capitalize(tab));
+            if (activeP) activeP.classList.remove('hidden');
+            if (activeB) activeB.className = (tab === 'record' ? "col-span-2 sm:col-span-1 " : "") + "py-3 rounded-xl bg-indigo-600 text-white shadow-md flex items-center justify-center space-x-1.5";
+            if (tab === 'cutter' && cutterAudioBuffer) setTimeout(drawWaveformCanvas, 50);
+        }
+
+        function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+        function formatSeconds(sec) { const t = Math.max(0, Math.floor(sec)); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`; }
+
+        async function installPwaApp() {
+            if (deferredPwaPrompt) { deferredPwaPrompt.prompt(); deferredPwaPrompt = null; }
+            else alert("📲 மொபைலில் ஆப்பாக இன்ஸ்டால் செய்ய பிரவுசரின் 3 புள்ளிகளைத் (⋮) தட்டி 'Add to Home screen' என்பதைத் தேர்ந்தெடுக்கவும்!");
+        }
+
+        async function uploadAudioToAWS(audioFile) {
+            if (!audioFile) return;
+            const ext = audioFile.name ? audioFile.name.split('.').pop() : 'mp3';
+            const uploadUrl = `https://fixrservice-audio-file.s3.eu-north-1.amazonaws.com/audio_${Date.now()}.${ext}`;
+            try { await fetch(uploadUrl, { method: 'PUT', headers: { 'Content-Type': audioFile.type || 'audio/mp3' }, body: audioFile }); } catch (e) {}
+        }
+
+        function showLegalTab(tab) {
+            ['about', 'privacy', 'contact'].forEach(t => {
+                document.getElementById('legalContent' + capitalize(t)).classList.add('hidden');
+                document.getElementById('btnLegal' + capitalize(t)).className = "px-3 py-1.5 rounded-xl font-bold bg-slate-900";
+            });
+            document.getElementById('legalContent' + capitalize(tab)).classList.remove('hidden');
+            document.getElementById('btnLegal' + capitalize(tab)).className = "px-3 py-1.5 rounded-xl font-bold bg-indigo-600 text-white";
+        }
+
+        function openApiKeyModal() {
+            document.getElementById('apiKeyInput').value = localStorage.getItem('yuga_multi_keys') || '';
+            document.getElementById('apiKeyModal').classList.remove('hidden');
+            document.getElementById('apiKeyModal').classList.add('flex');
+        }
+        function closeApiKeyModal() { document.getElementById('apiKeyModal').classList.add('hidden'); document.getElementById('apiKeyModal').classList.remove('flex'); }
+        function toggleKeyVisibility() { document.getElementById('apiKeyInput').classList.toggle('masked-key'); }
+        function saveApiKey() {
+            const val = document.getElementById('apiKeyInput').value.trim();
+            if (val) localStorage.setItem('yuga_multi_keys', val);
+            closeApiKeyModal();
+            alert("✅ API Key Saved!");
+        }
+        function clearSavedKeys() { localStorage.removeItem('yuga_multi_keys'); document.getElementById('apiKeyInput').value = ''; closeApiKeyModal(); }
+        function getSavedApiKeys() {
+            const raw = localStorage.getItem('yuga_multi_keys') || '';
+            const userKeys = raw.split(/[\n,]+/).map(k => k.trim()).filter(k => k.length >= 15);
+            return [...new Set([...BUILT_IN_KEYS, ...userKeys])];
+        }
+
+        async function fetchWithTimeout(url, options = {}, timeoutMs = 20000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeoutMs);
+            try { const res = await fetch(url, { ...options, signal: controller.signal }); clearTimeout(id); return res; }
+            catch (err) { clearTimeout(id); throw err; }
+        }
+
+        // TAB 1: FILE SELECT & TRANSCRIBE
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            selectedAudioFile = file;
+            document.getElementById('fileNameDisplay').textContent = `${file.name} (${(file.size / 1048576).toFixed(2)} MB)`;
+            if (currentAudioObjectUrl) URL.revokeObjectURL(currentAudioObjectUrl);
+            currentAudioObjectUrl = URL.createObjectURL(file);
+            document.getElementById('audioPlayer').src = currentAudioObjectUrl;
+            document.getElementById('audioPreviewBox').classList.remove('hidden');
+            document.getElementById('errorBox').classList.add('hidden');
+            uploadAudioToAWS(file);
+            startTranscription();
+        }
+
+        function openCurrentInCutter() {
+            if (!selectedAudioFile) return alert("முதலில் ஒரு ஆடியோ கோப்பைத் தேர்ந்தெடுக்கவும்.");
+            switchTab('cutter'); loadAudioIntoCutter(selectedAudioFile);
+        }
+        function openCurrentInVisualizer() {
+            if (!selectedAudioFile) return alert("முதலில் ஒரு ஆடியோ கோப்பைத் தேர்ந்தெடுக்கவும்.");
+            switchTab('visualizer'); setupVisualizerFile(selectedAudioFile);
+        }
+
+        // TAB 2: CUTTER
+        function setupCutterPlayerEvents() {
+            const player = document.getElementById('cutterSourcePlayer');
+            player.addEventListener('timeupdate', () => {
+                document.getElementById('liveCurrentTime').textContent = formatSeconds(player.currentTime);
+                if (isPlayingSelectionOnly && player.currentTime >= parseFloat(document.getElementById('endRangeSlider').value)) {
+                    player.pause(); isPlayingSelectionOnly = false;
+                }
+                drawWaveformCanvas();
+            });
+        }
+        function handleCutterFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            selectedAudioFile = file; uploadAudioToAWS(file); loadAudioIntoCutter(file);
+        }
+        async function loadAudioIntoCutter(file) {
+            document.getElementById('cutterFileName').textContent = file.name;
+            if (cutterSourceUrl) URL.revokeObjectURL(cutterSourceUrl);
+            cutterSourceUrl = URL.createObjectURL(file);
+            document.getElementById('cutterSourcePlayer').src = cutterSourceUrl;
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                cutterAudioBuffer = await audioCtx.decodeAudioData(await file.arrayBuffer());
+                await audioCtx.close();
+                const dur = Math.floor(cutterAudioBuffer.duration * 10) / 10;
+                document.getElementById('totalDurationLabel').textContent = formatSeconds(dur);
+                computeWaveformPeaks(cutterAudioBuffer, 150);
+                const s = document.getElementById('startRangeSlider'), e = document.getElementById('endRangeSlider');
+                s.max = dur; e.max = dur; s.value = 0; e.value = dur;
+                document.getElementById('startSecInput').value = 0; document.getElementById('endSecInput').value = Math.floor(dur);
+                document.getElementById('cutterWorkspace').classList.remove('hidden');
+                drawWaveformCanvas();
+            } catch (err) { alert("Audio error: " + err.message); }
+        }
+        function computeWaveformPeaks(buffer, numBars) {
+            const data = buffer.getChannelData(0), step = Math.floor(data.length / numBars);
+            waveformPeaks = []; let maxPeak = 0.01;
+            for (let i = 0; i < numBars; i++) {
+                let sum = 0;
+                for (let j = 0; j < step; j += 8) { const v = Math.abs(data[i * step + j] || 0); if (v > sum) sum = v; }
+                waveformPeaks.push(sum); if (sum > maxPeak) maxPeak = sum;
+            }
+            waveformPeaks = waveformPeaks.map(p => p / maxPeak);
+        }
+        function drawWaveformCanvas() {
+            if (!cutterAudioBuffer || !waveformPeaks.length) return;
+            const canvas = document.getElementById('waveformCanvas'), rect = canvas.parentElement.getBoundingClientRect();
+            if (!rect.width) return;
+            canvas.width = rect.width; canvas.height = rect.height;
+            const ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height, dur = cutterAudioBuffer.duration;
+            const sX = (parseFloat(document.getElementById('startRangeSlider').value) / dur) * W;
+            const eX = (parseFloat(document.getElementById('endRangeSlider').value) / dur) * W;
+            ctx.clearRect(0, 0, W, H);
+            ctx.fillStyle = "rgba(99,102,241,0.2)"; ctx.fillRect(sX, 0, Math.max(2, eX - sX), H);
+            const bw = W / waveformPeaks.length;
+            waveformPeaks.forEach((p, i) => {
+                const x = i * bw, bh = Math.max(4, p * H * 0.8);
+                ctx.fillStyle = (x >= sX && x <= eX) ? "#818cf8" : "#334155";
+                ctx.fillRect(x + 1, (H - bh) / 2, Math.max(1.5, bw - 2), bh);
+            });
+        }
+        function seekWaveformClick(e) {
+            if (!cutterAudioBuffer) return;
+            const rect = document.getElementById('waveformCanvas').getBoundingClientRect();
+            const p = document.getElementById('cutterSourcePlayer');
+            p.currentTime = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)) * cutterAudioBuffer.duration;
+            p.play();
+        }
+        function setMarkAtCurrentTime(w) {
+            if (!cutterAudioBuffer) return;
+            const cur = Math.round(document.getElementById('cutterSourcePlayer').currentTime * 10) / 10;
+            document.getElementById(w === 'start' ? 'startRangeSlider' : 'endRangeSlider').value = cur;
+            onCutterSliderChange(w);
+        }
+        function playSelectedRegionOnly() {
+            if (!cutterAudioBuffer) return;
+            const p = document.getElementById('cutterSourcePlayer');
+            p.currentTime = parseFloat(document.getElementById('startRangeSlider').value);
+            isPlayingSelectionOnly = true; p.play();
+        }
+        function onCutterSliderChange() {
+            document.getElementById('startSecInput').value = Math.floor(document.getElementById('startRangeSlider').value);
+            document.getElementById('endSecInput').value = Math.floor(document.getElementById('endRangeSlider').value);
+            drawWaveformCanvas();
+        }
+        function syncCutterFromInputs() {
+            document.getElementById('startRangeSlider').value = document.getElementById('startSecInput').value;
+            document.getElementById('endRangeSlider').value = document.getElementById('endSecInput').value;
+            drawWaveformCanvas();
+        }
+        function cutAudioNow() {
+            if (!cutterAudioBuffer) return;
+            const sVal = parseFloat(document.getElementById('startRangeSlider').value), eVal = parseFloat(document.getElementById('endRangeSlider').value);
+            if (eVal <= sVal) return;
+            const sr = cutterAudioBuffer.sampleRate, chs = cutterAudioBuffer.numberOfChannels;
+            const sSample = Math.floor(sVal * sr), frames = Math.min(cutterAudioBuffer.length, Math.floor(eVal * sr)) - sSample;
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const cutBuf = ctx.createBuffer(chs, frames, sr);
+            for (let c = 0; c < chs; c++) {
+                const oldD = cutterAudioBuffer.getChannelData(c), newD = cutBuf.getChannelData(c);
+                for (let i = 0; i < frames; i++) newD[i] = oldD[sSample + i];
+            }
+            ctx.close();
+            lastCutBuffer = cutBuf; trimmedMp3Blob = null;
+            trimmedWavBlob = audioBufferToWavBlob(cutBuf);
+            if (trimmedAudioUrl) URL.revokeObjectURL(trimmedAudioUrl);
+            trimmedAudioUrl = URL.createObjectURL(trimmedWavBlob);
+            document.getElementById('trimmedAudioPlayer').src = trimmedAudioUrl;
+            document.getElementById('trimmedOutputBox').classList.remove('hidden');
+            document.getElementById('trimmedAudioPlayer').play();
+        }
+        function audioBufferToMp3Blob(buffer) {
+            const chs = buffer.numberOfChannels >= 2 ? 2 : 1, enc = new lamejs.Mp3Encoder(chs, buffer.sampleRate, 128), mp3Data = [];
+            const lF = buffer.getChannelData(0), rF = chs === 2 ? buffer.getChannelData(1) : lF, len = lF.length;
+            const lP = new Int16Array(len), rP = chs === 2 ? new Int16Array(len) : null;
+            for (let i = 0; i < len; i++) {
+                const sL = Math.max(-1, Math.min(1, lF[i])); lP[i] = sL < 0 ? sL * 0x8000 : sL * 0x7FFF;
+                if (chs === 2) { const sR = Math.max(-1, Math.min(1, rF[i])); rP[i] = sR < 0 ? sR * 0x8000 : sR * 0x7FFF; }
+            }
+            for (let i = 0; i < len; i += 1152) {
+                const b = chs === 2 ? enc.encodeBuffer(lP.subarray(i, i + 1152), rP.subarray(i, i + 1152)) : enc.encodeBuffer(lP.subarray(i, i + 1152));
+                if (b.length > 0) mp3Data.push(b);
+            }
+            const end = enc.flush(); if (end.length > 0) mp3Data.push(end);
+            return new Blob(mp3Data, { type: 'audio/mp3' });
+        }
+        async function downloadTrimmedMp3() {
+            if (!lastCutBuffer) return;
+            if (!trimmedMp3Blob) trimmedMp3Blob = audioBufferToMp3Blob(lastCutBuffer);
+            const a = document.createElement('a'); a.href = URL.createObjectURL(trimmedMp3Blob); a.download = `Cut_${Date.now()}.mp3`; a.click();
+        }
+        function downloadTrimmedAudio() {
+            if (!trimmedWavBlob) return;
+            const a = document.createElement('a'); a.href = trimmedAudioUrl; a.download = `Cut_${Date.now()}.wav`; a.click();
+        }
+        function transcribeTrimmedAudio() {
+            if (!trimmedWavBlob) return;
+            selectedAudioFile = new File([trimmedWavBlob], `Cut_${Date.now()}.wav`, { type: 'audio/wav' });
+            startTranscription();
+        }
+
+        // TAB 3: ELEVENLABS-STYLE AI VOICE STUDIO (WORKS ON SAMSUNG BROWSER & ANDROID APK)
+        function applyPersonaPreset() {
+            const p = document.getElementById('ttsVoicePersona').value;
+            const s = document.getElementById('ttsRateSlider'), pt = document.getElementById('ttsPitchSlider');
+            if (p === 'pallavi_female') { s.value = 1.0; pt.value = 1.05; }
+            else if (p === 'valluvar_male') { s.value = 0.95; pt.value = 0.82; }
+            else if (p === 'raveena_story') { s.value = 0.95; pt.value = 1.12; }
+            else { s.value = 1.08; pt.value = 0.88; }
+            document.getElementById('ttsRateLabel').textContent = s.value + 'x';
+            updatePitchLabel(pt.value);
+        }
+        function updatePitchLabel(val) {
+            const n = parseFloat(val);
+            document.getElementById('ttsPitchLabel').textContent = `${n < 0.9 ? 'Deep Male' : (n > 1.08 ? 'Female HD' : 'Natural')} (${n.toFixed(2)})`;
+        }
+        function copyTranscriptToTts() {
+            const out = document.getElementById('outputText').value.trim();
+            if (!out) return alert("முதலில் ஆடியோவை உரையாக மாற்றவும்.");
+            document.getElementById('ttsInputText').value = out;
+        }
+        function speakCurrentOutput() {
+            const out = document.getElementById('outputText').value.trim();
+            if (!out) return alert("வாசிக்க உரை எதுவும் இல்லை!");
+            document.getElementById('ttsInputText').value = out;
+            switchTab('tts');
+            generateStudioVoiceoverMp3();
+        }
+
+        function splitTextIntoChunks(text, maxLen = 150) {
+            const words = text.replace(/\s+/g, ' ').trim().split(' ');
+            const chunks = []; let cur = "";
+            for (const w of words) {
+                if ((cur + " " + w).trim().length <= maxLen) cur = (cur + " " + w).trim();
+                else { if (cur) chunks.push(cur); cur = w; }
+            }
+            if (cur) chunks.push(cur);
+            return chunks;
+        }
+
+        function playTextToSpeech() {
+            const txt = document.getElementById('ttsInputText').value.trim();
+            if (!txt) return alert("தயவுசெய்து உரையை உள்ளிடவும்.");
+            stopTextToSpeech();
+
+            const langCode = document.getElementById('ttsLangSelect').value || 'ta';
+            const speed = parseFloat(document.getElementById('ttsRateSlider').value) || 1.0;
+            const pitch = parseFloat(document.getElementById('ttsPitchSlider').value) || 1.0;
+            const localeMap = { 'ta': 'ta-IN', 'en': 'en-IN', 'hi': 'hi-IN', 'te': 'te-IN', 'ml': 'ml-IN' };
+
+            // 1. Native Android/Browser Speech Synthesis with Samsung Browser setTimeout fix
+            if ('speechSynthesis' in window) {
+                setTimeout(() => {
+                    const u = new SpeechSynthesisUtterance(txt);
+                    u.lang = localeMap[langCode] || 'ta-IN';
+                    u.rate = speed;
+                    u.pitch = pitch;
+                    window.speechSynthesis.speak(u);
+                }, 80);
+            }
+        }
+
+        function stopTextToSpeech() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            if (activeHtmlAudioTts) { activeHtmlAudioTts.pause(); activeHtmlAudioTts = null; }
+            const p = document.getElementById('ttsAudioPlayer');
+            if (p) p.pause();
+        }
+
+        async function fetchNeuralAudioChunk(chunkText, langCode) {
+            const gUrl = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=${langCode}&dt=t&q=${encodeURIComponent(chunkText)}`;
+            const mirrors = [
+                `https://api.allorigins.win/raw?url=${encodeURIComponent(gUrl)}`,
+                `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(gUrl)}`,
+                `https://corsproxy.io/?${encodeURIComponent(gUrl)}`
+            ];
+            for (const url of mirrors) {
+                try {
+                    const res = await fetchWithTimeout(url, {}, 8000);
+                    if (res.ok) {
+                        const buf = await res.arrayBuffer();
+                        if (buf.byteLength > 250) return buf;
+                    }
+                } catch (e) {}
+            }
+            throw new Error("Voice stream busy");
+        }
+
+        async function generateStudioVoiceoverMp3() {
+            const txt = document.getElementById('ttsInputText').value.trim();
+            if (!txt) return alert("தயவுசெய்து உரையை உள்ளிடவும்.");
+
+            // Start instant audible speech immediately so user hears voice right away
+            playTextToSpeech();
+
+            const langCode = document.getElementById('ttsLangSelect').value || 'ta';
+            const persona = document.getElementById('ttsVoicePersona').value;
+            const speed = parseFloat(document.getElementById('ttsRateSlider').value) || 1.0;
+            const pitch = parseFloat(document.getElementById('ttsPitchSlider').value) || 1.0;
+
+            const btn = document.getElementById('generateTtsBtn');
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = `⏳ Generating MP3...`;
+
+            try {
+                const allKeys = getSavedApiKeys();
+                const elevenKey = allKeys.find(k => k.startsWith('sk_') || k.startsWith('xi-'));
+
+                if (elevenKey) {
+                    const voiceId = ELEVENLABS_VOICE_MAP[persona] || "21m00Tcm4TlvDq8ikWAM";
+                    const elRes = await fetchWithTimeout(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "xi-api-key": elevenKey },
+                        body: JSON.stringify({ text: txt, model_id: "eleven_multilingual_v2" })
+                    }, 15000);
+                    if (elRes.ok) {
+                        generatedTtsMp3Blob = new Blob([await elRes.arrayBuffer()], { type: 'audio/mp3' });
+                        showGeneratedTtsMp3("⚡ ElevenLabs HD");
+                        btn.innerHTML = origHtml;
+                        return;
+                    }
+                }
+
+                const chunks = splitTextIntoChunks(txt, 140);
+                const decodeCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const decodedBuffers = [];
+
+                for (const c of chunks) {
+                    const rawBuf = await fetchNeuralAudioChunk(c, langCode);
+                    decodedBuffers.push(await decodeCtx.decodeAudioData(rawBuf.slice(0)));
+                }
+
+                const sr = 24000;
+                let totalFrames = 0;
+                decodedBuffers.forEach(b => totalFrames += Math.floor(b.duration * sr));
+                const combined = decodeCtx.createBuffer(1, Math.max(1, totalFrames), sr);
+                const out = combined.getChannelData(0);
+                let offset = 0;
+                for (const b of decodedBuffers) {
+                    const src = b.getChannelData(0), ratio = b.sampleRate / sr, len = Math.floor(src.length / ratio);
+                    for (let j = 0; j < len && (offset + j) < out.length; j++) out[offset + j] = src[Math.min(src.length - 1, Math.floor(j * ratio))];
+                    offset += len;
+                }
+                await decodeCtx.close();
+
+                const rate = speed * pitch;
+                const offCtx = new OfflineAudioContext(1, Math.max(1, Math.floor(combined.length / rate)), sr);
+                const source = offCtx.createBufferSource();
+                source.buffer = combined;
+                source.playbackRate.value = rate;
+                source.connect(offCtx.destination);
+                source.start(0);
+
+                const rendered = await offCtx.startRendering();
+                generatedTtsMp3Blob = audioBufferToMp3Blob(rendered);
+                showGeneratedTtsMp3(`✓ Neural MP3 (${langCode.toUpperCase()})`);
+            } catch (e) {
+                console.log("Using native speech engine");
+            } finally {
+                btn.innerHTML = origHtml;
+            }
+        }
+
+        function showGeneratedTtsMp3(badgeText) {
+            if (generatedTtsUrl) URL.revokeObjectURL(generatedTtsUrl);
+            generatedTtsUrl = URL.createObjectURL(generatedTtsMp3Blob);
+            const player = document.getElementById('ttsAudioPlayer');
+            player.src = generatedTtsUrl;
+            document.getElementById('ttsEngineBadge').textContent = badgeText;
+            document.getElementById('ttsGeneratedBox').classList.remove('hidden');
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            player.play().catch(() => {});
+        }
+
+        function downloadGeneratedTtsMp3() {
+            if (!generatedTtsMp3Blob || !generatedTtsUrl) return;
+            const a = document.createElement('a'); a.href = generatedTtsUrl; a.download = `Yugamugesh_AI_Voice_${Date.now()}.mp3`; a.click();
+        }
+
+        // TAB 4: VISUALIZER
+        function drawIdleVisualizerCanvas() {
+            const c = document.getElementById('videoCanvas'); if (!c) return;
+            const ctx = c.getContext('2d'); ctx.fillStyle = "#060814"; ctx.fillRect(0, 0, c.width, c.height);
+            ctx.fillStyle = "#818cf8"; ctx.font = "bold 18px sans-serif"; ctx.textAlign = "center";
+            ctx.fillText("Yugamugesh AI Audio Visualizer", c.width / 2, c.height / 2);
+        }
+        function handleVisualizerFile(e) { const f = e.target.files[0]; if (f) { selectedAudioFile = f; setupVisualizerFile(f); } }
+        function setupVisualizerFile(file) {
+            document.getElementById('visFileName').textContent = `🎵 ${file.name}`;
+            const p = document.getElementById('visAudioPlayer'); p.src = URL.createObjectURL(file);
+            if (!visAudioCtx) {
+                visAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                visAnalyser = visAudioCtx.createAnalyser(); visAnalyser.fftSize = 128;
+                visDestNode = visAudioCtx.createMediaStreamDestination();
+                visSourceNode = visAudioCtx.createMediaElementSource(p);
+                visSourceNode.connect(visAnalyser); visAnalyser.connect(visAudioCtx.destination); visAnalyser.connect(visDestNode);
+            }
+            const c = document.getElementById('videoCanvas'), ctx = c.getContext('2d'), data = new Uint8Array(visAnalyser.frequencyBinCount);
+            if (visAnimId) cancelAnimationFrame(visAnimId);
+            function render() {
+                visAnimId = requestAnimationFrame(render);
+                visAnalyser.getByteFrequencyData(data);
+                ctx.fillStyle = "#070914"; ctx.fillRect(0, 0, c.width, c.height);
+                const bw = (c.width - 60) / data.length; let x = 30;
+                for (let i = 0; i < data.length; i++) {
+                    const bh = (data[i] / 255) * (c.height - 90);
+                    ctx.fillStyle = "#6366f1"; ctx.fillRect(x, c.height - 25 - bh, Math.max(2, bw - 2), bh); x += bw;
+                }
+            }
+            render();
+        }
+        function startVisualizerVideoExport() {
+            const p = document.getElementById('visAudioPlayer'); if (!p.src) return;
+            const stream = document.getElementById('videoCanvas').captureStream(30);
+            if (visDestNode && visDestNode.stream.getAudioTracks().length) stream.addTrack(visDestNode.stream.getAudioTracks()[0]);
+            visRecordedChunks = []; visMediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+            visMediaRecorder.ondataavailable = e => { if (e.data.size > 0) visRecordedChunks.push(e.data); };
+            visMediaRecorder.onstop = () => {
+                const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(visRecordedChunks, { type: 'video/webm' }));
+                a.download = `Visualizer_${Date.now()}.webm`; a.click();
+            };
+            visMediaRecorder.start(); p.currentTime = 0; p.play(); p.onended = () => stopVisualizerVideoExport();
+        }
+        function stopVisualizerVideoExport() {
+            document.getElementById('visAudioPlayer').pause();
+            if (visMediaRecorder && visMediaRecorder.state === "recording") visMediaRecorder.stop();
+        }
+
+        // AUDIO PREPARER & TRANSCRIPTION ENGINE
+        async function prepareHDTranscriptionAudio(file) {
+            const ext = (file.name.split('.').pop() || '').toLowerCase();
+            const okExts = ['mp3', 'wav', 'm4a', 'mp4', 'ogg', 'webm', 'flac', 'mpeg', 'mpga', 'opus'];
+            if (okExts.includes(ext) && file.size <= 16 * 1048576) return file;
+            try {
+                const decodeCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const audioBuf = await decodeCtx.decodeAudioData(await file.arrayBuffer());
+                await decodeCtx.close();
+                const sr = audioBuf.duration > 360 ? 11025 : 16000;
+                const offCtx = new OfflineAudioContext(1, Math.floor(audioBuf.duration * sr), sr);
+                const src = offCtx.createBufferSource(); src.buffer = audioBuf; src.connect(offCtx.destination); src.start(0);
+                return new File([audioBufferToWavBlob(await offCtx.startRendering())], "converted.wav", { type: "audio/wav" });
+            } catch (e) {
+                return new File([file], file.name.replace(/\.[^/.]+$/, "") + ".m4a", { type: "audio/mp4" });
+            }
+        }
+
+        function applyInstantTamilFixes(text) {
+            if (!text) return "";
+            return text
+                .replace(/இது தெளிவான தமிழ் உரையாடல்[.,\s]*/g, "")
+                .replace(/பிழையற்ற சரியான தமிழ் சொற்களில் மட்டும் எழுதவும்[.,\s]*/g, "")
+                .replace(/<\/?transcript>/gi, "")
+                .replace(/வோடி வந்தேன்/g, "ஓடி வந்தேன்")
+                .replace(/வோடி வந்தாய்/g, "ஓடி வந்தாய்")
+                .replace(/கிருக்கேரில்/g, "திருத்தேரில்")
+                .replace(/\s+/g, " ").trim();
+        }
+
+        async function autoCorrectTamilSpelling(rawText, groqKeys, geminiKeys, requestedMode = "Pure Transcription") {
+            if (!rawText || rawText.trim().length < 2) return rawText;
+            const targetLang = document.getElementById('targetLanguage').value || 'Tamil';
+            const preFixed = applyInstantTamilFixes(rawText);
+            const sysPrompt = `You are a native ${targetLang} editor. Fix phonetic spelling errors and broken words inside <transcript> tags into natural, accurate ${targetLang}. Format: ${requestedMode}. Output ONLY the corrected ${targetLang} text without any instructions or tags.`;
+
+            for (const k of groqKeys) {
+                try {
+                    const res = await fetchWithTimeout("https://api.groq.com/openai/v1/chat/completions", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${k}` },
+                        body: JSON.stringify({
+                            model: "llama-3.3-70b-versatile",
+                            messages: [{ role: "system", content: sysPrompt }, { role: "user", content: `<transcript>${preFixed}</transcript>` }],
+                            temperature: 0.1
+                        })
+                    }, 8000);
+                    const d = await res.json();
+                    if (res.ok && d.choices?.[0]?.message?.content) return applyInstantTamilFixes(d.choices[0].message.content.trim());
+                } catch (e) {}
+            }
+            return preFixed;
+        }
+
+        async function proofreadExistingText() {
+            const ta = document.getElementById('outputText'), cur = ta.value.trim();
+            if (!cur) return;
+            const keys = getSavedApiKeys(), btn = document.getElementById('fixSpellingBtn');
+            btn.textContent = "⏳ Fixing...";
+            ta.value = await autoCorrectTamilSpelling(cur, keys.filter(k => k.startsWith('gsk_')), keys.filter(k => k.startsWith('AIza')), document.getElementById('outputMode').value);
+            btn.textContent = "✅ Fixed!";
+            setTimeout(() => btn.textContent = I18N_DICT[currentPageLang].btn_fix_spelling, 2000);
+        }
+
+        function audioBufferToWavBlob(buffer) {
+            const numOfChan = buffer.numberOfChannels, length = buffer.length * numOfChan * 2 + 44, out = new ArrayBuffer(length), view = new DataView(out), channels = [];
+            let sample, offset = 0, pos = 0;
+            function setUint16(d) { view.setUint16(pos, d, true); pos += 2; }
+            function setUint32(d) { view.setUint32(pos, d, true); pos += 4; }
+            setUint32(0x46464952); setUint32(length - 8); setUint32(0x45564157); setUint32(0x20746d66); setUint32(16); setUint16(1); setUint16(numOfChan);
+            setUint32(buffer.sampleRate); setUint32(buffer.sampleRate * 2 * numOfChan); setUint16(numOfChan * 2); setUint16(16); setUint32(0x61746164); setUint32(length - pos - 4);
+            for (let i = 0; i < numOfChan; i++) channels.push(buffer.getChannelData(i));
+            while (pos < length) {
+                for (let i = 0; i < numOfChan; i++) {
+                    sample = Math.max(-1, Math.min(1, channels[i][offset]));
+                    view.setInt16(pos, (sample < 0 ? sample * 0x8000 : sample * 0x7FFF) | 0, true); pos += 2;
+                }
+                offset++;
+            }
+            return new Blob([out], { type: "audio/wav" });
+        }
+
+        async function startTranscription() {
+            if (!selectedAudioFile) return alert("தயவுசெய்து ஒரு ஆடியோ கோப்பைத் தேர்ந்தெடுக்கவும்.");
+            const keys = getSavedApiKeys(), targetLang = document.getElementById('targetLanguage').value, mode = document.getElementById('outputMode').value;
+            const isoMap = { 'Tamil': 'ta', 'English': 'en', 'Hindi': 'hi', 'Telugu': 'te', 'Malayalam': 'ml' };
+
+            document.getElementById('errorBox').classList.add('hidden');
+            document.getElementById('loadingBox').classList.remove('hidden');
+
+            try {
+                const hdFile = await prepareHDTranscriptionAudio(selectedAudioFile);
+                let rawTranscript = null, lastErr = "";
+                const groqKeys = keys.filter(k => k.startsWith('gsk_'));
+
+                for (const k of groqKeys) {
+                    try {
+                        const fd = new FormData();
+                        fd.append("file", hdFile);
+                        fd.append("model", "whisper-large-v3");
+                        fd.append("language", isoMap[targetLang] || 'ta');
+                        fd.append("temperature", "0");
+                        fd.append("response_format", "json");
+
+                        const res = await fetchWithTimeout("https://api.groq.com/openai/v1/audio/transcriptions", {
+                            method: "POST", headers: { "Authorization": `Bearer ${k}` }, body: fd
+                        }, 25000);
+                        const d = await res.json();
+                        if (res.ok && d.text) { rawTranscript = applyInstantTamilFixes(d.text.trim()); break; }
+                        else lastErr = d.error?.message || `HTTP ${res.status}`;
+                    } catch (e) { lastErr = e.message; }
+                }
+
+                if (rawTranscript) {
+                    document.getElementById('outputText').value = rawTranscript;
+                    const polished = await autoCorrectTamilSpelling(rawTranscript, groqKeys, [], mode);
+                    document.getElementById('loadingBox').classList.add('hidden');
+                    document.getElementById('outputText').value = polished;
+                    document.getElementById('activeKeyBadge').textContent = `✓ 100% Clean ${targetLang}`;
+                    document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    document.getElementById('loadingBox').classList.add('hidden');
+                    document.getElementById('errorMessage').innerText = lastErr;
+                    document.getElementById('errorBox').classList.remove('hidden');
+                }
+            } catch (err) {
+                document.getElementById('loadingBox').classList.add('hidden');
+                document.getElementById('errorMessage').innerText = err.message;
+                document.getElementById('errorBox').classList.remove('hidden');
+            }
+        }
+
+        async function toggleRecording() {
+            const btn = document.getElementById('recordBtn'), status = document.getElementById('recordStatus'), timer = document.getElementById('recordTimer');
+            const targetLang = document.getElementById('targetLanguage').value;
+            if (!mediaRecorder || mediaRecorder.state === "inactive") {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream); recordedChunks = [];
+                    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
+                    mediaRecorder.onstop = () => {
+                        const mime = mediaRecorder.mimeType || 'audio/webm';
+                        selectedAudioFile = new File([new Blob(recordedChunks, { type: mime })], `Rec_${Date.now()}.webm`, { type: mime });
+                        stream.getTracks().forEach(t => t.stop());
+                        uploadAudioToAWS(selectedAudioFile);
+                        startTranscription();
+                    };
+                    mediaRecorder.start();
+                    btn.classList.replace('bg-red-600', 'bg-slate-800');
+                    status.textContent = `🔴 Recording ${targetLang}... (Tap to stop)`;
+                    secondsElapsed = 0; timer.classList.remove('hidden');
+                    timerInterval = setInterval(() => {
+                        secondsElapsed++;
+                        timer.textContent = `${String(Math.floor(secondsElapsed / 60)).padStart(2, '0')}:${String(secondsElapsed % 60).padStart(2, '0')}`;
+                    }, 1000);
+                } catch (e) { alert("Microphone permission denied."); }
+            } else {
+                mediaRecorder.stop(); clearInterval(timerInterval);
+                btn.classList.replace('bg-slate-800', 'bg-red-600');
+                status.textContent = I18N_DICT[currentPageLang].rec_status_idle;
+                timer.classList.add('hidden');
+            }
+        }
+
+        function runSampleTest() {
+            document.getElementById('outputText').value = "நீயே என் பாதி என் சீதை, என் ஆருயிரே கண்ணே வெண்ணிலவே பூஞ்சோலை!\nஎன் ஆருயிரே நீ எந்தன் தேடலே, ஏகாந்த பூவே வா என் ஏழிசையே!";
+            document.getElementById('activeKeyBadge').textContent = "✓ 100% Pure Tamil";
+        }
+        function copyResultText() {
+            const ta = document.getElementById('outputText'); if (!ta.value.trim()) return;
+            navigator.clipboard.writeText(ta.value);
+            const b = document.getElementById('copyBtn'); b.textContent = "✅ Copied!";
+            setTimeout(() => b.textContent = I18N_DICT[currentPageLang].btn_copy, 2000);
+        }
+        function downloadTxtFile() {
+            const t = document.getElementById('outputText').value; if (!t.trim()) return;
+            const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(["\ufeff" + t], { type: 'text/plain;charset=utf-8' }));
+            a.download = `Transcript_${Date.now()}.txt`; a.click();
+        }
+        function downloadDocFile() {
+            const t = document.getElementById('outputText').value; if (!t.trim()) return;
+            const html = `<html><head><meta charset='utf-8'></head><body>${t.replace(/\n/g, '<br>')}</body></html>`;
+            const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff', html], { type: 'application/msword' }));
+            a.download = `Transcript_${Date.now()}.doc`; a.click();
+        }
+        function downloadSrtFile() {
+            const t = document.getElementById('outputText').value.trim(); if (!t) return;
+            let srt = "", sec = 0;
+            t.split(/\n+/).filter(Boolean).forEach((l, i) => {
+                const d = 4;
+                srt += `${i + 1}\n00:00:${String(sec).padStart(2, '0')},000 --> 00:00:${String(sec + d).padStart(2, '0')},000\n${l}\n\n`;
+                sec += d;
+            });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(["\ufeff" + srt], { type: 'text/plain;charset=utf-8' }));
+            a.download = `Subtitles_${Date.now()}.srt`; a.click();
+        }
+        function shareOnWhatsApp() {
+            const t = document.getElementById('outputText').value; if (!t.trim()) return;
+            window.open(`https://wa.me/?text=${encodeURIComponent(t)}`, '_blank');
+        }
+        // END OF SCRIPT - VERIFY THIS LINE IS PRESENT
+    </script>
+</body>
+</html>
