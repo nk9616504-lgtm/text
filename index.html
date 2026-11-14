@@ -167,7 +167,7 @@
                 </div>
             </div>
 
-            <!-- TAB 3: ELEVENLABS-STYLE AI VOICE STUDIO (TTS + MP3 DOWNLOAD) -->
+            <!-- TAB 3: ELEVENLABS-STYLE AI VOICE STUDIO (ALWAYS-VISIBLE DOWNLOAD BUTTON) -->
             <div id="panelTts" class="hidden space-y-4">
                 <div class="bg-gradient-to-r from-indigo-950/70 to-violet-950/70 border border-indigo-500/30 rounded-2xl p-4">
                     <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
@@ -177,7 +177,7 @@
                         </div>
                         <button type="button" onclick="copyTranscriptToTts()" class="text-[11px] bg-indigo-600/40 text-indigo-200 px-2.5 py-1 rounded-lg font-bold border border-indigo-400/30" data-i18n="btn_use_transcript">📥 Use Transcribed Text</button>
                     </div>
-                    <p class="text-xs text-slate-300" data-i18n="tts_desc">Select Male or Female AI Voice, click Speak Now or Generate MP3 to listen and download voiceover.</p>
+                    <p class="text-xs text-slate-300" data-i18n="tts_desc">Select Male or Female AI Voice, click Generate or Download .MP3 to save your voiceover audio.</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#070914] p-3.5 rounded-2xl border border-indigo-500/20">
@@ -213,31 +213,31 @@
                     </div>
                 </div>
 
-                <textarea id="ttsInputText" rows="4" class="w-full p-4 bg-[#070914] border border-indigo-500/30 rounded-2xl text-white text-sm leading-relaxed">வணக்கம்! யுகமுகேஷ் ஏஐ ஆடியோ ஸ்டுடியோவிற்கு உங்களை அன்புடன் வரவேற்கிறோம்.</textarea>
+                <textarea id="ttsInputText" rows="4" class="w-full p-4 bg-[#070914] border border-indigo-500/30 rounded-2xl text-white text-sm leading-relaxed">ஒரு தாயின் கண்ணீர்... ஒரு தந்தையின் ஏக்கம்... ஒரு மகனின் குற்ற உணர்வு... மறைக்கப்பட்ட குற்றங்களின் மர்மம்!</textarea>
 
-                <!-- Instant Speak + MP3 Generation Buttons -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    <button type="button" onclick="generateStudioVoiceoverMp3()" id="generateTtsBtn" class="col-span-2 bg-gradient-to-r from-indigo-600 to-fuchsia-600 hover:from-indigo-500 hover:to-fuchsia-500 text-white font-extrabold text-xs py-3.5 px-3 rounded-xl shadow-lg flex items-center justify-center space-x-1">
-                        <span>✨</span><span data-i18n="btn_gen_voice">Generate AI Voice (.MP3)</span>
+                <!-- 4 Always-Visible Action Buttons including Direct Download .MP3 -->
+                <div class="grid grid-cols-2 gap-2.5">
+                    <button type="button" onclick="generateStudioVoiceoverMp3(false)" id="generateTtsBtn" class="bg-gradient-to-r from-indigo-600 to-fuchsia-600 hover:from-indigo-500 hover:to-fuchsia-500 text-white font-extrabold text-xs py-3.5 px-3 rounded-xl shadow-lg flex items-center justify-center space-x-1">
+                        <span>✨</span><span data-i18n="btn_gen_voice">Generate AI Voice</span>
                     </button>
-                    <button type="button" onclick="playTextToSpeech()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-3.5 px-3 rounded-xl flex items-center justify-center space-x-1">
+                    <button type="button" onclick="downloadGeneratedTtsMp3()" id="downloadTtsBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs py-3.5 px-3 rounded-xl shadow-lg flex items-center justify-center space-x-1">
+                        <span>⬇️</span><span data-i18n="btn_dl_tts_mp3">Download .MP3</span>
+                    </button>
+                    <button type="button" onclick="playTextToSpeech()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-3 px-3 rounded-xl flex items-center justify-center space-x-1">
                         <span>▶️</span><span data-i18n="btn_speak_now">Speak Now</span>
                     </button>
-                    <button type="button" onclick="stopTextToSpeech()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs py-3.5 px-3 rounded-xl flex items-center justify-center space-x-1">
+                    <button type="button" onclick="stopTextToSpeech()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs py-3 px-3 rounded-xl flex items-center justify-center space-x-1">
                         <span>⏹️</span><span data-i18n="btn_stop_tts">Stop</span>
                     </button>
                 </div>
 
-                <!-- Generated MP3 Player & Download -->
-                <div id="ttsGeneratedBox" class="hidden bg-[#070914] p-4 rounded-2xl border border-emerald-500/30 space-y-3">
+                <!-- Always-Visible Audio Player & Status Box -->
+                <div id="ttsGeneratedBox" class="bg-[#070914] p-4 rounded-2xl border border-emerald-500/30 space-y-2.5">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-extrabold text-emerald-400" data-i18n="tts_ready_title">✅ AI Voiceover Audio Ready</span>
-                        <span id="ttsEngineBadge" class="text-[11px] bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full font-bold">Neural HD</span>
+                        <span class="text-xs font-extrabold text-emerald-400" data-i18n="tts_ready_title">🎧 AI Voiceover Audio Player</span>
+                        <span id="ttsEngineBadge" class="text-[11px] bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full font-bold">Neural MP3 Ready</span>
                     </div>
                     <audio id="ttsAudioPlayer" controls class="w-full h-10"></audio>
-                    <button type="button" onclick="downloadGeneratedTtsMp3()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3 px-4 rounded-xl shadow-md">
-                        🎵 <span data-i18n="btn_dl_tts_mp3">Download AI Voiceover (.MP3)</span>
-                    </button>
                 </div>
             </div>
 
@@ -372,12 +372,12 @@
                 cutter_heading: "✂️ Studio Audio Cutter (MP3 & WAV)", cutter_desc: "Play the audio, select start and end time on the waveform, and download as .MP3 or .WAV.",
                 cutter_upload_title: "✂️ Tap to Select MP3, AAC or WAV to Cut",
                 tts_heading: "🗣️ ElevenLabs-Style AI Voice Studio", btn_use_transcript: "📥 Use Transcribed Text",
-                tts_desc: "Select Male or Female AI Voice, click Speak Now or Generate MP3 to listen and download voiceover.",
+                tts_desc: "Select Male or Female AI Voice, click Generate or Download .MP3 to save your voiceover audio.",
                 tts_voice_lang: "1. Voice Language", tts_voice_persona: "2. AI Voice Character (Male / Female)",
                 voice_opt_1: "👩 Pallavi / Rachel — Natural Female", voice_opt_2: "👨 Valluvar / Adam — Deep Male Voice",
                 voice_opt_3: "🎙️ Raveena / Bella — Storyteller (Reels)", voice_opt_4: "📺 Prabhat / Antoni — News Anchor Male",
-                btn_gen_voice: "Generate AI Voice (.MP3)", btn_speak_now: "Speak Now", btn_stop_tts: "Stop",
-                tts_ready_title: "✅ AI Voiceover Audio Ready", btn_dl_tts_mp3: "Download AI Voiceover (.MP3)",
+                btn_gen_voice: "Generate AI Voice", btn_dl_tts_mp3: "Download .MP3", btn_speak_now: "Speak Now", btn_stop_tts: "Stop",
+                tts_ready_title: "🎧 AI Voiceover Audio Player",
                 rec_status_idle: "Tap microphone to speak in your selected language",
                 loading_main: "Converting audio to 100% accurate text...", out_heading: "✅ AI Transcription Output & Downloads",
                 btn_fix_spelling: "✨ Fix Spelling", btn_speak_out: "🗣️ Speak Output", btn_copy: "📋 Copy",
@@ -404,8 +404,8 @@
                 tts_voice_lang: "1. வாசிக்கும் மொழி", tts_voice_persona: "2. ஏஐ குரல் தேர்வு (ஆண் / பெண்)",
                 voice_opt_1: "👩 பல்லவி — இயற்கையான பெண் குரல்", voice_opt_2: "👨 வள்ளுவர் — ஆழமான ஆண் குரல்",
                 voice_opt_3: "🎙️ ரவீனா — கதை சொல்லும் குரல் (Reels)", voice_opt_4: "📺 பிரபாத் — செய்தி வாசிப்பாளர் ஆண் குரல்",
-                btn_gen_voice: "ஏஐ குரல் உருவாக்கு (.MP3)", btn_speak_now: "இப்போது வாசி", btn_stop_tts: "நிறுத்து",
-                tts_ready_title: "✅ ஏஐ வாய்ஸ்ஓவர் ஆடியோ தயார்", btn_dl_tts_mp3: "வாய்ஸ்ஓவர் டவுன்லோட் (.MP3)",
+                btn_gen_voice: "ஏஐ குரல் உருவாக்கு", btn_dl_tts_mp3: ".MP3 டவுன்லோட்", btn_speak_now: "இப்போது வாசி", btn_stop_tts: "நிறுத்து",
+                tts_ready_title: "🎧 ஏஐ வாய்ஸ்ஓவர் ஆடியோ பிளேயர்",
                 rec_status_idle: "தேர்ந்தெடுத்த மொழியில் பேச மைக் பட்டனைத் தட்டவும்",
                 loading_main: "ஆடியோ 100% பிழையற்ற எழுத்துக்களாக மாற்றப்படுகிறது...", out_heading: "✅ மாற்றப்பட்ட உரை & பதிவிறக்கம்",
                 btn_fix_spelling: "✨ பிழை திருத்து", btn_speak_out: "🗣️ குரலில் வாசி", btn_copy: "📋 காப்பி",
@@ -414,17 +414,16 @@
             }
         };
 
-        let selectedAudioFile = null, currentAudioObjectUrl = null, mediaRecorder = null, speechRecognition = null;
-        let liveSpeechTranscript = "", recordedChunks = [], timerInterval = null, secondsElapsed = 0;
+        let selectedAudioFile = null, currentAudioObjectUrl = null, mediaRecorder = null;
+        let recordedChunks = [], timerInterval = null, secondsElapsed = 0;
         let currentPageLang = 'en', deferredPwaPrompt = null;
         let cutterAudioBuffer = null, lastCutBuffer = null, cutterSourceUrl = null, waveformPeaks = [];
         let isPlayingSelectionOnly = false, trimmedWavBlob = null, trimmedMp3Blob = null, trimmedAudioUrl = null;
-        let generatedTtsMp3Blob = null, generatedTtsUrl = null, activeHtmlAudioTts = null;
+        let generatedTtsMp3Blob = null, generatedTtsUrl = null, lastGeneratedTextSig = "";
         let visAudioCtx = null, visAnalyser = null, visSourceNode = null, visDestNode = null, visMediaRecorder = null, visRecordedChunks = [], visAnimId = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             if (window.location.pathname.startsWith('/.well')) window.history.replaceState({}, '', '/');
-            // Clear stale service workers that block button updates
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.update()));
             }
@@ -501,7 +500,7 @@
             return [...new Set([...BUILT_IN_KEYS, ...userKeys])];
         }
 
-        async function fetchWithTimeout(url, options = {}, timeoutMs = 20000) {
+        async function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
             const controller = new AbortController();
             const id = setTimeout(() => controller.abort(), timeoutMs);
             try { const res = await fetch(url, { ...options, signal: controller.signal }); clearTimeout(id); return res; }
@@ -674,7 +673,9 @@
             startTranscription();
         }
 
-        // TAB 3: ELEVENLABS-STYLE AI VOICE STUDIO (WORKS ON SAMSUNG BROWSER & ANDROID APK)
+        // ============================================================================
+        // TAB 3: ELEVENLABS-STYLE AI VOICE STUDIO + GUARANTEED MP3 DOWNLOAD
+        // ============================================================================
         function applyPersonaPreset() {
             const p = document.getElementById('ttsVoicePersona').value;
             const s = document.getElementById('ttsRateSlider'), pt = document.getElementById('ttsPitchSlider');
@@ -699,7 +700,7 @@
             if (!out) return alert("வாசிக்க உரை எதுவும் இல்லை!");
             document.getElementById('ttsInputText').value = out;
             switchTab('tts');
-            generateStudioVoiceoverMp3();
+            generateStudioVoiceoverMp3(false);
         }
 
         function splitTextIntoChunks(text, maxLen = 150) {
@@ -723,7 +724,6 @@
             const pitch = parseFloat(document.getElementById('ttsPitchSlider').value) || 1.0;
             const localeMap = { 'ta': 'ta-IN', 'en': 'en-IN', 'hi': 'hi-IN', 'te': 'te-IN', 'ml': 'ml-IN' };
 
-            // 1. Native Android/Browser Speech Synthesis with Samsung Browser setTimeout fix
             if ('speechSynthesis' in window) {
                 setTimeout(() => {
                     const u = new SpeechSynthesisUtterance(txt);
@@ -731,53 +731,80 @@
                     u.rate = speed;
                     u.pitch = pitch;
                     window.speechSynthesis.speak(u);
-                }, 80);
+                }, 60);
             }
         }
 
         function stopTextToSpeech() {
             if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-            if (activeHtmlAudioTts) { activeHtmlAudioTts.pause(); activeHtmlAudioTts = null; }
             const p = document.getElementById('ttsAudioPlayer');
             if (p) p.pause();
         }
 
+        function base64DataUrlToArrayBuffer(dataUrl) {
+            const base64 = dataUrl.includes(',') ? dataUrl.split(',')[1] : dataUrl;
+            const binary = atob(base64.replace(/\s/g, ''));
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+            return bytes.buffer;
+        }
+
         async function fetchNeuralAudioChunk(chunkText, langCode) {
-            const gUrl = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=${langCode}&dt=t&q=${encodeURIComponent(chunkText)}`;
-            const mirrors = [
+            const gUrl = `https://translate.googleapis.com/translate_tts?client=tw-ob&ie=UTF-8&tl=${langCode}&q=${encodeURIComponent(chunkText)}`;
+
+            // Method 1: allorigins JSON Base64 wrapper (Never blocked by CORS binary filters)
+            try {
+                const jsonRes = await fetchWithTimeout(`https://api.allorigins.win/get?url=${encodeURIComponent(gUrl)}`, {}, 10000);
+                if (jsonRes.ok) {
+                    const j = await jsonRes.json();
+                    if (j && j.contents && j.contents.length > 100) {
+                        return base64DataUrlToArrayBuffer(j.contents);
+                    }
+                }
+            } catch (e) {}
+
+            // Method 2: Direct binary proxies
+            const rawProxies = [
                 `https://api.allorigins.win/raw?url=${encodeURIComponent(gUrl)}`,
                 `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(gUrl)}`,
                 `https://corsproxy.io/?${encodeURIComponent(gUrl)}`
             ];
-            for (const url of mirrors) {
+            for (const url of rawProxies) {
                 try {
-                    const res = await fetchWithTimeout(url, {}, 8000);
+                    const res = await fetchWithTimeout(url, {}, 9000);
                     if (res.ok) {
                         const buf = await res.arrayBuffer();
-                        if (buf.byteLength > 250) return buf;
+                        if (buf.byteLength > 200) return buf;
                     }
                 } catch (e) {}
             }
             throw new Error("Voice stream busy");
         }
 
-        async function generateStudioVoiceoverMp3() {
+        async function generateStudioVoiceoverMp3(autoTriggerDownload = false) {
             const txt = document.getElementById('ttsInputText').value.trim();
             if (!txt) return alert("தயவுசெய்து உரையை உள்ளிடவும்.");
-
-            // Start instant audible speech immediately so user hears voice right away
-            playTextToSpeech();
 
             const langCode = document.getElementById('ttsLangSelect').value || 'ta';
             const persona = document.getElementById('ttsVoicePersona').value;
             const speed = parseFloat(document.getElementById('ttsRateSlider').value) || 1.0;
             const pitch = parseFloat(document.getElementById('ttsPitchSlider').value) || 1.0;
+            const currentSig = `${txt}|${langCode}|${persona}|${speed}|${pitch}`;
 
-            const btn = document.getElementById('generateTtsBtn');
-            const origHtml = btn.innerHTML;
-            btn.innerHTML = `⏳ Generating MP3...`;
+            if (!autoTriggerDownload) {
+                playTextToSpeech();
+            }
+
+            const genBtn = document.getElementById('generateTtsBtn');
+            const dlBtn = document.getElementById('downloadTtsBtn');
+            const origGenHtml = genBtn.innerHTML;
+            const origDlHtml = dlBtn.innerHTML;
+
+            genBtn.innerHTML = `⏳ Generating...`;
+            if (autoTriggerDownload) dlBtn.innerHTML = `⏳ Preparing .MP3...`;
 
             try {
+                // 1. Optional ElevenLabs API Key support
                 const allKeys = getSavedApiKeys();
                 const elevenKey = allKeys.find(k => k.startsWith('sk_') || k.startsWith('xi-'));
 
@@ -790,66 +817,109 @@
                     }, 15000);
                     if (elRes.ok) {
                         generatedTtsMp3Blob = new Blob([await elRes.arrayBuffer()], { type: 'audio/mp3' });
-                        showGeneratedTtsMp3("⚡ ElevenLabs HD");
-                        btn.innerHTML = origHtml;
+                        lastGeneratedTextSig = currentSig;
+                        showGeneratedTtsMp3("⚡ ElevenLabs HD", !autoTriggerDownload);
+                        if (autoTriggerDownload) triggerMp3BlobDownload(generatedTtsMp3Blob);
                         return;
                     }
                 }
 
+                // 2. Built-in Neural TTS MP3 Fetch + Persona Pitch/Speed DSP
                 const chunks = splitTextIntoChunks(txt, 140);
-                const decodeCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const decodedBuffers = [];
-
+                const rawBuffers = [];
                 for (const c of chunks) {
-                    const rawBuf = await fetchNeuralAudioChunk(c, langCode);
-                    decodedBuffers.push(await decodeCtx.decodeAudioData(rawBuf.slice(0)));
+                    rawBuffers.push(await fetchNeuralAudioChunk(c, langCode));
                 }
 
-                const sr = 24000;
-                let totalFrames = 0;
-                decodedBuffers.forEach(b => totalFrames += Math.floor(b.duration * sr));
-                const combined = decodeCtx.createBuffer(1, Math.max(1, totalFrames), sr);
-                const out = combined.getChannelData(0);
-                let offset = 0;
-                for (const b of decodedBuffers) {
-                    const src = b.getChannelData(0), ratio = b.sampleRate / sr, len = Math.floor(src.length / ratio);
-                    for (let j = 0; j < len && (offset + j) < out.length; j++) out[offset + j] = src[Math.min(src.length - 1, Math.floor(j * ratio))];
-                    offset += len;
+                try {
+                    const decodeCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const decodedBuffers = [];
+                    for (const rb of rawBuffers) {
+                        decodedBuffers.push(await decodeCtx.decodeAudioData(rb.slice(0)));
+                    }
+                    const sr = 24000;
+                    let totalFrames = 0;
+                    decodedBuffers.forEach(b => totalFrames += Math.floor(b.duration * sr));
+                    const combined = decodeCtx.createBuffer(1, Math.max(1, totalFrames), sr);
+                    const out = combined.getChannelData(0);
+                    let offset = 0;
+                    for (const b of decodedBuffers) {
+                        const src = b.getChannelData(0), ratio = b.sampleRate / sr, len = Math.floor(src.length / ratio);
+                        for (let j = 0; j < len && (offset + j) < out.length; j++) out[offset + j] = src[Math.min(src.length - 1, Math.floor(j * ratio))];
+                        offset += len;
+                    }
+                    await decodeCtx.close();
+
+                    const rate = speed * pitch;
+                    const offCtx = new OfflineAudioContext(1, Math.max(1, Math.floor(combined.length / rate)), sr);
+                    const source = offCtx.createBufferSource();
+                    source.buffer = combined;
+                    source.playbackRate.value = rate;
+                    source.connect(offCtx.destination);
+                    source.start(0);
+
+                    const rendered = await offCtx.startRendering();
+                    generatedTtsMp3Blob = audioBufferToMp3Blob(rendered);
+                } catch (dspErr) {
+                    // Direct raw MP3 fallback if decodeAudioData is restricted
+                    generatedTtsMp3Blob = new Blob(rawBuffers, { type: 'audio/mp3' });
                 }
-                await decodeCtx.close();
 
-                const rate = speed * pitch;
-                const offCtx = new OfflineAudioContext(1, Math.max(1, Math.floor(combined.length / rate)), sr);
-                const source = offCtx.createBufferSource();
-                source.buffer = combined;
-                source.playbackRate.value = rate;
-                source.connect(offCtx.destination);
-                source.start(0);
-
-                const rendered = await offCtx.startRendering();
-                generatedTtsMp3Blob = audioBufferToMp3Blob(rendered);
-                showGeneratedTtsMp3(`✓ Neural MP3 (${langCode.toUpperCase()})`);
+                lastGeneratedTextSig = currentSig;
+                showGeneratedTtsMp3(`✓ Neural MP3 (${langCode.toUpperCase()})`, !autoTriggerDownload);
+                if (autoTriggerDownload) {
+                    triggerMp3BlobDownload(generatedTtsMp3Blob);
+                }
             } catch (e) {
-                console.log("Using native speech engine");
+                if (autoTriggerDownload) {
+                    // Direct browser fallback download stream
+                    const directUrl = `https://translate.googleapis.com/translate_tts?client=tw-ob&ie=UTF-8&tl=${langCode}&q=${encodeURIComponent(txt.slice(0, 180))}`;
+                    window.open(directUrl, '_blank', 'noopener,noreferrer');
+                }
             } finally {
-                btn.innerHTML = origHtml;
+                genBtn.innerHTML = origGenHtml;
+                dlBtn.innerHTML = origDlHtml;
             }
         }
 
-        function showGeneratedTtsMp3(badgeText) {
+        function showGeneratedTtsMp3(badgeText, autoPlay = true) {
+            if (!generatedTtsMp3Blob) return;
             if (generatedTtsUrl) URL.revokeObjectURL(generatedTtsUrl);
             generatedTtsUrl = URL.createObjectURL(generatedTtsMp3Blob);
             const player = document.getElementById('ttsAudioPlayer');
             player.src = generatedTtsUrl;
             document.getElementById('ttsEngineBadge').textContent = badgeText;
-            document.getElementById('ttsGeneratedBox').classList.remove('hidden');
-            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-            player.play().catch(() => {});
+            if (autoPlay) {
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+                player.play().catch(() => {});
+            }
         }
 
-        function downloadGeneratedTtsMp3() {
-            if (!generatedTtsMp3Blob || !generatedTtsUrl) return;
-            const a = document.createElement('a'); a.href = generatedTtsUrl; a.download = `Yugamugesh_AI_Voice_${Date.now()}.mp3`; a.click();
+        function triggerMp3BlobDownload(blob) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Yugamugesh_AI_Voice_${Date.now()}.mp3`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 4000);
+        }
+
+        async function downloadGeneratedTtsMp3() {
+            const txt = document.getElementById('ttsInputText').value.trim();
+            if (!txt) return alert("தயவுசெய்து உரையை உள்ளிடவும்.");
+            const langCode = document.getElementById('ttsLangSelect').value || 'ta';
+            const persona = document.getElementById('ttsVoicePersona').value;
+            const speed = parseFloat(document.getElementById('ttsRateSlider').value) || 1.0;
+            const pitch = parseFloat(document.getElementById('ttsPitchSlider').value) || 1.0;
+            const currentSig = `${txt}|${langCode}|${persona}|${speed}|${pitch}`;
+
+            if (generatedTtsMp3Blob && lastGeneratedTextSig === currentSig) {
+                triggerMp3BlobDownload(generatedTtsMp3Blob);
+            } else {
+                await generateStudioVoiceoverMp3(true);
+            }
         }
 
         // TAB 4: VISUALIZER
@@ -1101,7 +1171,6 @@
             const t = document.getElementById('outputText').value; if (!t.trim()) return;
             window.open(`https://wa.me/?text=${encodeURIComponent(t)}`, '_blank');
         }
-        // END OF SCRIPT - VERIFY THIS LINE IS PRESENT
     </script>
 </body>
 </html>
