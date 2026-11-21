@@ -1,5 +1,6 @@
-const CACHE_NAME = 'yuga-audio-studio-v2';
+const CACHE_NAME = 'yuga-audio-studio-v3';
 const ASSETS = ['/', '/index.html', '/manifest.json'];
+const CDN_HOSTS = ['cdn.tailwindcss.com', 'cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'fonts.googleapis.com', 'fonts.gstatic.com'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -20,6 +21,22 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
+
+  // Cache Tailwind CSS, FontAwesome & Fonts so offline UI stays 100% styled
+  if (CDN_HOSTS.some((h) => url.hostname.includes(h))) {
+    event.respondWith(
+      caches.match(event.request).then((cached) => {
+        if (cached) return cached;
+        return fetch(event.request).then((res) => {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then((c) => c.put(event.request, copy)).catch(() => {});
+          return res;
+        }).catch(() => cached || new Response('', { status: 200 }));
+      })
+    );
+    return;
+  }
+
   if (url.origin !== self.location.origin) return;
 
   if (event.request.mode === 'navigate') {
